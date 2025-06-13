@@ -1,21 +1,21 @@
-package ec.edu.ups.poo.clases;
+package ec.edu.ups.poo.clases.modelo;
 
 public class Producto {
-    private String codigo;
+    private int codigo;
     private String nombre;
-    private int precio;
+    private double precio;
 
-    public Producto(String codigo, String nombre, int precio) {
+    public Producto(int codigo, String nombre, double precio) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.precio = precio;
     }
 
-    public String getCodigo() {
+    public int getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(String codigo) {
+    public void setCodigo(int codigo) {
         this.codigo = codigo;
     }
 
@@ -27,11 +27,11 @@ public class Producto {
         this.nombre = nombre;
     }
 
-    public int getPrecio() {
+    public double getPrecio() {
         return precio;
     }
 
-    public void setPrecio(int precio) {
+    public void setPrecio(double precio) {
         this.precio = precio;
     }
 

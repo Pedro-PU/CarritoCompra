@@ -1,20 +1,44 @@
 package ec.edu.ups.poo.clases;
 
+import ec.edu.ups.poo.clases.modelo.ItemCarrito;
+import ec.edu.ups.poo.clases.modelo.Producto;
+import ec.edu.ups.poo.clases.servicio.CarritoServiceImpl;
+import ec.edu.ups.poo.clases.servicio.CarritoService;
+import ec.edu.ups.poo.clases.vista.VentanaPrincipalView;
+
 public class Main {
     public static void main(String[] args) {
-        Producto p1 = new Producto("P001", "Galleta",2);
-        Producto p2 = new Producto("P002", "Pan",5);
-        Producto p3 = new Producto("P003", "Tomate",10);
-        CarritoCompra cc = new CarritoCompra();
-        cc.agregarItem(5,p1);
-        cc.agregarItem(10, p2);
-        cc.agregarItem(2,p3);
-        cc.calcularTotalCompra();
+        // Crear servicio de carrito
+        CarritoService carrito = new CarritoServiceImpl();
 
-        System.out.println("Carrito:");
-        for (ItemCarrito item : cc.getItems()) {
-            System.out.println("\t" + item);
+        // Crear productos
+        Producto p1 = new Producto(1, "Mouse", 15.0);
+        Producto p2 = new Producto(2, "Teclado", 25.0);
+
+        // Agregar productos al carrito
+        carrito.agregarProducto(p1, 2);  // 2 x $15 = $30
+        carrito.agregarProducto(p2, 1);  // 1 x $25 = $25
+
+        // Mostrar los ítems
+        System.out.println("Contenido del carrito:");
+        for (ItemCarrito item : carrito.obtenerItems()) {
+            System.out.println("- " + item);
         }
-        System.out.println("\tTotal: " + cc.calcularTotalCompra());
+
+        new VentanaPrincipalView(carrito);
+        /*
+        // Calcular total
+        double total = carrito.calcularTotal();
+        System.out.println("Total: $" + total);
+
+        // Verificar si está vacío
+        System.out.println("¿Carrito vacío? " + carrito.estaVacio());
+
+        // Eliminar producto y vaciar carrito
+        carrito.eliminarProducto(1);
+        carrito.vaciarCarrito();
+
+        System.out.println("Carrito vaciado. ¿Vacío ahora? " + carrito.estaVacio());
+        */
     }
 }

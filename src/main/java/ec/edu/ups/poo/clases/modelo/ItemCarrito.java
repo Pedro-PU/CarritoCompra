@@ -1,10 +1,10 @@
-package ec.edu.ups.poo.clases;
+package ec.edu.ups.poo.clases.modelo;
 
 public class ItemCarrito {
     private Producto producto;
     private int cantidad;
 
-    public ItemCarrito(int cantidad, Producto producto) {
+    public ItemCarrito(Producto producto, int cantidad) {
         this.cantidad = cantidad;
         this.producto = producto;
     }
