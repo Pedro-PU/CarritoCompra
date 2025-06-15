@@ -4,9 +4,8 @@ import ec.edu.ups.poo.clases.modelo.ItemCarrito;
 import ec.edu.ups.poo.clases.modelo.Producto;
 import ec.edu.ups.poo.clases.servicio.CarritoServiceImpl;
 import ec.edu.ups.poo.clases.servicio.CarritoService;
-import ec.edu.ups.poo.clases.vista.VentanaPrincipalView;
 
-public class Main {
+public class CarritoTest {
     public static void main(String[] args) {
         // Crear servicio de carrito
         CarritoService carrito = new CarritoServiceImpl();
@@ -25,7 +24,6 @@ public class Main {
             System.out.println("- " + item);
         }
 
-        new VentanaPrincipalView(carrito);
         /*
         // Calcular total
         double total = carrito.calcularTotal();
