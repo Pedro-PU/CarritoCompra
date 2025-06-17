@@ -1,29 +1,23 @@
 package ec.edu.ups.poo.clases.vista;
 
-import ec.edu.ups.poo.clases.modelo.Producto;
-
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.util.List;
 
-public class ProductoEditarView extends JFrame{
+public class ProductoEliminarView extends JFrame {
     private JPanel panelPrincipal;
     private JTextField txtBuscar;
     private JButton btnBuscar;
-    private JTable tblProductos;
     private JTextField txtNombre;
     private JTextField txtPrecio;
-    private JButton btnActualizar;
     private JButton btnEliminar;
-    private DefaultTableModel modelo;
-
-    public ProductoEditarView() {
+    public ProductoEliminarView(){
         setContentPane(panelPrincipal);
         setTitle("Edición de Productos");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(800, 400);
         setLocationRelativeTo(null);
         setVisible(true);
+        txtNombre.setEnabled(false);
+        txtPrecio.setEnabled(false);
 
     }
 
@@ -43,14 +37,6 @@ public class ProductoEditarView extends JFrame{
         this.btnBuscar = btnBuscar;
     }
 
-    public JTable getTblProductos() {
-        return tblProductos;
-    }
-
-    public void setTblProductos(JTable tblProductos) {
-        this.tblProductos = tblProductos;
-    }
-
     public JTextField getTxtNombre() {
         return txtNombre;
     }
@@ -67,14 +53,6 @@ public class ProductoEditarView extends JFrame{
         this.txtPrecio.setText(txtPrecio);
     }
 
-    public JButton getBtnActualizar() {
-        return btnActualizar;
-    }
-
-    public void setBtnActualizar(JButton btnActualizar) {
-        this.btnActualizar = btnActualizar;
-    }
-
     public JButton getBtnEliminar() {
         return btnEliminar;
     }
@@ -82,18 +60,18 @@ public class ProductoEditarView extends JFrame{
     public void setBtnEliminar(JButton btnEliminar) {
         this.btnEliminar = btnEliminar;
     }
-
-
-    public void mostrarMensaje(String mensaje) {
-        JOptionPane.showMessageDialog(this, mensaje);
-    }
     public boolean mostrarMensajePregunta(String mensaje) {
         int respuesta = JOptionPane.showConfirmDialog(this, mensaje, "Confirmación",
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         return respuesta == JOptionPane.YES_OPTION;
     }
+
+    public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje);
+    }
     public void limpiarCampos() {
         txtNombre.setText("");
         txtPrecio.setText("");
     }
+
 }
