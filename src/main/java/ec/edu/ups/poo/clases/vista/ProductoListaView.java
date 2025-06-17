@@ -6,7 +6,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
-public class ProductoListaView extends JFrame {
+public class ProductoListaView extends JInternalFrame {
     private JPanel panelPrincipal;
     private JTextField txtBuscar;
     private JButton btnBuscar;
@@ -17,10 +17,16 @@ public class ProductoListaView extends JFrame {
 
         setContentPane(panelPrincipal);
         setTitle("Listado de Productos");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 400);
-        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+        setSize(500, 500);
+        //setResizable(false);
+        setLocation(100,500);
         setVisible(true);
+        //pack();
+        setClosable(true);
+        setMaximizable(true);
+        setResizable(true);
+        setIconifiable(true);
 
         modelo = new DefaultTableModel();
         Object[] columnas = {"Codigo", "Nombre", "Precio"};

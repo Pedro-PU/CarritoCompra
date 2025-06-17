@@ -6,7 +6,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
-public class ProductoEditarView extends JFrame{
+public class ProductoEditarView extends JInternalFrame{
     private JPanel panelPrincipal;
     private JTextField txtBuscar;
     private JButton btnBuscar;
@@ -20,10 +20,16 @@ public class ProductoEditarView extends JFrame{
     public ProductoEditarView() {
         setContentPane(panelPrincipal);
         setTitle("Edición de Productos");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(800, 400);
-        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+        setSize(500, 500);
+        //setResizable(false);
+        setLocation(100,500);
         setVisible(true);
+        //pack();
+        setClosable(true);
+        setMaximizable(true);
+        setResizable(true);
+        setIconifiable(true);
 
     }
 

@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 
-public class ProductoAnadirView extends JFrame {
+public class ProductoAnadirView extends JInternalFrame{
     private JPanel panelPrincipal;
     private JButton btnAceptar;
     private JButton btnLimpiar;
@@ -18,12 +18,17 @@ public class ProductoAnadirView extends JFrame {
 
     public ProductoAnadirView() {
         setContentPane(panelPrincipal);
-        setTitle("Datos del Producto");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(800, 400);
-        setLocationRelativeTo(null);
+        setTitle("Datos del Productos");
+        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+        setSize(500, 500);
+        //setResizable(false);
+        setLocation(100,500);
         setVisible(true);
         //pack();
+        setClosable(true);
+        setMaximizable(true);
+        setResizable(true);
+        setIconifiable(true);
 
         btnLimpiar.addActionListener(new ActionListener() {
             @Override
@@ -31,7 +36,6 @@ public class ProductoAnadirView extends JFrame {
                 limpiarCampos();
             }
         });
-
     }
     public void mostrarProductos(List<Producto> productos) {
         for (Producto producto : productos) {

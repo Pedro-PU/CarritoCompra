@@ -13,11 +13,11 @@ import java.util.List;
 
 
 public class ProductoController {
-    private final ProductoAnadirView productoAnadirView;
-    private final ProductoListaView productoListaView;
-    private final ProductoDAO productoDAO;
-    private final ProductoEditarView productoEditarView;
-    private final ProductoEliminarView productoEliminarView;
+    private ProductoAnadirView productoAnadirView;
+    private ProductoListaView productoListaView;
+    private ProductoDAO productoDAO;
+    private ProductoEditarView productoEditarView;
+    private ProductoEliminarView productoEliminarView;
 
     public ProductoController(ProductoDAO productoDAO,
                               ProductoAnadirView productoAnadirView,
@@ -29,6 +29,9 @@ public class ProductoController {
         this.productoEditarView = productoGestionView;
         this.productoEliminarView = productoEliminarView;
         configurarEventos();
+    }
+    public ProductoController(ProductoDAO productoDAO) {
+        this.productoDAO = productoDAO;
     }
 
     private void configurarEventos() {
@@ -183,5 +186,21 @@ public class ProductoController {
         } else {
             productoEliminarView.mostrarMensaje("Ingresa un código para buscar");
         }
+    }
+
+    public void setProductoEditarView(ProductoEditarView productoEditarView) {
+        this.productoEditarView = productoEditarView;
+    }
+
+    public void setProductoEliminarView(ProductoEliminarView productoEliminarView) {
+        this.productoEliminarView = productoEliminarView;
+    }
+
+    public void setProductoListaView(ProductoListaView productoListaView) {
+        this.productoListaView = productoListaView;
+    }
+
+    public void setProductoAnadirView(ProductoAnadirView productoAnadirView) {
+        this.productoAnadirView = productoAnadirView;
     }
 }

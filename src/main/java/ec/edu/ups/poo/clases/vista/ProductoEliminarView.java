@@ -2,7 +2,7 @@ package ec.edu.ups.poo.clases.vista;
 
 import javax.swing.*;
 
-public class ProductoEliminarView extends JFrame {
+public class ProductoEliminarView extends JInternalFrame {
     private JPanel panelPrincipal;
     private JTextField txtBuscar;
     private JButton btnBuscar;
@@ -12,12 +12,16 @@ public class ProductoEliminarView extends JFrame {
     public ProductoEliminarView(){
         setContentPane(panelPrincipal);
         setTitle("Edición de Productos");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(800, 400);
-        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+        setSize(500, 500);
+        //setResizable(false);
+        setLocation(100,500);
         setVisible(true);
-        txtNombre.setEnabled(false);
-        txtPrecio.setEnabled(false);
+        //pack();
+        setClosable(true);
+        setMaximizable(true);
+        setResizable(true);
+        setIconifiable(true);
 
     }
 
