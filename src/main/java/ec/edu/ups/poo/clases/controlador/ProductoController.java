@@ -2,10 +2,7 @@ package ec.edu.ups.poo.clases.controlador;
 
 import ec.edu.ups.poo.clases.dao.ProductoDAO;
 import ec.edu.ups.poo.clases.modelo.Producto;
-import ec.edu.ups.poo.clases.vista.ProductoAnadirView;
-import ec.edu.ups.poo.clases.vista.ProductoEditarView;
-import ec.edu.ups.poo.clases.vista.ProductoEliminarView;
-import ec.edu.ups.poo.clases.vista.ProductoListaView;
+import ec.edu.ups.poo.clases.vista.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,26 +10,27 @@ import java.util.List;
 
 
 public class ProductoController {
-    private ProductoAnadirView productoAnadirView;
-    private ProductoListaView productoListaView;
-    private ProductoDAO productoDAO;
-    private ProductoEditarView productoEditarView;
-    private ProductoEliminarView productoEliminarView;
+    private final ProductoAnadirView productoAnadirView;
+    private final ProductoListaView productoListaView;
+    private final ProductoDAO productoDAO;
+    private final ProductoEditarView productoEditarView;
+    private final ProductoEliminarView productoEliminarView;
+    private final CarritoAnadirView carritoAnadirView;
+
 
     public ProductoController(ProductoDAO productoDAO,
                               ProductoAnadirView productoAnadirView,
                               ProductoListaView productoListaView,
-                              ProductoEditarView productoGestionView, ProductoEliminarView productoEliminarView ) {
+                              ProductoEditarView productoGestionView, ProductoEliminarView productoEliminarView, CarritoAnadirView carritoAnadirView) {
         this.productoDAO = productoDAO;
         this.productoAnadirView = productoAnadirView;
         this.productoListaView = productoListaView;
         this.productoEditarView = productoGestionView;
         this.productoEliminarView = productoEliminarView;
+        this.carritoAnadirView = carritoAnadirView;
         configurarEventos();
     }
-    public ProductoController(ProductoDAO productoDAO) {
-        this.productoDAO = productoDAO;
-    }
+
 
     private void configurarEventos() {
         productoAnadirView.getBtnAceptar().addActionListener(new ActionListener() {
@@ -84,6 +82,12 @@ public class ProductoController {
                 buscarProductoEliminar();
             }
         });
+        carritoAnadirView.getBtnBuscar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                buscarProductoCarrito();
+            }
+        });
     }
 
     private void guardarProducto() {
@@ -109,22 +113,7 @@ public class ProductoController {
         productoListaView.cargarDatos(productos);
     }
 
-    private void buscarProductoEdicion() {
-        String txtCod = productoEditarView.getTxtBuscar().getText();
-        if (!txtCod.isEmpty()) {
-            int codigo = Integer.parseInt(txtCod);
-            Producto producto = productoDAO.buscarPorCodigo(codigo);
-            if (producto != null) {
-                productoEditarView.setTxtNombre(producto.getNombre());
-                productoEditarView.setTxtPrecio(String.valueOf(producto.getPrecio()));
-            } else {
-                productoEditarView.mostrarMensaje("Producto no encontrado");
-                productoEditarView.limpiarCampos();
-            }
-        } else {
-            productoEditarView.mostrarMensaje("Ingresa un código para buscar");
-        }
-    }
+
 
     private void actualizarProducto() {
         String txtCod = productoEditarView.getTxtBuscar().getText();
@@ -177,8 +166,8 @@ public class ProductoController {
             int codigo = Integer.parseInt(txtCod);
             Producto producto = productoDAO.buscarPorCodigo(codigo);
             if (producto != null) {
-                productoEliminarView.setTxtNombre(producto.getNombre());
-                productoEliminarView.setTxtPrecio(String.valueOf(producto.getPrecio()));
+                productoEliminarView.getTxtNombre().setText(producto.getNombre());
+                productoEliminarView.getTxtPrecio().setText(String.valueOf(producto.getPrecio()));
             } else {
                 productoEliminarView.mostrarMensaje("Producto no encontrado");
                 productoEliminarView.limpiarCampos();
@@ -187,20 +176,41 @@ public class ProductoController {
             productoEliminarView.mostrarMensaje("Ingresa un código para buscar");
         }
     }
-
-    public void setProductoEditarView(ProductoEditarView productoEditarView) {
-        this.productoEditarView = productoEditarView;
+    private void buscarProductoEdicion() {
+        String txtCod = productoEditarView.getTxtBuscar().getText();
+        if (!txtCod.isEmpty()) {
+            int codigo = Integer.parseInt(txtCod);
+            Producto producto = productoDAO.buscarPorCodigo(codigo);
+            if (producto != null) {
+                productoEditarView.getTxtNombre().setText(producto.getNombre());
+                productoEditarView.getTxtPrecio().setText(String.valueOf(producto.getPrecio()));
+            } else {
+                productoEditarView.mostrarMensaje("Producto no encontrado");
+                productoEditarView.limpiarCampos();
+            }
+        } else {
+            productoEditarView.mostrarMensaje("Ingresa un código para buscar");
+        }
+    }
+    private void buscarProductoCarrito() {
+        String txtCod = carritoAnadirView.getTxtBuscar().getText();
+        if (!txtCod.isEmpty()) {
+            int codigo = Integer.parseInt(txtCod);
+            Producto producto = productoDAO.buscarPorCodigo(codigo);
+            if (producto != null) {
+                carritoAnadirView.getTxtNombre().setText(producto.getNombre());
+                carritoAnadirView.getTxtPrecio().setText(String.valueOf(producto.getPrecio()));
+                buscarPorCodigo(codigo);
+            } else {
+                carritoAnadirView.mostrarMensaje("Producto no encontrado");
+                carritoAnadirView.limpiarCampos();
+            }
+        } else {
+            carritoAnadirView.mostrarMensaje("Ingresa un código para buscar");
+        }
+    }
+    public Producto buscarPorCodigo(int codigo) {
+        return productoDAO.buscarPorCodigo(codigo);
     }
 
-    public void setProductoEliminarView(ProductoEliminarView productoEliminarView) {
-        this.productoEliminarView = productoEliminarView;
-    }
-
-    public void setProductoListaView(ProductoListaView productoListaView) {
-        this.productoListaView = productoListaView;
-    }
-
-    public void setProductoAnadirView(ProductoAnadirView productoAnadirView) {
-        this.productoAnadirView = productoAnadirView;
-    }
 }

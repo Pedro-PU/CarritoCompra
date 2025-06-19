@@ -1,14 +1,14 @@
 package ec.edu.ups.poo.clases;
 
+import ec.edu.ups.poo.clases.modelo.Carrito;
 import ec.edu.ups.poo.clases.modelo.ItemCarrito;
 import ec.edu.ups.poo.clases.modelo.Producto;
-import ec.edu.ups.poo.clases.servicio.CarritoServiceImpl;
-import ec.edu.ups.poo.clases.servicio.CarritoService;
 
 public class CarritoTest {
     public static void main(String[] args) {
+
         // Crear servicio de carrito
-        CarritoService carrito = new CarritoServiceImpl();
+        Carrito carrito = new Carrito();
 
         // Crear productos
         Producto p1 = new Producto(1, "Mouse", 15.0);

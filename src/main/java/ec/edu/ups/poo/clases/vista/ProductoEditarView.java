@@ -23,13 +23,14 @@ public class ProductoEditarView extends JInternalFrame{
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(500, 500);
         //setResizable(false);
-        setLocation(100,500);
-        setVisible(true);
+        //setLocation(100,500);
+        //setVisible(true);
         //pack();
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
         setIconifiable(true);
+
 
     }
 
@@ -61,16 +62,16 @@ public class ProductoEditarView extends JInternalFrame{
         return txtNombre;
     }
 
-    public void setTxtNombre(String nombre) {
-        this.txtNombre.setText(nombre);
+    public void setTxtNombre(JTextField txtNombre) {
+        this.txtNombre = txtNombre;
     }
 
     public JTextField getTxtPrecio() {
         return txtPrecio;
     }
 
-    public void setTxtPrecio(String txtPrecio) {
-        this.txtPrecio.setText(txtPrecio);
+    public void setTxtPrecio(JTextField txtPrecio) {
+        this.txtPrecio = txtPrecio;
     }
 
     public JButton getBtnActualizar() {
@@ -89,6 +90,13 @@ public class ProductoEditarView extends JInternalFrame{
         this.btnEliminar = btnEliminar;
     }
 
+    public DefaultTableModel getModelo() {
+        return modelo;
+    }
+
+    public void setModelo(DefaultTableModel modelo) {
+        this.modelo = modelo;
+    }
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);

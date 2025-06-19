@@ -5,21 +5,29 @@ import javax.swing.*;
 public class PrincipalView extends JFrame {
     private JMenuBar menuBar;
     private JMenu menuProducto;
+    private JMenuItem menuCarrito;
     private JMenuItem menuItemCrearProducto;
     private JMenuItem menuItemEliminarProducto;
     private JMenuItem menuItemActualizarProducto;
     private JMenuItem menuItemBuscarProducto;
     private JDesktopPane jDesktopPane;
 
+    private JMenuItem menuItemCrearCarrito;
     public PrincipalView() {
         jDesktopPane = new JDesktopPane();
         menuBar = new JMenuBar();
         menuProducto = new JMenu("Producto");
+        menuCarrito = new JMenu("Carrito");
         menuItemCrearProducto = new JMenuItem("Crear Producto");
         menuItemEliminarProducto = new JMenuItem("Eliminar Producto");
         menuItemActualizarProducto = new JMenuItem("Actualizar Producto");
         menuItemBuscarProducto = new JMenuItem("Buscar Producto");
 
+        menuItemCrearCarrito = new JMenuItem("Crear Carrito");
+
+        menuCarrito.add(menuItemCrearCarrito);
+
+        menuBar.add(menuCarrito);
         menuBar.add(menuProducto);
         menuProducto.add(menuItemCrearProducto);
         menuProducto.add(menuItemEliminarProducto);
@@ -32,10 +40,7 @@ public class PrincipalView extends JFrame {
         setTitle("Sistema Carrito de Compras");
         setLocationRelativeTo(null);
         setVisible(true);
-
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-
-
     }
 
     public JMenuItem getMenuItemCrearProducto() {
@@ -72,5 +77,21 @@ public class PrincipalView extends JFrame {
 
     public JDesktopPane getjDesktopPane() {
         return jDesktopPane;
+    }
+
+    public JMenuItem getMenuCarrito() {
+        return menuCarrito;
+    }
+
+    public void setMenuCarrito(JMenuItem menuCarrito) {
+        this.menuCarrito = menuCarrito;
+    }
+
+    public JMenuItem getMenuItemCrearCarrito() {
+        return menuItemCrearCarrito;
+    }
+
+    public void setMenuItemCrearCarrito(JMenuItem menuItemCrearCarrito) {
+        this.menuItemCrearCarrito = menuItemCrearCarrito;
     }
 }

@@ -20,8 +20,8 @@ public class ProductoListaView extends JInternalFrame {
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(500, 500);
         //setResizable(false);
-        setLocation(100,500);
-        setVisible(true);
+        //setLocation(100,500);
+        //setVisible(true);
         //pack();
         setClosable(true);
         setMaximizable(true);
@@ -84,7 +84,6 @@ public class ProductoListaView extends JInternalFrame {
 
     public void cargarDatos(List<Producto> listaProductos) {
         modelo.setNumRows(0);
-
         for (Producto producto : listaProductos) {
             Object[] fila = {
                     producto.getCodigo(),

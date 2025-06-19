@@ -15,8 +15,8 @@ public class ProductoEliminarView extends JInternalFrame {
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(500, 500);
         //setResizable(false);
-        setLocation(100,500);
-        setVisible(true);
+        //setLocation(100,500);
+        //setVisible(true);
         //pack();
         setClosable(true);
         setMaximizable(true);
@@ -45,16 +45,16 @@ public class ProductoEliminarView extends JInternalFrame {
         return txtNombre;
     }
 
-    public void setTxtNombre(String nombre) {
-        this.txtNombre.setText(nombre);
+    public void setTxtNombre(JTextField txtNombre) {
+        this.txtNombre = txtNombre;
     }
 
     public JTextField getTxtPrecio() {
         return txtPrecio;
     }
 
-    public void setTxtPrecio(String txtPrecio) {
-        this.txtPrecio.setText(txtPrecio);
+    public void setTxtPrecio(JTextField txtPrecio) {
+        this.txtPrecio = txtPrecio;
     }
 
     public JButton getBtnEliminar() {
@@ -64,6 +64,7 @@ public class ProductoEliminarView extends JInternalFrame {
     public void setBtnEliminar(JButton btnEliminar) {
         this.btnEliminar = btnEliminar;
     }
+
     public boolean mostrarMensajePregunta(String mensaje) {
         int respuesta = JOptionPane.showConfirmDialog(this, mensaje, "Confirmación",
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
