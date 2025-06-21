@@ -1,5 +1,6 @@
 package ec.edu.ups.poo.clases.controlador;
 import ec.edu.ups.poo.clases.dao.UsuarioDAO;
+import ec.edu.ups.poo.clases.modelo.Rol;
 import ec.edu.ups.poo.clases.modelo.Usuario;
 import ec.edu.ups.poo.clases.vista.LoginView;
 
@@ -28,7 +29,7 @@ public class UsuarioController {
         loginView.getBtnRegistrar().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                registrar();
             }
         });
     }
@@ -47,5 +48,23 @@ public class UsuarioController {
 
     public Usuario getUsuarioAutenticado() {
         return usuario;
+    }
+
+    public void setUsuarioAutenticado(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    private void registrar(){
+        boolean confirmado = loginView.mostrarMensajePregunta("¿Desea crear el usuario?");
+        if (confirmado) {
+            String username = loginView.getTxtUsername().getText();
+            String contrasenia = loginView.getTxtContrasenia().getText();
+            Usuario usuario1 = new Usuario(username, contrasenia, Rol.USUARIO);
+            usuarioDAO.crear(usuario1);
+            loginView.mostrarMensaje("Usuario creado");
+        }else{
+            loginView.mostrarMensaje("Creación cancelada");
+        }
+
     }
 }

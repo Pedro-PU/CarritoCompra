@@ -103,6 +103,17 @@ public class Main {
                                 }
                             }
                         });
+                        principalView.getBtnCerrarSesion().addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                boolean confirmado = principalView.mostrarMensajePregunta("¿Desea cerrar sesión?");
+                                if(confirmado) {
+                                    principalView.dispose();
+                                    usuarioController.setUsuarioAutenticado(null);
+                                    loginView.setVisible(true);
+                                }
+                            }
+                        });
                     }
                 }
             });
