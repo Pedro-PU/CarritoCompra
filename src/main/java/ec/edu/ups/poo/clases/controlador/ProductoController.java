@@ -200,7 +200,6 @@ public class ProductoController {
             if (producto != null) {
                 carritoAnadirView.getTxtNombre().setText(producto.getNombre());
                 carritoAnadirView.getTxtPrecio().setText(String.valueOf(producto.getPrecio()));
-                buscarPorCodigo(codigo);
             } else {
                 carritoAnadirView.mostrarMensaje("Producto no encontrado");
                 carritoAnadirView.limpiarCampos();
@@ -209,8 +208,4 @@ public class ProductoController {
             carritoAnadirView.mostrarMensaje("Ingresa un código para buscar");
         }
     }
-    public Producto buscarPorCodigo(int codigo) {
-        return productoDAO.buscarPorCodigo(codigo);
-    }
-
 }

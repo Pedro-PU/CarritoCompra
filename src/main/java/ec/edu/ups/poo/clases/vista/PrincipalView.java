@@ -11,7 +11,6 @@ public class PrincipalView extends JFrame {
     private JMenuItem menuItemActualizarProducto;
     private JMenuItem menuItemBuscarProducto;
     private JDesktopPane jDesktopPane;
-
     private JMenuItem menuItemCrearCarrito;
     public PrincipalView() {
         jDesktopPane = new JDesktopPane();

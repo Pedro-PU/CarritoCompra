@@ -47,6 +47,12 @@ public class CarritoController {
                 limpiarFormulario();
             }
         });
+        carritoAnadirView.getBtnBorrar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                borrarItemFormulario();
+            }
+        });
     }
     private void anadirProductoACarrito() {
         int codigo = Integer.parseInt(carritoAnadirView.getTxtBuscar().getText());
@@ -83,7 +89,7 @@ public class CarritoController {
 
     private void aceptarCarrito() {
         if (carrito.estaVacio()) {
-            carritoAnadirView.mostrarMensaje("El carrito está vacío.");
+            carritoAnadirView.mostrarMensaje("El carrito está vacío");
             return;
         }
         carritoDAO.crear(carrito);
@@ -94,11 +100,33 @@ public class CarritoController {
         actualizarTotales();
         carritoAnadirView.limpiarCampos();
     }
+    private void borrarItemFormulario(){
+        int filaSeleccionada = carritoAnadirView.getTblProductos().getSelectedRow();
+        if (filaSeleccionada != -1) {
+            DefaultTableModel modelo = (DefaultTableModel) carritoAnadirView.getTblProductos().getModel();
+            int codigoProducto = Integer.parseInt(modelo.getValueAt(filaSeleccionada, 0).toString());
+            boolean confirmado = carritoAnadirView.mostrarMensajePregunta("¿Desea eliminar el producto?");
+            if (confirmado) {
+                carrito.eliminarProducto(codigoProducto);
+                actualizarTabla();
+                actualizarTotales();
+            }else{
+                carritoAnadirView.mostrarMensaje("Eliminación cancelada");
+            }
+        } else {
+            carritoAnadirView.mostrarMensaje("Seleccione una fila para eliminar");
+        }
+    }
 
     private void limpiarFormulario() {
-        carrito.vaciarCarrito();
-        actualizarTabla();
-        actualizarTotales();
-        carritoAnadirView.limpiarCampos();
+        boolean confirmado = carritoAnadirView.mostrarMensajePregunta("¿Deseas vaciar el carrito?");
+        if (confirmado) {
+            carrito.vaciarCarrito();
+            actualizarTabla();
+            actualizarTotales();
+            carritoAnadirView.limpiarCampos();
+        }else{
+            carritoAnadirView.mostrarMensaje("Cancelada");
+        }
     }
 }
