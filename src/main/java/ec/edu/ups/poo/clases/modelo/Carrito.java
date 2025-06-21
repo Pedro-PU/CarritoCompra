@@ -6,11 +6,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Carrito {
-    private final List<ItemCarrito> items;
+    private final double IVA = 0.12;
+    private static int contador = 1;
     private int codigo;
     private GregorianCalendar fechaCreacion;
+    private List<ItemCarrito> items;
 
     public Carrito() {
+        codigo = contador++;
         items = new ArrayList<>();
         fechaCreacion = new GregorianCalendar();
     }
@@ -49,20 +52,29 @@ public class Carrito {
         items.clear();
     }
 
-    public double calcularTotal() {
-        double total = 0;
-        for (ItemCarrito item : items) {
-            total += item.getProducto().getPrecio() * item.getCantidad();
-        }
-        return total;
-    }
-
     public List<ItemCarrito> obtenerItems() {
         return items;
     }
 
     public boolean estaVacio() {
         return items.isEmpty();
+    }
+
+    public double calcularSubtotal() {
+        double subtotal = 0;
+        for (ItemCarrito item : items) {
+            subtotal += item.getProducto().getPrecio() * item.getCantidad();
+        }
+        return subtotal;
+    }
+
+    public double calcularIVA() {
+        double subtotal = calcularSubtotal();
+        return subtotal * IVA;
+    }
+
+    public double calcularTotal() {
+        return calcularSubtotal() + calcularIVA();
     }
 
 }

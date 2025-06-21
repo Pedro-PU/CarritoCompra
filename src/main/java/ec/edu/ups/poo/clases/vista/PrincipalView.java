@@ -22,11 +22,9 @@ public class PrincipalView extends JFrame {
         menuItemEliminarProducto = new JMenuItem("Eliminar Producto");
         menuItemActualizarProducto = new JMenuItem("Actualizar Producto");
         menuItemBuscarProducto = new JMenuItem("Buscar Producto");
-
         menuItemCrearCarrito = new JMenuItem("Crear Carrito");
 
         menuCarrito.add(menuItemCrearCarrito);
-
         menuBar.add(menuCarrito);
         menuBar.add(menuProducto);
         menuProducto.add(menuItemCrearProducto);
@@ -93,5 +91,15 @@ public class PrincipalView extends JFrame {
 
     public void setMenuItemCrearCarrito(JMenuItem menuItemCrearCarrito) {
         this.menuItemCrearCarrito = menuItemCrearCarrito;
+    }
+    public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje);
+    }
+
+    public void deshabilitarMenusAdministrador() {
+        getMenuItemCrearProducto().setEnabled(false);
+        getMenuItemBuscarProducto().setEnabled(false);
+        getMenuItemActualizarProducto().setEnabled(false);
+        getMenuItemEliminarProducto().setEnabled(false);
     }
 }
