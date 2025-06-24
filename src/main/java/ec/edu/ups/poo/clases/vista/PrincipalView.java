@@ -13,6 +13,7 @@ public class PrincipalView extends JFrame {
     private JMenuItem menuItemBuscarProducto;
     private JDesktopPane jDesktopPane;
     private JMenuItem menuItemCrearCarrito;
+    private JMenuItem menuItemListarCarrito;
     private JButton btnCerrarSesion;
     private JPanel panelInferior;
 
@@ -33,8 +34,10 @@ public class PrincipalView extends JFrame {
         menuItemActualizarProducto = new JMenuItem("Actualizar Producto");
         menuItemBuscarProducto = new JMenuItem("Buscar Producto");
         menuItemCrearCarrito = new JMenuItem("Crear Carrito");
+        menuItemListarCarrito = new JMenuItem("Listar Carrito");
 
         menuCarrito.add(menuItemCrearCarrito);
+        menuCarrito.add(menuItemListarCarrito);
         menuProducto.add(menuItemCrearProducto);
         menuProducto.add(menuItemEliminarProducto);
         menuProducto.add(menuItemActualizarProducto);
@@ -59,6 +62,13 @@ public class PrincipalView extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
+    public JMenuItem getMenuItemListarCarrito() {
+        return menuItemListarCarrito;
+    }
+
+    public void setMenuItemListarCarrito(JMenuItem menuItemListarCarrito) {
+        this.menuItemListarCarrito = menuItemListarCarrito;
+    }
 
     public JMenuItem getMenuItemCrearProducto() {
         return menuItemCrearProducto;

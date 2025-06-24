@@ -21,6 +21,8 @@ import java.awt.event.WindowEvent;
 public class Main {
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(() -> {
+            ProductoDAO productoDAO = new ProductoDAOMemoria();
+            CarritoDAO carritoDAO = new CarritoDAOMemoria();
 
             UsuarioDAO usuarioDAO = new UsuarioDAOMemoria();
             LoginView loginView = new LoginView();
@@ -34,9 +36,8 @@ public class Main {
                     Usuario usuarioAuntenticado = usuarioController.getUsuarioAutenticado();
                     if(usuarioAuntenticado != null) {
                         PrincipalView principalView = new PrincipalView();
-                        ProductoDAO productoDAO = new ProductoDAOMemoria();
-                        CarritoDAO carritoDAO = new CarritoDAOMemoria();
                         CarritoAnadirView carritoAnadirView = new CarritoAnadirView();
+                        CarritoListaView carritoListaView = new CarritoListaView();
 
                         ProductoAnadirView productoAnadirView = new ProductoAnadirView();
                         ProductoEditarView productoEditarView = new ProductoEditarView();
@@ -52,7 +53,7 @@ public class Main {
                         ProductoController productoController = new ProductoController(productoDAO, productoAnadirView,
                                 productoListaView, productoEditarView, productoEliminarView, carritoAnadirView);
 
-                        CarritoController carritoController = new CarritoController(carritoAnadirView, productoDAO, carritoDAO);
+                        CarritoController carritoController = new CarritoController(carritoAnadirView, productoDAO, carritoDAO,usuarioAuntenticado, carritoListaView);
 
                         principalView.mostrarMensaje("Bienvenido: " + usuarioAuntenticado.getUsername());
                         if (usuarioAuntenticado.getRol().equals(Rol.USUARIO)) {
@@ -64,6 +65,15 @@ public class Main {
                                 if(!carritoAnadirView.isVisible()) {
                                     carritoAnadirView.setVisible(true);
                                     principalView.getjDesktopPane().add(carritoAnadirView);
+                                }
+                            }
+                        });
+                        principalView.getMenuItemListarCarrito().addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                if(!carritoListaView.isVisible()) {
+                                    carritoListaView.setVisible(true);
+                                    principalView.getjDesktopPane().add(carritoListaView);
                                 }
                             }
                         });

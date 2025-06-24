@@ -7,15 +7,23 @@ import java.util.Iterator;
 
 public class Carrito {
     private final double IVA = 0.12;
-    private static int contador = 1;
+    //private static int contador = 1;
     private int codigo;
     private GregorianCalendar fechaCreacion;
     private List<ItemCarrito> items;
+    private Usuario usuario;
 
     public Carrito() {
-        codigo = contador++;
+        //codigo = contador++;
         items = new ArrayList<>();
-        fechaCreacion = new GregorianCalendar();
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public int getCodigo() {
@@ -35,8 +43,15 @@ public class Carrito {
     }
 
     public void agregarProducto(Producto producto, int cantidad) {
+        for (ItemCarrito item : items) {
+            if (item.getProducto().getCodigo() == producto.getCodigo()) {
+                item.setCantidad(item.getCantidad() + cantidad);
+                return;
+            }
+        }
         items.add(new ItemCarrito(producto, cantidad));
     }
+
 
     public void eliminarProducto(int codigoProducto) {
         Iterator<ItemCarrito> it = items.iterator();
@@ -64,7 +79,10 @@ public class Carrito {
         double subtotal = 0;
         for (ItemCarrito item : items) {
             subtotal += item.getProducto().getPrecio() * item.getCantidad();
+            System.out.println("Producto: " + item.getProducto().getNombre() +
+                    ", Precio: " + item.getProducto().getPrecio() + ", Cantidad: " + item.getCantidad());
         }
+
         return subtotal;
     }
 
@@ -77,4 +95,18 @@ public class Carrito {
         return calcularSubtotal() + calcularIVA();
     }
 
+    public Carrito copiar() {
+        Carrito copia = new Carrito();
+        copia.setFechaCreacion(this.fechaCreacion);
+        copia.setUsuario(this.usuario);
+        copia.setCodigo(this.codigo);
+
+        for (ItemCarrito item : this.items) {
+            Producto producto = item.getProducto();
+            int cantidad = item.getCantidad();
+            copia.agregarProducto(producto, cantidad);
+        }
+
+        return copia;
+    }
 }
