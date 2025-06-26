@@ -81,21 +81,20 @@ public class CarritoListaView extends JInternalFrame{
 
     public void cargarDatos(List<Carrito> listaCarritos) {
         modelo.setNumRows(0);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
         for (Carrito carrito : listaCarritos) {
             System.out.println("Cargando carrito: Código = " + carrito.getCodigo() +
                     ", Subtotal = " + carrito.calcularSubtotal());
 
-            String fechaFormateada = sdf.format(carrito.getFechaCreacion().getTime());
+            String fechaFormateada = carrito.getFechaCreacion();
 
             Object[] fila = {
                     carrito.getCodigo(),
                     carrito.getUsuario().getUsername(),
                     fechaFormateada,
-                    carrito.calcularSubtotal(),
-                    carrito.calcularIVA(),
-                    carrito.calcularTotal()
+                    String.format("%.2f", carrito.calcularSubtotal()),
+                    String.format("%.2f", carrito.calcularIVA()),
+                    String.format("%.2f", carrito.calcularTotal())
             };
             modelo.addRow(fila);
         }

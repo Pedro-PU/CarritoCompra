@@ -38,6 +38,8 @@ public class Main {
                         PrincipalView principalView = new PrincipalView();
                         CarritoAnadirView carritoAnadirView = new CarritoAnadirView();
                         CarritoListaView carritoListaView = new CarritoListaView();
+                        CarritoModificarView carritoModificarView = new CarritoModificarView();
+                        CarritoEliminarView carritoEliminarView = new CarritoEliminarView();
 
                         ProductoAnadirView productoAnadirView = new ProductoAnadirView();
                         ProductoEditarView productoEditarView = new ProductoEditarView();
@@ -53,7 +55,8 @@ public class Main {
                         ProductoController productoController = new ProductoController(productoDAO, productoAnadirView,
                                 productoListaView, productoEditarView, productoEliminarView, carritoAnadirView);
 
-                        CarritoController carritoController = new CarritoController(carritoAnadirView, productoDAO, carritoDAO,usuarioAuntenticado, carritoListaView);
+                        CarritoController carritoController = new CarritoController(carritoAnadirView, productoDAO, carritoDAO,usuarioAuntenticado,
+                                carritoListaView, carritoModificarView, carritoEliminarView);
 
                         principalView.mostrarMensaje("Bienvenido: " + usuarioAuntenticado.getUsername());
                         if (usuarioAuntenticado.getRol().equals(Rol.USUARIO)) {
@@ -74,6 +77,24 @@ public class Main {
                                 if(!carritoListaView.isVisible()) {
                                     carritoListaView.setVisible(true);
                                     principalView.getjDesktopPane().add(carritoListaView);
+                                }
+                            }
+                        });
+                        principalView.getMenuItemEditarCarrito().addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                if(!carritoModificarView.isVisible()) {
+                                    carritoModificarView.setVisible(true);
+                                    principalView.getjDesktopPane().add(carritoModificarView);
+                                }
+                            }
+                        });
+                        principalView.getMenuItemEliminarCarrito().addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                if(!carritoEliminarView.isVisible()) {
+                                    carritoEliminarView.setVisible(true);
+                                    principalView.getjDesktopPane().add(carritoEliminarView);
                                 }
                             }
                         });
@@ -113,7 +134,7 @@ public class Main {
                                 }
                             }
                         });
-                        principalView.getBtnCerrarSesion().addActionListener(new ActionListener() {
+                        principalView.getMenuItemCerrarSesion().addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 boolean confirmado = principalView.mostrarMensajePregunta("¿Desea cerrar sesión?");
@@ -121,6 +142,16 @@ public class Main {
                                     principalView.dispose();
                                     usuarioController.setUsuarioAutenticado(null);
                                     loginView.setVisible(true);
+                                }
+                            }
+                        });
+                        principalView.getMenuItemSalir().addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                boolean confirmado = principalView.mostrarMensajePregunta("¿Desea Salir?");
+                                if(confirmado) {
+                                    principalView.dispose();
+                                    System.exit(0);
                                 }
                             }
                         });

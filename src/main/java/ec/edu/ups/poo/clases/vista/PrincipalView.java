@@ -14,8 +14,11 @@ public class PrincipalView extends JFrame {
     private JDesktopPane jDesktopPane;
     private JMenuItem menuItemCrearCarrito;
     private JMenuItem menuItemListarCarrito;
-    private JButton btnCerrarSesion;
-    private JPanel panelInferior;
+    private JMenuItem menuItemEditarCarrito;
+    private JMenuItem menuItemEliminarCarrito;
+    private JMenuItem menuSalir;
+    private JMenuItem menuItemCerrarSesion;
+    private JMenuItem menuItemSalir;
 
     public PrincipalView() {
         // Panel principal que usará BorderLayout
@@ -28,6 +31,7 @@ public class PrincipalView extends JFrame {
         menuBar = new JMenuBar();
         menuProducto = new JMenu("Producto");
         menuCarrito = new JMenu("Carrito");
+        menuSalir = new JMenu("Salir");
 
         menuItemCrearProducto = new JMenuItem("Crear Producto");
         menuItemEliminarProducto = new JMenuItem("Eliminar Producto");
@@ -35,23 +39,27 @@ public class PrincipalView extends JFrame {
         menuItemBuscarProducto = new JMenuItem("Buscar Producto");
         menuItemCrearCarrito = new JMenuItem("Crear Carrito");
         menuItemListarCarrito = new JMenuItem("Listar Carrito");
+        menuItemEditarCarrito = new JMenuItem("Editar Carrito");
+        menuItemEliminarCarrito = new JMenuItem("Eliminar Carrito");
+        menuItemSalir = new JMenuItem("Salir");
+        menuItemCerrarSesion = new JMenuItem("Cerrar Sesion");
 
+        menuSalir.add(menuItemSalir);
+        menuSalir.add(menuItemCerrarSesion);
         menuCarrito.add(menuItemCrearCarrito);
         menuCarrito.add(menuItemListarCarrito);
+        menuCarrito.add(menuItemEditarCarrito);
+        menuCarrito.add(menuItemEliminarCarrito);
         menuProducto.add(menuItemCrearProducto);
         menuProducto.add(menuItemEliminarProducto);
         menuProducto.add(menuItemActualizarProducto);
         menuProducto.add(menuItemBuscarProducto);
         menuBar.add(menuCarrito);
         menuBar.add(menuProducto);
+        menuBar.add(menuSalir);
         setJMenuBar(menuBar);
 
-        panelInferior = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        btnCerrarSesion = new JButton("Cerrar Sesión");
-        panelInferior.add(btnCerrarSesion);
-
         panelPrincipal.add(jDesktopPane, BorderLayout.CENTER);
-        panelPrincipal.add(panelInferior, BorderLayout.SOUTH);
 
         setContentPane(panelPrincipal);
 
@@ -60,6 +68,46 @@ public class PrincipalView extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+    }
+
+    public JMenuItem getMenuItemEliminarCarrito() {
+        return menuItemEliminarCarrito;
+    }
+
+    public void setMenuItemEliminarCarrito(JMenuItem menuItemEliminarCarrito) {
+        this.menuItemEliminarCarrito = menuItemEliminarCarrito;
+    }
+
+    public JMenuItem getMenuItemEditarCarrito() {
+        return menuItemEditarCarrito;
+    }
+
+    public void setMenuItemEditarCarrito(JMenuItem menuItemEditarCarrito) {
+        this.menuItemEditarCarrito = menuItemEditarCarrito;
+    }
+
+    public JMenuItem getMenuSalir() {
+        return menuSalir;
+    }
+
+    public void setMenuSalir(JMenuItem menuSalir) {
+        this.menuSalir = menuSalir;
+    }
+
+    public JMenuItem getMenuItemCerrarSesion() {
+        return menuItemCerrarSesion;
+    }
+
+    public void setMenuItemCerrarSesion(JMenuItem menuItemCerrarSesion) {
+        this.menuItemCerrarSesion = menuItemCerrarSesion;
+    }
+
+    public JMenuItem getMenuItemSalir() {
+        return menuItemSalir;
+    }
+
+    public void setMenuItemSalir(JMenuItem menuItemSalir) {
+        this.menuItemSalir = menuItemSalir;
     }
 
     public JMenuItem getMenuItemListarCarrito() {
@@ -122,13 +170,7 @@ public class PrincipalView extends JFrame {
         this.menuItemCrearCarrito = menuItemCrearCarrito;
     }
 
-    public JButton getBtnCerrarSesion() {
-        return btnCerrarSesion;
-    }
 
-    public void setBtnCerrarSesion(JButton btnCerrarSesion) {
-        this.btnCerrarSesion = btnCerrarSesion;
-    }
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);

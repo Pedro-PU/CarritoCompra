@@ -1,5 +1,6 @@
 package ec.edu.ups.poo.clases.modelo;
 
+import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.ArrayList;
@@ -34,8 +35,9 @@ public class Carrito {
         this.codigo = codigo;
     }
 
-    public GregorianCalendar getFechaCreacion() {
-        return fechaCreacion;
+    public String getFechaCreacion() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        return dateFormat.format(fechaCreacion.getTime());
     }
 
     public void setFechaCreacion(GregorianCalendar fechaCreacion) {

@@ -27,7 +27,7 @@
             <properties>
               <font style="1"/>
               <foreground color="-1027"/>
-              <text value="Nombre:"/>
+              <text value="Codigo:"/>
             </properties>
           </component>
           <component id="f1896" class="javax.swing.JTextField" binding="txtBuscar">
