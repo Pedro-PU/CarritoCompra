@@ -45,23 +45,62 @@ public class Main {
                         ProductoEditarView productoEditarView = new ProductoEditarView();
                         ProductoEliminarView productoEliminarView = new ProductoEliminarView();
                         ProductoListaView productoListaView = new ProductoListaView();
-                        /*
-                        ProductoController productoController = new ProductoController(productoDAO);
-                        productoController.setProductoAnadirView(productoAnadirView);
-                        productoController.setProductoEditarView(productoEditarView);
-                        productoController.setProductoEliminarView(productoEliminarView);
-                        productoController.setProductoListaView(productoListaView);
-                        */
+
+                        UsuarioCrearView usuarioCrearView = new UsuarioCrearView();
+                        UsuarioEliminarView usuarioEliminarView = new UsuarioEliminarView();
+                        UsuarioModificarView usuarioModificarView = new UsuarioModificarView();
+                        UsuarioListarView usuarioListarView = new UsuarioListarView();
+
                         ProductoController productoController = new ProductoController(productoDAO, productoAnadirView,
                                 productoListaView, productoEditarView, productoEliminarView, carritoAnadirView);
 
                         CarritoController carritoController = new CarritoController(carritoAnadirView, productoDAO, carritoDAO,usuarioAuntenticado,
                                 carritoListaView, carritoModificarView, carritoEliminarView);
 
+                        UsuarioController usuarioController = new UsuarioController(usuarioDAO, usuarioCrearView, usuarioEliminarView, usuarioModificarView,
+                                usuarioListarView);
+
                         principalView.mostrarMensaje("Bienvenido: " + usuarioAuntenticado.getUsername());
                         if (usuarioAuntenticado.getRol().equals(Rol.USUARIO)) {
                             principalView.deshabilitarMenusAdministrador();
                         }
+
+                        principalView.getMenuItemCrearUsuario().addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                if(!usuarioCrearView.isVisible()) {
+                                    usuarioCrearView.setVisible(true);
+                                    principalView.getjDesktopPane().add(usuarioCrearView);
+                                }
+                            }
+                        });
+                        principalView.getMenuItemEliminarUsuario().addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                if(!usuarioEliminarView.isVisible()) {
+                                    usuarioEliminarView.setVisible(true);
+                                    principalView.getjDesktopPane().add(usuarioEliminarView);
+                                }
+                            }
+                        });
+                        principalView.getMenuItemEditarUsuario().addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                if(!usuarioModificarView.isVisible()) {
+                                    usuarioModificarView.setVisible(true);
+                                    principalView.getjDesktopPane().add(usuarioModificarView);
+                                }
+                            }
+                        });
+                        principalView.getMenuItemListarUsuario().addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                if(!usuarioListarView.isVisible()) {
+                                    usuarioListarView.setVisible(true);
+                                    principalView.getjDesktopPane().add(usuarioListarView);
+                                }
+                            }
+                        });
                         principalView.getMenuItemCrearCarrito().addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {

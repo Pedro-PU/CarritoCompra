@@ -95,11 +95,16 @@ public class ProductoController {
         String nombre = productoAnadirView.getTxtNombre().getText();
         double precio = Double.parseDouble(productoAnadirView.getTxtPrecio().getText());
 
+        if (productoDAO.buscarPorCodigo(codigo) != null) {
+            productoAnadirView.mostrarMensaje("Error: Ya existe un producto con ese código");
+            return;
+        }
         productoDAO.crear(new Producto(codigo, nombre, precio));
         productoAnadirView.mostrarMensaje("Producto guardado correctamente");
         productoAnadirView.limpiarCampos();
         productoAnadirView.mostrarProductos(productoDAO.listarTodos());
     }
+
 
     private void buscarProducto() {
         String nombre = productoListaView.getTxtBuscar().getText();

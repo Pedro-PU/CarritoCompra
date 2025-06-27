@@ -151,7 +151,7 @@ public class CarritoController {
         carritoAnadirView.mostrarMensaje("Carrito guardado con éxito. Código: " + carrito.getCodigo() +
                 "\nCon el usuario: "+usuario.getUsername());
 
-        carrito.vaciarCarrito();//Limpia y borra lo anteriormente Ingresado
+        carrito.vaciarCarrito();
         actualizarTabla();
         actualizarTotales();
         carritoAnadirView.limpiarCampos();
@@ -236,11 +236,8 @@ public class CarritoController {
                 carritoDetalleView.getTxtTotal().setText(String.format("%.2f", carrito.calcularTotal()));
 
                 carritoDetalleView.setVisible(true);
-                try {
-                    carritoDetalleView.setSelected(true);
-                } catch (PropertyVetoException e) {
-                    System.err.println("No se pudo seleccionar la ventana de detalle: " + e.getMessage());
-                }
+                carritoDetalleView.moveToFront();
+                carritoDetalleView.requestFocusInWindow();
 
             } else {
                 carritoDetalleView.mostrarMensaje("Carrito no encontrado");
