@@ -52,6 +52,24 @@ public class CarritoModificarView extends JInternalFrame {
         }
     }
 
+    public String cantidad(String mensaje) {
+        if (mostrarMensajePregunta(mensaje)) {
+            String respuesta = JOptionPane.showInputDialog(this, "Ingrese la cantidad:");
+            if (respuesta != null && !respuesta.trim().isEmpty()) {
+                return respuesta.trim();
+            }
+        }
+        return null;
+    }
+
+
+
+    public boolean mostrarMensajePregunta(String mensaje) {
+        int respuesta = JOptionPane.showConfirmDialog(this, mensaje, "Confirmación",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        return respuesta == JOptionPane.YES_OPTION;
+    }
+
     public JTextField getTxtCodigo() {
         return txtCodigo;
     }

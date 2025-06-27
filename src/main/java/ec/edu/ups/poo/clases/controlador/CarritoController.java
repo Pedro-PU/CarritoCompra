@@ -261,30 +261,37 @@ public class CarritoController {
         }
     }
 
-    private void editarCarrito(){
-        if(carritoModificarView.getTblProductos().getSelectedRow() != -1) {
-            int nuevaCantidad = Integer.parseInt(JOptionPane.showInputDialog(carritoModificarView, "Ingrese la nueva cantidad:"));
+    private void editarCarrito() {
+        if (carritoModificarView.getTblProductos().getSelectedRow() != -1) {
+            String cantidadStr = carritoModificarView.cantidad("¿Desea modificar la cantidad del producto?");
+            if (cantidadStr != null) {
+                int nuevaCantidad = Integer.parseInt(cantidadStr);
 
-            int codigoCarrito = Integer.parseInt(carritoModificarView.getTxtCodigo().getText());
-            Carrito carritoEncontrado = carritoDAO.buscarPorCodigo(codigoCarrito);
+                int codigoCarrito = Integer.parseInt(carritoModificarView.getTxtCodigo().getText());
+                Carrito carritoEncontrado = carritoDAO.buscarPorCodigo(codigoCarrito);
 
-            for (ItemCarrito item: carritoEncontrado.obtenerItems()) {
-                if (item.getProducto().getCodigo() == (Integer) carritoModificarView.getTblProductos().getValueAt(carritoModificarView.getTblProductos().getSelectedRow(), 0)) {
-                    item.setCantidad(nuevaCantidad);
+                for (ItemCarrito item : carritoEncontrado.obtenerItems()) {
+                    if (item.getProducto().getCodigo() ==
+                            (Integer) carritoModificarView.getTblProductos().getValueAt(
+                                    carritoModificarView.getTblProductos().getSelectedRow(), 0)) {
+
+                        item.setCantidad(nuevaCantidad);
+                    }
                 }
+
+                carritoDAO.actualizar(carritoEncontrado);
+                carritoModificarView.cargarDatos(carritoEncontrado);
+                carritoModificarView.getTxtSubtotal().setText(String.valueOf(carritoEncontrado.calcularSubtotal()));
+                carritoModificarView.getTxtIVA().setText(String.valueOf(carritoEncontrado.calcularIVA()));
+                carritoModificarView.getTxtTotal().setText(String.valueOf(carritoEncontrado.calcularTotal()));
+            } else {
+                carritoModificarView.mostrarMensaje("Cantidad no modificada.");
             }
-            carritoDAO.actualizar(carritoEncontrado);
-            carritoModificarView.cargarDatos(carritoEncontrado);
-
-            carritoModificarView.getTxtSubtotal().setText(String.valueOf(carritoEncontrado.calcularSubtotal()));
-            carritoModificarView.getTxtIVA().setText(String.valueOf(carritoEncontrado.calcularIVA()));
-            carritoModificarView.getTxtTotal().setText(String.valueOf(carritoEncontrado.calcularTotal()));
-
         } else {
-            carritoModificarView.mostrarMensaje("Seleccione un Item para editar");
-
+            carritoModificarView.mostrarMensaje("Seleccione un Item para editar.");
         }
     }
+
 
     private void buscarCarritoCodigoEliminar(){
         int codigo = Integer.parseInt(carritoEliminarView.getTxtCodigo().getText());
