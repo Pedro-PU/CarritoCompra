@@ -4,14 +4,25 @@ import ec.edu.ups.poo.clases.controlador.CarritoController;
 import ec.edu.ups.poo.clases.controlador.ProductoController;
 import ec.edu.ups.poo.clases.controlador.UsuarioController;
 import ec.edu.ups.poo.clases.dao.CarritoDAO;
+import ec.edu.ups.poo.clases.dao.CuestionarioDAO;
 import ec.edu.ups.poo.clases.dao.ProductoDAO;
 import ec.edu.ups.poo.clases.dao.UsuarioDAO;
 import ec.edu.ups.poo.clases.dao.impl.CarritoDAOMemoria;
+import ec.edu.ups.poo.clases.dao.impl.CuestionarioDAOMemoria;
 import ec.edu.ups.poo.clases.dao.impl.ProductoDAOMemoria;
 import ec.edu.ups.poo.clases.dao.impl.UsuarioDAOMemoria;
 import ec.edu.ups.poo.clases.modelo.Rol;
 import ec.edu.ups.poo.clases.modelo.Usuario;
 import ec.edu.ups.poo.clases.vista.*;
+import ec.edu.ups.poo.clases.vista.carrito.CarritoAnadirView;
+import ec.edu.ups.poo.clases.vista.carrito.CarritoEliminarView;
+import ec.edu.ups.poo.clases.vista.carrito.CarritoListaView;
+import ec.edu.ups.poo.clases.vista.carrito.CarritoModificarView;
+import ec.edu.ups.poo.clases.vista.producto.ProductoAnadirView;
+import ec.edu.ups.poo.clases.vista.producto.ProductoEditarView;
+import ec.edu.ups.poo.clases.vista.producto.ProductoEliminarView;
+import ec.edu.ups.poo.clases.vista.producto.ProductoListaView;
+import ec.edu.ups.poo.clases.vista.usuario.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,11 +35,13 @@ public class Main {
             ProductoDAO productoDAO = new ProductoDAOMemoria();
             CarritoDAO carritoDAO = new CarritoDAOMemoria();
 
-            UsuarioDAO usuarioDAO = new UsuarioDAOMemoria();
+            CuestionarioDAO cuestionarioDAO = new CuestionarioDAOMemoria();
+            UsuarioDAO usuarioDAO = new UsuarioDAOMemoria(cuestionarioDAO);
+
             LoginView loginView = new LoginView();
             loginView.setVisible(true);
 
-            UsuarioController usuarioController = new UsuarioController(usuarioDAO, loginView);
+            UsuarioController usuarioController = new UsuarioController(usuarioDAO, loginView, cuestionarioDAO);
 
             loginView.addWindowListener(new WindowAdapter() {
                 @Override
@@ -61,6 +74,7 @@ public class Main {
                                 usuarioListarView);
 
                         principalView.mostrarMensaje("Bienvenido: " + usuarioAuntenticado.getUsername());
+                        principalView.setTitle("Sistema de Carrito de Compras - " + usuarioAuntenticado.getUsername());
                         if (usuarioAuntenticado.getRol().equals(Rol.USUARIO)) {
                             principalView.deshabilitarMenusAdministrador();
                         }

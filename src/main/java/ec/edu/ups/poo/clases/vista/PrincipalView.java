@@ -234,5 +234,7 @@ public class PrincipalView extends JFrame {
         getMenuItemEliminarProducto().setEnabled(false);
         getMenuItemCrearUsuario().setEnabled(false);
         getMenuItemEliminarUsuario().setEnabled(false);
+        getMenuItemListarUsuario().setEnabled(false);
+        getMenuItemEditarUsuario().setEnabled(false);
     }
 }

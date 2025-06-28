@@ -1,6 +1,9 @@
 package ec.edu.ups.poo.clases.dao.impl;
 
+import ec.edu.ups.poo.clases.dao.CuestionarioDAO;
 import ec.edu.ups.poo.clases.dao.UsuarioDAO;
+import ec.edu.ups.poo.clases.modelo.Cuestionario;
+import ec.edu.ups.poo.clases.modelo.Respuesta;
 import ec.edu.ups.poo.clases.modelo.Rol;
 import ec.edu.ups.poo.clases.modelo.Usuario;
 
@@ -9,18 +12,35 @@ import java.util.Iterator;
 import java.util.List;
 
 public class UsuarioDAOMemoria implements UsuarioDAO {
-    private List<Usuario> usuarios;
 
-    public UsuarioDAOMemoria() {
-        this.usuarios = new ArrayList<Usuario>();
+    private List<Usuario> usuarios;
+    private CuestionarioDAO cuestionarioDAO;
+
+    public UsuarioDAOMemoria(CuestionarioDAO cuestionarioDAO) {
+        this.usuarios = new ArrayList<>();
+        this.cuestionarioDAO = cuestionarioDAO;
+
         crear(new Usuario("admin", "12345", Rol.ADMINISTRADOR));
         crear(new Usuario("user", "12345", Rol.USUARIO));
+
+        Cuestionario cuestionarioAdmin = new Cuestionario("admin");
+        List<Respuesta> preguntas = cuestionarioAdmin.preguntasPorDefecto();
+
+        preguntas.get(0).setRespuesta("Negro");
+        preguntas.get(1).setRespuesta("Kobu");
+        preguntas.get(2).setRespuesta("Churrasco");
+
+        cuestionarioAdmin.agregarRespuesta(preguntas.get(0));
+        cuestionarioAdmin.agregarRespuesta(preguntas.get(1));
+        cuestionarioAdmin.agregarRespuesta(preguntas.get(2));
+
+        cuestionarioDAO.guardar(cuestionarioAdmin);
     }
 
     @Override
     public Usuario autenticar(String username, String contrasenia) {
-        for(Usuario usuario : usuarios) {
-            if(usuario.getUsername().equals(username) && usuario.getContrasenia().equals(contrasenia)) {
+        for (Usuario usuario : usuarios) {
+            if (usuario.getUsername().equals(username) && usuario.getContrasenia().equals(contrasenia)) {
                 return usuario;
             }
         }
@@ -44,8 +64,8 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
 
     @Override
     public void actualizar(Usuario usuario) {
-        for(int i = 0; i < usuarios.size(); i++){
-            if(usuarios.get(i).getUsername().equals(usuario.getUsername())){
+        for (int i = 0; i < usuarios.size(); i++) {
+            if (usuarios.get(i).getUsername().equals(usuario.getUsername())) {
                 usuarios.set(i, usuario);
                 break;
             }

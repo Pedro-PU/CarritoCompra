@@ -3,13 +3,11 @@ package ec.edu.ups.poo.clases.controlador;
 import ec.edu.ups.poo.clases.dao.CarritoDAO;
 import ec.edu.ups.poo.clases.dao.ProductoDAO;
 import ec.edu.ups.poo.clases.modelo.*;
-import ec.edu.ups.poo.clases.vista.*;
+import ec.edu.ups.poo.clases.vista.carrito.*;
 
-import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyVetoException;
 import java.util.GregorianCalendar;
 import java.util.List;
 

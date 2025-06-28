@@ -2,7 +2,11 @@ package ec.edu.ups.poo.clases.controlador;
 
 import ec.edu.ups.poo.clases.dao.ProductoDAO;
 import ec.edu.ups.poo.clases.modelo.Producto;
-import ec.edu.ups.poo.clases.vista.*;
+import ec.edu.ups.poo.clases.vista.carrito.CarritoAnadirView;
+import ec.edu.ups.poo.clases.vista.producto.ProductoAnadirView;
+import ec.edu.ups.poo.clases.vista.producto.ProductoEditarView;
+import ec.edu.ups.poo.clases.vista.producto.ProductoEliminarView;
+import ec.edu.ups.poo.clases.vista.producto.ProductoListaView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
