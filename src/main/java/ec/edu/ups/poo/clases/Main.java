@@ -25,6 +25,7 @@ import ec.edu.ups.poo.clases.vista.producto.ProductoEliminarView;
 import ec.edu.ups.poo.clases.vista.producto.ProductoListaView;
 import ec.edu.ups.poo.clases.vista.usuario.*;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -47,9 +48,17 @@ public class Main {
 
             UsuarioController usuarioController = new UsuarioController(usuarioDAO, loginView, cuestionarioDAO, mi);
 
+
             loginView.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
+
+                    //Cambio el idioma en todos los botones de mis JOptionPane
+                    UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
+                    UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
+                    UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
+                    UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
+
                     Usuario usuarioAuntenticado = usuarioController.getUsuarioAutenticado();
                     if(usuarioAuntenticado != null) {
 
@@ -62,12 +71,12 @@ public class Main {
                         ProductoAnadirView productoAnadirView = new ProductoAnadirView(mi);
                         ProductoEditarView productoEditarView = new ProductoEditarView(mi);
                         ProductoEliminarView productoEliminarView = new ProductoEliminarView(mi);
-                        ProductoListaView productoListaView = new ProductoListaView();
+                        ProductoListaView productoListaView = new ProductoListaView(mi);
 
                         UsuarioCrearView usuarioCrearView = new UsuarioCrearView(mi);
                         UsuarioEliminarView usuarioEliminarView = new UsuarioEliminarView(mi);
                         UsuarioModificarView usuarioModificarView = new UsuarioModificarView(mi);
-                        UsuarioListarView usuarioListarView = new UsuarioListarView();
+                        UsuarioListarView usuarioListarView = new UsuarioListarView(mi);
 
                         ProductoController productoController = new ProductoController(productoDAO, productoAnadirView,
                                 productoListaView, productoEditarView, productoEliminarView, carritoAnadirView, mi);
@@ -222,10 +231,12 @@ public class Main {
                                 usuarioCrearView.cambiarIdioma();
                                 usuarioEliminarView.cambiarIdioma();
                                 usuarioModificarView.cambiarIdioma();
+                                usuarioListarView.cambiarIdioma();
 
                                 productoAnadirView.cambiarIdioma();
                                 productoEditarView.cambiarIdioma();
                                 productoEliminarView.cambiarIdioma();
+                                productoListaView.cambiarIdioma();
                             }
                         });
                         principalView.getMenuItemIngles().addActionListener(new ActionListener() {
@@ -236,10 +247,12 @@ public class Main {
                                 usuarioCrearView.cambiarIdioma();
                                 usuarioEliminarView.cambiarIdioma();
                                 usuarioModificarView.cambiarIdioma();
+                                usuarioListarView.cambiarIdioma();
 
                                 productoAnadirView.cambiarIdioma();
                                 productoEditarView.cambiarIdioma();
                                 productoEliminarView.cambiarIdioma();
+                                productoListaView.cambiarIdioma();
                             }
                         });
                         principalView.getMenuItemFrances().addActionListener(new ActionListener() {
@@ -250,10 +263,12 @@ public class Main {
                                 usuarioCrearView.cambiarIdioma();
                                 usuarioEliminarView.cambiarIdioma();
                                 usuarioModificarView.cambiarIdioma();
+                                usuarioListarView.cambiarIdioma();
 
                                 productoAnadirView.cambiarIdioma();
                                 productoEditarView.cambiarIdioma();
                                 productoEliminarView.cambiarIdioma();
+                                productoListaView.cambiarIdioma();
                             }
                         });
                     }

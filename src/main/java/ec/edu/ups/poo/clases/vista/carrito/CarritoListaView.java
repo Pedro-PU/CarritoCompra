@@ -99,4 +99,7 @@ public class CarritoListaView extends JInternalFrame{
         }
     }
 
+    public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje);
+    }
 }

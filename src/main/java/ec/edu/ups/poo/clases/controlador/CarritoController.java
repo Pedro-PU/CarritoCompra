@@ -185,24 +185,30 @@ public class CarritoController {
     }
 
     private void buscarCarritoCodigo() {
-        String txtCod = carritoListaView.getTxtBuscar().getText();
-        if (!txtCod.isEmpty() && txtCod.matches("\\d+")) {
-            int codigo = Integer.parseInt(txtCod);
-            Carrito carrito = carritoDAO.buscarPorCodigo(codigo);
-            if (carrito != null) {
-                if (usuario.getRol().equals(Rol.ADMINISTRADOR)) {
-                    carritoListaView.cargarDatos(List.of(carrito));
-                }
-                else if (carrito.getUsuario().getUsername().equals(usuario.getUsername())) {
-                    carritoListaView.cargarDatos(List.of(carrito));
-                } else {
-                    carritoListaView.cargarDatos(List.of());
-                }
+        String txtCod = carritoListaView.getTxtBuscar().getText().trim();
+        if (txtCod.isEmpty()) {
+            carritoListaView.cargarDatos(List.of());
+            return;
+        }
+        if (!txtCod.matches("[1-9]\\d*|0")) {
+            carritoListaView.mostrarMensaje("El código debe ser un número entero positivo válido.");
+            carritoListaView.cargarDatos(List.of());
+            return;
+        }
+        int codigo = Integer.parseInt(txtCod);
+        Carrito carrito = carritoDAO.buscarPorCodigo(codigo);
+        if (carrito != null) {
+            if (usuario.getRol().equals(Rol.ADMINISTRADOR)
+                    || carrito.getUsuario().getUsername().equals(usuario.getUsername())) {
+                carritoListaView.cargarDatos(List.of(carrito));
             } else {
                 carritoListaView.cargarDatos(List.of());
             }
+        } else {
+            carritoListaView.cargarDatos(List.of());
         }
     }
+
     private void listarCarritos() {
         List<Carrito> carritosAMostrar;
 
@@ -246,8 +252,18 @@ public class CarritoController {
     }
 
     private void buscarCarritoCodigoModificar() {
-        int codigo = Integer.parseInt(carritoModificarView.getTxtCodigo().getText());
+        String txtCod = carritoModificarView.getTxtCodigo().getText().trim();
+        if (txtCod.isEmpty()) {
+            carritoModificarView.mostrarMensaje("Por favor, ingrese el código del carrito.");
+            return;
+        }
+        if (!txtCod.matches("[1-9]\\d*|0")) {
+            carritoModificarView.mostrarMensaje("El código debe ser un número entero positivo válido.");
+            return;
+        }
+        int codigo = Integer.parseInt(txtCod);
         Carrito carritoEncontrado = carritoDAO.buscarPorCodigo(codigo);
+
         if (carritoEncontrado != null) {
             carritoModificarView.getTxtFecha().setText(carritoEncontrado.getFechaCreacion());
             carritoModificarView.cargarDatos(carritoEncontrado);
@@ -263,20 +279,32 @@ public class CarritoController {
         if (carritoModificarView.getTblProductos().getSelectedRow() != -1) {
             String cantidadStr = carritoModificarView.cantidad("¿Desea modificar la cantidad del producto?");
             if (cantidadStr != null) {
+                cantidadStr = cantidadStr.trim();
+                if (!cantidadStr.matches("[1-9]\\d*")) {
+                    carritoModificarView.mostrarMensaje("La cantidad debe ser un número entero positivo mayor que cero.");
+                    return;
+                }
                 int nuevaCantidad = Integer.parseInt(cantidadStr);
-
-                int codigoCarrito = Integer.parseInt(carritoModificarView.getTxtCodigo().getText());
+                int codigoCarrito = Integer.parseInt(carritoModificarView.getTxtCodigo().getText().trim());
                 Carrito carritoEncontrado = carritoDAO.buscarPorCodigo(codigoCarrito);
-
+                if (carritoEncontrado == null) {
+                    carritoModificarView.mostrarMensaje("Carrito no encontrado.");
+                    return;
+                }
+                boolean itemEncontrado = false;
                 for (ItemCarrito item : carritoEncontrado.obtenerItems()) {
-                    if (item.getProducto().getCodigo() ==
-                            (Integer) carritoModificarView.getTblProductos().getValueAt(
-                                    carritoModificarView.getTblProductos().getSelectedRow(), 0)) {
-
+                    int codigoProducto = (Integer) carritoModificarView.getTblProductos().getValueAt(
+                            carritoModificarView.getTblProductos().getSelectedRow(), 0);
+                    if (item.getProducto().getCodigo() == codigoProducto) {
                         item.setCantidad(nuevaCantidad);
+                        itemEncontrado = true;
+                        break;
                     }
                 }
-
+                if (!itemEncontrado) {
+                    carritoModificarView.mostrarMensaje("Producto no encontrado en el carrito.");
+                    return;
+                }
                 carritoDAO.actualizar(carritoEncontrado);
                 carritoModificarView.cargarDatos(carritoEncontrado);
                 carritoModificarView.getTxtSubtotal().setText(String.valueOf(carritoEncontrado.calcularSubtotal()));
@@ -290,9 +318,19 @@ public class CarritoController {
         }
     }
 
-
-    private void buscarCarritoCodigoEliminar(){
-        int codigo = Integer.parseInt(carritoEliminarView.getTxtCodigo().getText());
+    private void buscarCarritoCodigoEliminar() {
+        String txtCod = carritoEliminarView.getTxtCodigo().getText().trim();
+        if (txtCod.isEmpty()) {
+            carritoEliminarView.mostrarMensaje("Por favor, ingrese el código del carrito.");
+            carritoEliminarView.getBtnEliminar().setEnabled(false);
+            return;
+        }
+        if (!txtCod.matches("[1-9]\\d*|0")) {
+            carritoEliminarView.mostrarMensaje("El código debe ser un número entero positivo válido.");
+            carritoEliminarView.getBtnEliminar().setEnabled(false);
+            return;
+        }
+        int codigo = Integer.parseInt(txtCod);
         Carrito carritoEncontrado = carritoDAO.buscarPorCodigo(codigo);
         if (carritoEncontrado != null) {
             carritoEliminarView.getTxtFecha().setText(carritoEncontrado.getFechaCreacion());
