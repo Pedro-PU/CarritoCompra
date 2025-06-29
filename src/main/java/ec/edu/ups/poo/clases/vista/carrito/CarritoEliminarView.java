@@ -3,10 +3,12 @@ package ec.edu.ups.poo.clases.vista.carrito;
 import ec.edu.ups.poo.clases.modelo.Carrito;
 import ec.edu.ups.poo.clases.modelo.ItemCarrito;
 import ec.edu.ups.poo.clases.modelo.Producto;
+import ec.edu.ups.poo.clases.util.FormateadorUtils;
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.util.Locale;
 
 public class CarritoEliminarView extends JInternalFrame {
     private JTextField txtCodigo;
@@ -46,18 +48,20 @@ public class CarritoEliminarView extends JInternalFrame {
 
     public void cargarDatos(Carrito carrito) {
         modelo.setRowCount(0);
+        Locale locale = mi.getLocale();
 
-        for(ItemCarrito itemCarrito: carrito.obtenerItems()){
+        for (ItemCarrito itemCarrito : carrito.obtenerItems()) {
             Producto producto = itemCarrito.getProducto();
             Object[] fila = {
                     producto.getCodigo(),
                     producto.getNombre(),
-                    producto.getPrecio(),
-                    itemCarrito.getCantidad(),
+                    FormateadorUtils.formatearMoneda(producto.getPrecio(), locale),
+                    itemCarrito.getCantidad()
             };
             modelo.addRow(fila);
         }
     }
+
 
     public boolean mostrarMensajePregunta(String mensaje) {
         int respuesta = JOptionPane.showConfirmDialog(this, mensaje, "Confirmación",

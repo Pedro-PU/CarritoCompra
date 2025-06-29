@@ -3,10 +3,12 @@ package ec.edu.ups.poo.clases.vista.carrito;
 import ec.edu.ups.poo.clases.modelo.Carrito;
 import ec.edu.ups.poo.clases.modelo.ItemCarrito;
 import ec.edu.ups.poo.clases.modelo.Producto;
+import ec.edu.ups.poo.clases.util.FormateadorUtils;
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.util.Locale;
 
 public class CarritoDetalleView extends JInternalFrame{
     private JPanel panelPrincipal;
@@ -111,15 +113,16 @@ public class CarritoDetalleView extends JInternalFrame{
     }
     public void cargarDatos(Carrito carrito) {
         modelo.setRowCount(0);
+        Locale locale = mi.getLocale();
 
         for (ItemCarrito itemCarrito : carrito.obtenerItems()) {
             Producto producto = itemCarrito.getProducto();
             Object[] fila = {
                     producto.getCodigo(),
                     producto.getNombre(),
-                    producto.getPrecio(),
+                    FormateadorUtils.formatearMoneda(producto.getPrecio(), locale),
                     itemCarrito.getCantidad(),
-                    producto.getPrecio() * itemCarrito.getCantidad()
+                    FormateadorUtils.formatearMoneda(producto.getPrecio() * itemCarrito.getCantidad(), locale)
             };
             modelo.addRow(fila);
         }
@@ -151,7 +154,5 @@ public class CarritoDetalleView extends JInternalFrame{
         UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
-
-
     }
 }

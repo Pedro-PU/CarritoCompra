@@ -1,12 +1,14 @@
 package ec.edu.ups.poo.clases.vista.carrito;
 
 import ec.edu.ups.poo.clases.modelo.Carrito;
+import ec.edu.ups.poo.clases.util.FormateadorUtils;
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class CarritoListaView extends JInternalFrame{
     private JPanel panelPrincipal;
@@ -93,22 +95,23 @@ public class CarritoListaView extends JInternalFrame{
 
     public void cargarDatos(List<Carrito> listaCarritos) {
         modelo.setNumRows(0);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Locale locale = mi.getLocale();
 
         for (Carrito carrito : listaCarritos) {
-            String fechaFormateada = dateFormat.format(carrito.getFechaCreacion().getTime());
+            String fechaFormateada = FormateadorUtils.formatearFecha(carrito.getFechaCreacion().getTime(), locale);
 
             Object[] fila = {
                     carrito.getCodigo(),
                     carrito.getUsuario().getUsername(),
                     fechaFormateada,
-                    String.format("%.2f", carrito.calcularSubtotal()),
-                    String.format("%.2f", carrito.calcularIVA()),
-                    String.format("%.2f", carrito.calcularTotal())
+                    FormateadorUtils.formatearMoneda(carrito.calcularSubtotal(), locale),
+                    FormateadorUtils.formatearMoneda(carrito.calcularIVA(), locale),
+                    FormateadorUtils.formatearMoneda(carrito.calcularTotal(), locale)
             };
             modelo.addRow(fila);
         }
     }
+
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);

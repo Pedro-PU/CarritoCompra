@@ -137,7 +137,7 @@ public class UsuarioController {
 
         if (index >= 0 && index < 3) {
             mi.setLenguaje(clavesIdiomas[index], paisesIdiomas[index]);
-            loginView.inicializarComponentes();
+            loginView.actualizarTextos();
         }
     }
 

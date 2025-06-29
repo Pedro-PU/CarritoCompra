@@ -3,6 +3,7 @@ package ec.edu.ups.poo.clases.controlador;
 import ec.edu.ups.poo.clases.dao.CarritoDAO;
 import ec.edu.ups.poo.clases.dao.ProductoDAO;
 import ec.edu.ups.poo.clases.modelo.*;
+import ec.edu.ups.poo.clases.util.FormateadorUtils;
 import ec.edu.ups.poo.clases.vista.carrito.*;
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 
@@ -12,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 public class CarritoController {
     private final CarritoAnadirView carritoAnadirView;
@@ -124,22 +126,22 @@ public class CarritoController {
         DefaultTableModel modelo = (DefaultTableModel) carritoAnadirView.getTblProductos().getModel();
         modelo.setNumRows(0);
         for (ItemCarrito item : items) {
-            modelo.addRow(new Object[]{ item.getProducto().getCodigo(),
+            Locale locale = mi.getLocale();
+            modelo.addRow(new Object[]{
+                    item.getProducto().getCodigo(),
                     item.getProducto().getNombre(),
-                    item.getProducto().getPrecio(),
+                    FormateadorUtils.formatearMoneda(item.getProducto().getPrecio(), locale),
                     item.getCantidad(),
-                    item.getProducto().getPrecio() * item.getCantidad() });
+                    FormateadorUtils.formatearMoneda(item.getProducto().getPrecio() * item.getCantidad(), locale)
+            });
         }
     }
 
     private void actualizarTotales() {
-        String subtotal = String.format("%.2f", carrito.calcularSubtotal());
-        String iva = String.format("%.2f", carrito.calcularIVA());
-        String total = String.format("%.2f", carrito.calcularTotal());
-
-        carritoAnadirView.getTxtSubTotal().setText(subtotal);
-        carritoAnadirView.getTxtIVA().setText(iva);
-        carritoAnadirView.getTxtTotal().setText(total);
+        Locale locale = mi.getLocale();
+        carritoAnadirView.getTxtSubTotal().setText(FormateadorUtils.formatearMoneda(carrito.calcularSubtotal(), locale));
+        carritoAnadirView.getTxtIVA().setText(FormateadorUtils.formatearMoneda(carrito.calcularIVA(), locale));
+        carritoAnadirView.getTxtTotal().setText(FormateadorUtils.formatearMoneda(carrito.calcularTotal(), locale));
     }
 
     private void aceptarCarrito() {
@@ -242,9 +244,10 @@ public class CarritoController {
 
                 carritoDetalleView.cargarDatos(carrito);
 
-                carritoDetalleView.getTxtSubTotal().setText(String.format("%.2f", carrito.calcularSubtotal()));
-                carritoDetalleView.getTxtIVA().setText(String.format("%.2f", carrito.calcularIVA()));
-                carritoDetalleView.getTxtTotal().setText(String.format("%.2f", carrito.calcularTotal()));
+                Locale locale = mi.getLocale();
+                carritoDetalleView.getTxtSubTotal().setText(FormateadorUtils.formatearMoneda(carrito.calcularSubtotal(), locale));
+                carritoDetalleView.getTxtIVA().setText(FormateadorUtils.formatearMoneda(carrito.calcularIVA(), locale));
+                carritoDetalleView.getTxtTotal().setText(FormateadorUtils.formatearMoneda(carrito.calcularTotal(), locale));
 
                 carritoDetalleView.setVisible(true);
                 carritoDetalleView.moveToFront();
@@ -272,13 +275,14 @@ public class CarritoController {
         Carrito carritoEncontrado = carritoDAO.buscarPorCodigo(codigo);
 
         if (carritoEncontrado != null) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            String fechaFormateada = dateFormat.format(carrito.getFechaCreacion().getTime());
-            carritoModificarView.getTxtFecha().setText(fechaFormateada);
+            Locale locale = mi.getLocale();
+            carritoModificarView.getTxtFecha().setText(
+                    FormateadorUtils.formatearFecha(carrito.getFechaCreacion().getTime(), locale)
+            );
             carritoModificarView.cargarDatos(carritoEncontrado);
-            carritoModificarView.getTxtSubtotal().setText(String.valueOf(carritoEncontrado.calcularSubtotal()));
-            carritoModificarView.getTxtIVA().setText(String.valueOf(carritoEncontrado.calcularIVA()));
-            carritoModificarView.getTxtTotal().setText(String.valueOf(carritoEncontrado.calcularTotal()));
+            carritoModificarView.getTxtSubtotal().setText(FormateadorUtils.formatearMoneda(carritoEncontrado.calcularSubtotal(), locale));
+            carritoModificarView.getTxtIVA().setText(FormateadorUtils.formatearMoneda(carritoEncontrado.calcularIVA(), locale));
+            carritoModificarView.getTxtTotal().setText(FormateadorUtils.formatearMoneda(carritoEncontrado.calcularTotal(), locale));
         } else {
             carritoModificarView.mostrarMensaje(mi.get("carrito.msj.no.encontrado"));
         }
@@ -316,9 +320,10 @@ public class CarritoController {
                 }
                 carritoDAO.actualizar(carritoEncontrado);
                 carritoModificarView.cargarDatos(carritoEncontrado);
-                carritoModificarView.getTxtSubtotal().setText(String.valueOf(carritoEncontrado.calcularSubtotal()));
-                carritoModificarView.getTxtIVA().setText(String.valueOf(carritoEncontrado.calcularIVA()));
-                carritoModificarView.getTxtTotal().setText(String.valueOf(carritoEncontrado.calcularTotal()));
+                Locale locale = mi.getLocale();
+                carritoModificarView.getTxtSubtotal().setText(FormateadorUtils.formatearMoneda(carritoEncontrado.calcularSubtotal(), locale));
+                carritoModificarView.getTxtIVA().setText(FormateadorUtils.formatearMoneda(carritoEncontrado.calcularIVA(), locale));
+                carritoModificarView.getTxtTotal().setText(FormateadorUtils.formatearMoneda(carritoEncontrado.calcularTotal(), locale));
             } else {
                 carritoModificarView.mostrarMensaje(mi.get("carrito.msj.cantidad.no.modificada"));
             }
@@ -342,14 +347,15 @@ public class CarritoController {
         int codigo = Integer.parseInt(txtCod);
         Carrito carritoEncontrado = carritoDAO.buscarPorCodigo(codigo);
         if (carritoEncontrado != null) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            String fechaFormateada = dateFormat.format(carrito.getFechaCreacion().getTime());
+            Locale locale = mi.getLocale();
+            carritoEliminarView.getTxtFecha().setText(
+                    FormateadorUtils.formatearFecha(carrito.getFechaCreacion().getTime(), locale)
+            );
 
-            carritoEliminarView.getTxtFecha().setText(fechaFormateada);
             carritoEliminarView.cargarDatos(carritoEncontrado);
-            carritoEliminarView.getTxtSubtotal().setText(String.valueOf(carritoEncontrado.calcularSubtotal()));
-            carritoEliminarView.getTxtIVA().setText(String.valueOf(carritoEncontrado.calcularIVA()));
-            carritoEliminarView.getTxtTotal().setText(String.valueOf(carritoEncontrado.calcularTotal()));
+            carritoEliminarView.getTxtSubtotal().setText(FormateadorUtils.formatearMoneda(carritoEncontrado.calcularSubtotal(), locale));
+            carritoEliminarView.getTxtIVA().setText(FormateadorUtils.formatearMoneda(carritoEncontrado.calcularIVA(), locale));
+            carritoEliminarView.getTxtTotal().setText(FormateadorUtils.formatearMoneda(carritoEncontrado.calcularTotal(), locale));
             carritoEliminarView.getBtnEliminar().setEnabled(true);
         } else {
             carritoEliminarView.mostrarMensaje(mi.get("carrito.msj.no.encontrado"));

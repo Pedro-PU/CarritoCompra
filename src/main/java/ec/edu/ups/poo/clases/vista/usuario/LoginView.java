@@ -3,6 +3,7 @@ package ec.edu.ups.poo.clases.vista.usuario;
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import java.util.Locale;
 
 public class LoginView extends JFrame{
     private JPanel panelPrincipal;
@@ -25,6 +26,7 @@ public class LoginView extends JFrame{
         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
         setLocationRelativeTo(null);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         add(panelPrincipal);
         inicializarComponentes();
     }
@@ -132,15 +134,6 @@ public class LoginView extends JFrame{
         cbxIdiomas.addItem(mi.get("menu.idioma.es")); // Español
         cbxIdiomas.addItem(mi.get("menu.idioma.en")); // Inglés
         cbxIdiomas.addItem(mi.get("menu.idioma.fr")); // Francés
-        String lang = mi.getLocale().getLanguage();
-        String country = mi.getLocale().getCountry();
-        int selectedIndex = 0;
-        if ("en".equals(lang) && "US".equals(country)) {
-            selectedIndex = 1;
-        } else if ("fr".equals(lang) && "FR".equals(country)) {
-            selectedIndex = 2;
-        }
-        cbxIdiomas.setSelectedIndex(selectedIndex);
         actualizarTextos();
     }
 
@@ -155,7 +148,16 @@ public class LoginView extends JFrame{
         btnRegistrar.setText(mi.get("login.boton.registrar"));
         btnOlvidar.setText(mi.get("login.boton.olvidar"));
         btnSalir.setText(mi.get("login.boton.salir"));
-
+        Locale currentLocale = mi.getLocale();
+        int selectedIndex = 0;
+        if ("en".equals(currentLocale.getLanguage()) && "US".equals(currentLocale.getCountry())) {
+            selectedIndex = 1;
+        } else if ("fr".equals(currentLocale.getLanguage()) && "FR".equals(currentLocale.getCountry())) {
+            selectedIndex = 2;
+        }
+        if (cbxIdiomas.getSelectedIndex() != selectedIndex) {
+            cbxIdiomas.setSelectedIndex(selectedIndex);
+        }
         UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
         UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));

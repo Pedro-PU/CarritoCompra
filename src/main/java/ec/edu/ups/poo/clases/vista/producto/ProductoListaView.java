@@ -1,6 +1,7 @@
 package ec.edu.ups.poo.clases.vista.producto;
 
 import ec.edu.ups.poo.clases.modelo.Producto;
+import ec.edu.ups.poo.clases.util.FormateadorUtils;
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
@@ -120,7 +121,7 @@ public class ProductoListaView extends JInternalFrame {
             Object[] fila = {
                     producto.getCodigo(),
                     producto.getNombre(),
-                    producto.getPrecio()
+                    FormateadorUtils.formatearMoneda(producto.getPrecio(), mi.getLocale())
             };
             modelo.addRow(fila);
         }

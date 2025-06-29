@@ -2,6 +2,7 @@ package ec.edu.ups.poo.clases.controlador;
 
 import ec.edu.ups.poo.clases.dao.ProductoDAO;
 import ec.edu.ups.poo.clases.modelo.Producto;
+import ec.edu.ups.poo.clases.util.FormateadorUtils;
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.poo.clases.vista.carrito.CarritoAnadirView;
 import ec.edu.ups.poo.clases.vista.producto.ProductoAnadirView;
@@ -231,7 +232,7 @@ public class ProductoController {
 
         if (producto != null) {
             productoEliminarView.getTxtNombre().setText(producto.getNombre());
-            productoEliminarView.getTxtPrecio().setText(String.valueOf(producto.getPrecio()));
+            productoEliminarView.getTxtPrecio().setText(FormateadorUtils.formatearMoneda(producto.getPrecio(), mi.getLocale()));
         } else {
             productoEliminarView.mostrarMensaje(mi.get("producto.mensaje.no.encontrado"));
             productoEliminarView.limpiarCampos();
@@ -257,7 +258,7 @@ public class ProductoController {
 
         if (producto != null) {
             productoEditarView.getTxtNombre().setText(producto.getNombre());
-            productoEditarView.getTxtPrecio().setText(String.valueOf(producto.getPrecio()));
+            productoEditarView.getTxtPrecio().setText(FormateadorUtils.formatearMoneda(producto.getPrecio(), mi.getLocale()));
         } else {
             productoEditarView.mostrarMensaje(mi.get("producto.mensaje.no.encontrado"));
             productoEditarView.limpiarCampos();
@@ -282,7 +283,7 @@ public class ProductoController {
 
         if (producto != null) {
             carritoAnadirView.getTxtNombre().setText(producto.getNombre());
-            carritoAnadirView.getTxtPrecio().setText(String.valueOf(producto.getPrecio()));
+            carritoAnadirView.getTxtPrecio().setText(FormateadorUtils.formatearMoneda(producto.getPrecio(), mi.getLocale()));
         } else {
             carritoAnadirView.mostrarMensaje(mi.get("producto.mensaje.no.encontrado"));
             carritoAnadirView.limpiarCampos();
