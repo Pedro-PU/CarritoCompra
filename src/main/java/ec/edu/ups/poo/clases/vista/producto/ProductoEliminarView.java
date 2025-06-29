@@ -121,6 +121,11 @@ public class ProductoEliminarView extends JInternalFrame {
 
         if (btnBuscar != null) btnBuscar.setText(mi.get("producto.eliminar.buscar"));
         if (btnEliminar != null) btnEliminar.setText(mi.get("producto.eliminar.eliminar"));
+
+        UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
+        UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
+        UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
+        UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
 
 }

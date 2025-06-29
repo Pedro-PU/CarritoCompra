@@ -4,10 +4,12 @@ import ec.edu.ups.poo.clases.dao.CarritoDAO;
 import ec.edu.ups.poo.clases.dao.ProductoDAO;
 import ec.edu.ups.poo.clases.modelo.*;
 import ec.edu.ups.poo.clases.vista.carrito.*;
+import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -21,9 +23,11 @@ public class CarritoController {
     private CarritoDetalleView carritoDetalleView;
     private final CarritoModificarView carritoModificarView;
     private final CarritoEliminarView carritoEliminarView;
+    private final MensajeInternacionalizacionHandler mi;
 
     public CarritoController(CarritoAnadirView carritoView, ProductoDAO productoDAO,
-                             CarritoDAO carritoDAO, Usuario usuario, CarritoListaView carritoListaView, CarritoModificarView carritoModificarView, CarritoEliminarView carritoEliminarView) {
+                             CarritoDAO carritoDAO, Usuario usuario, CarritoListaView carritoListaView, CarritoModificarView carritoModificarView, CarritoEliminarView carritoEliminarView,
+                             MensajeInternacionalizacionHandler mi) {
         this.carritoAnadirView = carritoView;
         this.productoDAO = productoDAO;
         this.carritoDAO = carritoDAO;
@@ -31,9 +35,9 @@ public class CarritoController {
         this.carritoListaView = carritoListaView;
         this.carritoModificarView = carritoModificarView;
         this.carritoEliminarView = carritoEliminarView;
+        this.mi = mi;
         this.carrito = new Carrito();
         carrito.setCodigo(carrito.hashCode());
-
         configurarEventosEnVistas();
     }
     private void configurarEventosEnVistas() {
@@ -103,8 +107,8 @@ public class CarritoController {
                 eliminarCarrito();
             }
         });
-
     }
+
     private void anadirProductoACarrito() {
         int codigo = Integer.parseInt(carritoAnadirView.getTxtBuscar().getText());
         Producto producto = productoDAO.buscarPorCodigo(codigo);
@@ -154,6 +158,7 @@ public class CarritoController {
         actualizarTotales();
         carritoAnadirView.limpiarCampos();
     }
+
     private void borrarItemFormulario(){
         int filaSeleccionada = carritoAnadirView.getTblProductos().getSelectedRow();
         if (filaSeleccionada != -1) {
@@ -229,7 +234,7 @@ public class CarritoController {
             Carrito carrito = carritoDAO.buscarPorCodigo(codigoCarrito);
             if (carrito != null) {
                 if (carritoDetalleView == null || carritoDetalleView.isClosed()) {
-                    carritoDetalleView = new CarritoDetalleView();
+                    carritoDetalleView = new CarritoDetalleView(mi);
                     carritoListaView.getDesktopPane().add(carritoDetalleView);
                 }
 
@@ -265,7 +270,9 @@ public class CarritoController {
         Carrito carritoEncontrado = carritoDAO.buscarPorCodigo(codigo);
 
         if (carritoEncontrado != null) {
-            carritoModificarView.getTxtFecha().setText(carritoEncontrado.getFechaCreacion());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String fechaFormateada = dateFormat.format(carrito.getFechaCreacion().getTime());
+            carritoModificarView.getTxtFecha().setText(fechaFormateada);
             carritoModificarView.cargarDatos(carritoEncontrado);
             carritoModificarView.getTxtSubtotal().setText(String.valueOf(carritoEncontrado.calcularSubtotal()));
             carritoModificarView.getTxtIVA().setText(String.valueOf(carritoEncontrado.calcularIVA()));
@@ -333,7 +340,10 @@ public class CarritoController {
         int codigo = Integer.parseInt(txtCod);
         Carrito carritoEncontrado = carritoDAO.buscarPorCodigo(codigo);
         if (carritoEncontrado != null) {
-            carritoEliminarView.getTxtFecha().setText(carritoEncontrado.getFechaCreacion());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String fechaFormateada = dateFormat.format(carrito.getFechaCreacion().getTime());
+
+            carritoEliminarView.getTxtFecha().setText(fechaFormateada);
             carritoEliminarView.cargarDatos(carritoEncontrado);
             carritoEliminarView.getTxtSubtotal().setText(String.valueOf(carritoEncontrado.calcularSubtotal()));
             carritoEliminarView.getTxtIVA().setText(String.valueOf(carritoEncontrado.calcularIVA()));
@@ -356,5 +366,14 @@ public class CarritoController {
         }
     }
 
+    public void actualizarIdiomaEnVistas() {
+        carritoAnadirView.cambiarIdioma();
+        carritoListaView.cambiarIdioma();
+        carritoModificarView.cambiarIdioma();
+        carritoEliminarView.cambiarIdioma();
+        if (carritoDetalleView != null && !carritoDetalleView.isClosed()) {
+            carritoDetalleView.cambiarIdioma();
+        }
+    }
 
 }

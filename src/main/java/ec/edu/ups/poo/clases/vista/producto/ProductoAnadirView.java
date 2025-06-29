@@ -67,6 +67,11 @@ public class ProductoAnadirView extends JInternalFrame{
         lblPrecio.setText(mi.get("producto.anadir.precio"));
         btnAceptar.setText(mi.get("producto.anadir.aceptar"));
         btnLimpiar.setText(mi.get("producto.anadir.limpiar"));
+
+        UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
+        UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
+        UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
+        UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
 
 

@@ -102,6 +102,11 @@ public class UsuarioEliminarView extends JInternalFrame {
         lblContrasenia.setText(mi.get("usuario.eliminar.contrasena"));
         btnBuscar.setText(mi.get("usuario.eliminar.buscar"));
         btnEliminar.setText(mi.get("usuario.eliminar.eliminar"));
+
+        UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
+        UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
+        UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
+        UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
 
 }

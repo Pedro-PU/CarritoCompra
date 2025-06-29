@@ -241,4 +241,5 @@ public class CuestionarioController {
             cuestionarioView.getLblPregunta().setText(preguntasAleatorias.get(0).getEnunciado());
         }
     }
+
 }

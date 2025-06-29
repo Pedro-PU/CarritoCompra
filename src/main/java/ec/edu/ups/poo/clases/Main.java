@@ -52,21 +52,14 @@ public class Main {
             loginView.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
-
-                    //Cambio el idioma en todos los botones de mis JOptionPane
-                    UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
-                    UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
-                    UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
-                    UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
-
                     Usuario usuarioAuntenticado = usuarioController.getUsuarioAutenticado();
                     if(usuarioAuntenticado != null) {
 
                         PrincipalView principalView = new PrincipalView(mi,usuarioAuntenticado.getUsername());
-                        CarritoAnadirView carritoAnadirView = new CarritoAnadirView();
-                        CarritoListaView carritoListaView = new CarritoListaView();
-                        CarritoModificarView carritoModificarView = new CarritoModificarView();
-                        CarritoEliminarView carritoEliminarView = new CarritoEliminarView();
+                        CarritoAnadirView carritoAnadirView = new CarritoAnadirView(mi);
+                        CarritoListaView carritoListaView = new CarritoListaView(mi);
+                        CarritoModificarView carritoModificarView = new CarritoModificarView(mi);
+                        CarritoEliminarView carritoEliminarView = new CarritoEliminarView(mi);
 
                         ProductoAnadirView productoAnadirView = new ProductoAnadirView(mi);
                         ProductoEditarView productoEditarView = new ProductoEditarView(mi);
@@ -82,7 +75,7 @@ public class Main {
                                 productoListaView, productoEditarView, productoEliminarView, carritoAnadirView, mi);
 
                         CarritoController carritoController = new CarritoController(carritoAnadirView, productoDAO, carritoDAO,usuarioAuntenticado,
-                                carritoListaView, carritoModificarView, carritoEliminarView);
+                                carritoListaView, carritoModificarView, carritoEliminarView, mi);
 
                         UsuarioController usuarioController = new UsuarioController(usuarioDAO, usuarioCrearView, usuarioEliminarView, usuarioModificarView,
                                 usuarioListarView, mi);
@@ -228,15 +221,9 @@ public class Main {
                             public void actionPerformed(ActionEvent e) {
                                 mi.setLenguaje("es", "EC");
                                 principalView.cambiarIdioma();
-                                usuarioCrearView.cambiarIdioma();
-                                usuarioEliminarView.cambiarIdioma();
-                                usuarioModificarView.cambiarIdioma();
-                                usuarioListarView.cambiarIdioma();
-
-                                productoAnadirView.cambiarIdioma();
-                                productoEditarView.cambiarIdioma();
-                                productoEliminarView.cambiarIdioma();
-                                productoListaView.cambiarIdioma();
+                                usuarioController.actualizarIdiomaEnVistas();
+                                productoController.actualizarIdiomaEnVistas();
+                                carritoController.actualizarIdiomaEnVistas();
                             }
                         });
                         principalView.getMenuItemIngles().addActionListener(new ActionListener() {
@@ -244,15 +231,9 @@ public class Main {
                             public void actionPerformed(ActionEvent e) {
                                 mi.setLenguaje("en", "US");
                                 principalView.cambiarIdioma();
-                                usuarioCrearView.cambiarIdioma();
-                                usuarioEliminarView.cambiarIdioma();
-                                usuarioModificarView.cambiarIdioma();
-                                usuarioListarView.cambiarIdioma();
-
-                                productoAnadirView.cambiarIdioma();
-                                productoEditarView.cambiarIdioma();
-                                productoEliminarView.cambiarIdioma();
-                                productoListaView.cambiarIdioma();
+                                usuarioController.actualizarIdiomaEnVistas();
+                                productoController.actualizarIdiomaEnVistas();
+                                carritoController.actualizarIdiomaEnVistas();
                             }
                         });
                         principalView.getMenuItemFrances().addActionListener(new ActionListener() {
@@ -260,15 +241,9 @@ public class Main {
                             public void actionPerformed(ActionEvent e) {
                                 mi.setLenguaje("fr", "FR");
                                 principalView.cambiarIdioma();
-                                usuarioCrearView.cambiarIdioma();
-                                usuarioEliminarView.cambiarIdioma();
-                                usuarioModificarView.cambiarIdioma();
-                                usuarioListarView.cambiarIdioma();
-
-                                productoAnadirView.cambiarIdioma();
-                                productoEditarView.cambiarIdioma();
-                                productoEliminarView.cambiarIdioma();
-                                productoListaView.cambiarIdioma();
+                                usuarioController.actualizarIdiomaEnVistas();
+                                productoController.actualizarIdiomaEnVistas();
+                                carritoController.actualizarIdiomaEnVistas();
                             }
                         });
                     }

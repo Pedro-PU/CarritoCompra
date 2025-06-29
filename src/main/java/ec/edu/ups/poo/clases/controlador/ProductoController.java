@@ -289,4 +289,11 @@ public class ProductoController {
         }
     }
 
+    public void actualizarIdiomaEnVistas() {
+        productoAnadirView.cambiarIdioma();
+        productoEditarView.cambiarIdioma();
+        productoEliminarView.cambiarIdioma();
+        productoListaView.cambiarIdioma();
+    }
+
 }

@@ -35,9 +35,8 @@ public class Carrito {
         this.codigo = codigo;
     }
 
-    public String getFechaCreacion() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        return dateFormat.format(fechaCreacion.getTime());
+    public GregorianCalendar getFechaCreacion() {
+        return fechaCreacion;
     }
 
     public void setFechaCreacion(GregorianCalendar fechaCreacion) {

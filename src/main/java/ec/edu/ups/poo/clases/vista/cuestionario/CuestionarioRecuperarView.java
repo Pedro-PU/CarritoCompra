@@ -31,6 +31,11 @@ public class CuestionarioRecuperarView extends JFrame {
         lblTitulo.setText(mi.get("cuestionario.recuperar.titulo"));
         btnGuardar.setText(mi.get("cuestionario.boton.guardar"));
         btnFinalizar.setText(mi.get("cuestionario.boton.finalizar"));
+
+        UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
+        UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
+        UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
+        UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
 
 

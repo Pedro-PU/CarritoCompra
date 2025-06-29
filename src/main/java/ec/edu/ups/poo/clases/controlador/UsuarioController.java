@@ -341,4 +341,11 @@ public class UsuarioController {
         List<Usuario> usuarios = usuarioDAO.listarTodos();
         usuarioListarView.cargarDatos(usuarios);
     }
+
+    public void actualizarIdiomaEnVistas() {
+        usuarioCrearView.cambiarIdioma();
+        usuarioEliminarView.cambiarIdioma();
+        usuarioModificarView.cambiarIdioma();
+        usuarioListarView.cambiarIdioma();
+    }
 }

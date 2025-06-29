@@ -149,6 +149,11 @@ public class ProductoEditarView extends JInternalFrame{
         if (btnBuscar != null) btnBuscar.setText(mi.get("producto.editar.buscar"));
         if (btnActualizar != null) btnActualizar.setText(mi.get("producto.editar.actualizar"));
         if (btnEliminar != null) btnEliminar.setText(mi.get("producto.editar.eliminar"));
+
+        UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
+        UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
+        UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
+        UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
 
 }

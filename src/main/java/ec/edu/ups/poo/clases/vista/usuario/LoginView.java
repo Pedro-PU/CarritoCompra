@@ -155,6 +155,11 @@ public class LoginView extends JFrame{
         btnRegistrar.setText(mi.get("login.boton.registrar"));
         btnOlvidar.setText(mi.get("login.boton.olvidar"));
         btnSalir.setText(mi.get("login.boton.salir"));
+
+        UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
+        UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
+        UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
+        UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
 
 }

@@ -1,5 +1,7 @@
 package ec.edu.ups.poo.clases.vista.carrito;
 
+import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -18,25 +20,122 @@ public class CarritoAnadirView extends JInternalFrame {
     private JButton btnLimpiar;
     private JComboBox cbxCantidad;
     private JButton btnBorrar;
-
-    public CarritoAnadirView() {
+    private JLabel lblBuscarCodigo;
+    private JLabel lblNombreProducto;
+    private JLabel lblPrecioProducto;
+    private JLabel lblCantidad;
+    private JLabel lblSubtotal;
+    private JLabel lblIVA;
+    private JLabel lblTotal;
+    private DefaultTableModel modelo;
+    private MensajeInternacionalizacionHandler mi;
+    public CarritoAnadirView(MensajeInternacionalizacionHandler mi) {
         super("Carrito de Compras", true,true,false,true);
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(500, 500);
 
-        DefaultTableModel modelo = new DefaultTableModel();
-        Object[] columnas = {"Codigo", "Nombre", "Precio", "Cantidad", "Subtotal"};
-        modelo.setColumnIdentifiers(columnas);
+        modelo = new DefaultTableModel();
         tblProductos.setModel(modelo);
 
         cargarDatos();
+        this.mi = mi;
+        cambiarIdioma();
     }
+
     private void cargarDatos() {
         cbxCantidad.removeAllItems();
         for(int i = 0; i < 20; i++){
             cbxCantidad.addItem(String.valueOf(i+1));
         }
+    }
+
+    public void cambiarIdioma() {
+        mi.setLenguaje(mi.getLocale().getLanguage(), mi.getLocale().getCountry());
+
+        setTitle(mi.get("carrito.anadir.titulo"));
+        lblBuscarCodigo.setText(mi.get("carrito.anadir.buscar.codigo"));
+        lblNombreProducto.setText(mi.get("carrito.anadir.nombre"));
+        lblPrecioProducto.setText(mi.get("carrito.anadir.precio"));
+        lblCantidad.setText(mi.get("carrito.anadir.cantidad"));
+        lblSubtotal.setText(mi.get("carrito.anadir.subtotal"));
+        lblIVA.setText(mi.get("carrito.anadir.iva"));
+        lblTotal.setText(mi.get("carrito.anadir.total"));
+
+        btnBuscar.setText(mi.get("carrito.anadir.boton.buscar"));
+        btnAnadir.setText(mi.get("carrito.anadir.boton.anadir"));
+        btnAceptar.setText(mi.get("carrito.anadir.boton.aceptar"));
+        btnLimpiar.setText(mi.get("carrito.anadir.boton.limpiar"));
+        btnBorrar.setText(mi.get("carrito.anadir.boton.borrar"));
+
+        modelo.setColumnIdentifiers(new Object[]{
+                mi.get("carrito.anadir.tabla.codigo"),
+                mi.get("carrito.anadir.tabla.nombre"),
+                mi.get("carrito.anadir.tabla.precio"),
+                mi.get("carrito.anadir.tabla.cantidad"),
+                mi.get("carrito.anadir.tabla.subtotal")
+        });
+        UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
+        UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
+        UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
+        UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
+    }
+
+
+    public JLabel getLblBuscarCodigo() {
+        return lblBuscarCodigo;
+    }
+
+    public void setLblBuscarCodigo(JLabel lblBuscarCodigo) {
+        this.lblBuscarCodigo = lblBuscarCodigo;
+    }
+
+    public JLabel getLblNombreProducto() {
+        return lblNombreProducto;
+    }
+
+    public void setLblNombreProducto(JLabel lblNombreProducto) {
+        this.lblNombreProducto = lblNombreProducto;
+    }
+
+    public JLabel getLblPrecioProducto() {
+        return lblPrecioProducto;
+    }
+
+    public void setLblPrecioProducto(JLabel lblPrecioProducto) {
+        this.lblPrecioProducto = lblPrecioProducto;
+    }
+
+    public JLabel getLblCantidad() {
+        return lblCantidad;
+    }
+
+    public void setLblCantidad(JLabel lblCantidad) {
+        this.lblCantidad = lblCantidad;
+    }
+
+    public JLabel getLblSubtotal() {
+        return lblSubtotal;
+    }
+
+    public void setLblSubtotal(JLabel lblSubtotal) {
+        this.lblSubtotal = lblSubtotal;
+    }
+
+    public JLabel getLblIVA() {
+        return lblIVA;
+    }
+
+    public void setLblIVA(JLabel lblIVA) {
+        this.lblIVA = lblIVA;
+    }
+
+    public JLabel getLblTotal() {
+        return lblTotal;
+    }
+
+    public void setLblTotal(JLabel lblTotal) {
+        this.lblTotal = lblTotal;
     }
 
     public JTextField getTxtBuscar() {

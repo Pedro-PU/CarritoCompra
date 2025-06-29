@@ -3,6 +3,7 @@ package ec.edu.ups.poo.clases.vista.carrito;
 import ec.edu.ups.poo.clases.modelo.Carrito;
 import ec.edu.ups.poo.clases.modelo.ItemCarrito;
 import ec.edu.ups.poo.clases.modelo.Producto;
+import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -17,8 +18,12 @@ public class CarritoModificarView extends JInternalFrame {
     private JTextField txtTotal;
     private JButton btnEditar;
     private JPanel panelPrincipal;
+    private JLabel lblBuscarCodigo;
+    private JLabel lblFecha;
     private DefaultTableModel modelo;
-    public CarritoModificarView() {
+    private MensajeInternacionalizacionHandler mi;
+
+    public CarritoModificarView(MensajeInternacionalizacionHandler mi) {
         setContentPane(panelPrincipal);
         setTitle("Edicion de Carrito");
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
@@ -28,9 +33,10 @@ public class CarritoModificarView extends JInternalFrame {
         setResizable(true);
         setIconifiable(true);
         modelo = new DefaultTableModel();
-        Object[] columnas = {"Código", "Nombre", "Precio","Cantidad"};
-        modelo.setColumnIdentifiers(columnas);
         tblProductos.setModel(modelo);
+
+        this.mi = mi;
+        cambiarIdioma();
     }
 
     public void mostrarMensaje(String mensaje) {
@@ -54,7 +60,7 @@ public class CarritoModificarView extends JInternalFrame {
 
     public String cantidad(String mensaje) {
         if (mostrarMensajePregunta(mensaje)) {
-            String respuesta = JOptionPane.showInputDialog(this, "Ingrese la cantidad:");
+            String respuesta = JOptionPane.showInputDialog(this, mi.get("carrito.modificar.ingresar.cantidad"));
             if (respuesta != null && !respuesta.trim().isEmpty()) {
                 return respuesta.trim();
             }
@@ -62,12 +68,49 @@ public class CarritoModificarView extends JInternalFrame {
         return null;
     }
 
-
-
     public boolean mostrarMensajePregunta(String mensaje) {
-        int respuesta = JOptionPane.showConfirmDialog(this, mensaje, "Confirmación",
+        int respuesta = JOptionPane.showConfirmDialog(this, mensaje, mi.get("dialogo.titulo.confirmacion"),
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         return respuesta == JOptionPane.YES_OPTION;
+    }
+
+    public void cambiarIdioma(){
+        mi.setLenguaje(mi.getLocale().getLanguage(), mi.getLocale().getCountry());
+
+        setTitle(mi.get("carrito.modificar.titulo.ventana"));
+        lblBuscarCodigo.setText(mi.get("carrito.modificar.buscar.codigo"));
+        lblFecha.setText(mi.get("carrito.modificar.fecha"));
+        btnBuscar.setText(mi.get("carrito.modificar.boton.buscar"));
+        btnEditar.setText(mi.get("carrito.modificar.boton.editar"));
+
+        Object[] columnas = {
+                mi.get("carrito.modificar.columna.codigo"),
+                mi.get("carrito.modificar.columna.nombre"),
+                mi.get("carrito.modificar.columna.precio"),
+                mi.get("carrito.modificar.columna.cantidad")
+        };
+        modelo.setColumnIdentifiers(columnas);
+
+        UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
+        UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
+        UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
+        UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
+    }
+
+    public JLabel getLblBuscarCodigo() {
+        return lblBuscarCodigo;
+    }
+
+    public void setLblBuscarCodigo(JLabel lblBuscarCodigo) {
+        this.lblBuscarCodigo = lblBuscarCodigo;
+    }
+
+    public JLabel getLblFecha() {
+        return lblFecha;
+    }
+
+    public void setLblFecha(JLabel lblFecha) {
+        this.lblFecha = lblFecha;
     }
 
     public JTextField getTxtCodigo() {

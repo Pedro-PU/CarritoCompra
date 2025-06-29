@@ -311,6 +311,11 @@ public class PrincipalView extends JFrame {
         menuItemEspanol.setText(mi.get("principal.idioma.es"));
         menuItemIngles.setText(mi.get("principal.idioma.en"));
         menuItemFrances.setText(mi.get("principal.idioma.fr"));
+
+        UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
+        UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
+        UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
+        UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
 
 

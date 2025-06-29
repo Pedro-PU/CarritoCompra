@@ -3,6 +3,7 @@ package ec.edu.ups.poo.clases.vista.carrito;
 import ec.edu.ups.poo.clases.modelo.Carrito;
 import ec.edu.ups.poo.clases.modelo.ItemCarrito;
 import ec.edu.ups.poo.clases.modelo.Producto;
+import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -13,8 +14,14 @@ public class CarritoDetalleView extends JInternalFrame{
     private JTextField txtSubTotal;
     private JTextField txtIVA;
     private JTextField txtTotal;
+    private JLabel lblDetalleCarrito;
+    private JLabel lblSubtotal;
+    private JLabel lblIVA;
+    private JLabel lblTotal;
     private DefaultTableModel modelo;
-    public CarritoDetalleView() {
+    private MensajeInternacionalizacionHandler mi;
+
+    public CarritoDetalleView(MensajeInternacionalizacionHandler mi) {
         setContentPane(panelPrincipal);
         setTitle("Listado de Carritos");
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
@@ -25,9 +32,42 @@ public class CarritoDetalleView extends JInternalFrame{
         setIconifiable(true);
 
         modelo = new DefaultTableModel();
-        Object[] columnas = {"Codigo", "Nombre", "Precio", "Cantidad", "Subtotal"};
-        modelo.setColumnIdentifiers(columnas);
         tblProductos.setModel(modelo);
+
+        this.mi = mi;
+        cambiarIdioma();
+    }
+
+    public JLabel getLblDetalleCarrito() {
+        return lblDetalleCarrito;
+    }
+
+    public void setLblDetalleCarrito(JLabel lblDetalleCarrito) {
+        this.lblDetalleCarrito = lblDetalleCarrito;
+    }
+
+    public JLabel getLblSubtotal() {
+        return lblSubtotal;
+    }
+
+    public void setLblSubtotal(JLabel lblSubtotal) {
+        this.lblSubtotal = lblSubtotal;
+    }
+
+    public JLabel getLblIVA() {
+        return lblIVA;
+    }
+
+    public void setLblIVA(JLabel lblIVA) {
+        this.lblIVA = lblIVA;
+    }
+
+    public JLabel getLblTotal() {
+        return lblTotal;
+    }
+
+    public void setLblTotal(JLabel lblTotal) {
+        this.lblTotal = lblTotal;
     }
 
     public JTable getTblProductos() {
@@ -87,5 +127,31 @@ public class CarritoDetalleView extends JInternalFrame{
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
+    }
+
+    public void cambiarIdioma() {
+        mi.setLenguaje(mi.getLocale().getLanguage(), mi.getLocale().getCountry());
+
+        setTitle(mi.get("carrito.detalle.titulo.ventana"));
+        lblDetalleCarrito.setText(mi.get("carrito.detalle.titulo"));
+        lblSubtotal.setText(mi.get("carrito.detalle.subtotal"));
+        lblIVA.setText(mi.get("carrito.detalle.iva"));
+        lblTotal.setText(mi.get("carrito.detalle.total"));
+
+        Object[] columnas = {
+                mi.get("carrito.detalle.columna.codigo"),
+                mi.get("carrito.detalle.columna.nombre"),
+                mi.get("carrito.detalle.columna.precio"),
+                mi.get("carrito.detalle.columna.cantidad"),
+                mi.get("carrito.detalle.columna.subtotal")
+        };
+        modelo.setColumnIdentifiers(columnas);
+
+        UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
+        UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
+        UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
+        UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
+
+
     }
 }

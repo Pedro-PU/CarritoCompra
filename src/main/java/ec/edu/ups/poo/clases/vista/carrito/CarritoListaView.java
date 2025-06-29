@@ -1,10 +1,12 @@
 package ec.edu.ups.poo.clases.vista.carrito;
 
 import ec.edu.ups.poo.clases.modelo.Carrito;
+import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
+import java.text.SimpleDateFormat;
 
 public class CarritoListaView extends JInternalFrame{
     private JPanel panelPrincipal;
@@ -13,8 +15,10 @@ public class CarritoListaView extends JInternalFrame{
     private JButton btnListar;
     private JTable tblProductos;
     private JButton btnDetalle;
+    private JLabel lblBuscarCodigo;
     private DefaultTableModel modelo;
-    public CarritoListaView() {
+    private MensajeInternacionalizacionHandler mi;
+    public CarritoListaView(MensajeInternacionalizacionHandler mi) {
         setContentPane(panelPrincipal);
         setTitle("Listado de Carritos");
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
@@ -25,9 +29,18 @@ public class CarritoListaView extends JInternalFrame{
         setIconifiable(true);
 
         modelo = new DefaultTableModel();
-        Object[] columnas = {"Codigo", "Usuario", "Fecha", "Subtotal", "IVA", "Total"};
-        modelo.setColumnIdentifiers(columnas);
         tblProductos.setModel(modelo);
+
+        this.mi = mi;
+        cambiarIdioma();
+    }
+
+    public JLabel getLblBuscarCodigo() {
+        return lblBuscarCodigo;
+    }
+
+    public void setLblBuscarCodigo(JLabel lblBuscarCodigo) {
+        this.lblBuscarCodigo = lblBuscarCodigo;
     }
 
     public JTextField getTxtBuscar() {
@@ -80,12 +93,10 @@ public class CarritoListaView extends JInternalFrame{
 
     public void cargarDatos(List<Carrito> listaCarritos) {
         modelo.setNumRows(0);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
         for (Carrito carrito : listaCarritos) {
-            System.out.println("Cargando carrito: Código = " + carrito.getCodigo() +
-                    ", Subtotal = " + carrito.calcularSubtotal());
-
-            String fechaFormateada = carrito.getFechaCreacion();
+            String fechaFormateada = dateFormat.format(carrito.getFechaCreacion().getTime());
 
             Object[] fila = {
                     carrito.getCodigo(),
@@ -101,5 +112,30 @@ public class CarritoListaView extends JInternalFrame{
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
+    }
+
+    public void cambiarIdioma(){
+        mi.setLenguaje(mi.getLocale().getLanguage(), mi.getLocale().getCountry());
+
+        setTitle(mi.get("carrito.lista.titulo.ventana"));
+        lblBuscarCodigo.setText(mi.get("carrito.lista.buscar.codigo"));
+        btnBuscar.setText(mi.get("carrito.lista.boton.buscar"));
+        btnListar.setText(mi.get("carrito.lista.boton.listar"));
+        btnDetalle.setText(mi.get("carrito.lista.boton.detalle"));
+
+        Object[] columnas = {
+                mi.get("carrito.lista.columna.codigo"),
+                mi.get("carrito.lista.columna.usuario"),
+                mi.get("carrito.lista.columna.fecha"),
+                mi.get("carrito.lista.columna.subtotal"),
+                mi.get("carrito.lista.columna.iva"),
+                mi.get("carrito.lista.columna.total")
+        };
+        modelo.setColumnIdentifiers(columnas);
+
+        UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
+        UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
+        UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
+        UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
 }
