@@ -1,5 +1,7 @@
 package ec.edu.ups.poo.clases.vista.usuario;
 
+import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
+
 import javax.swing.*;
 
 public class UsuarioModificarView extends JInternalFrame {
@@ -9,13 +11,29 @@ public class UsuarioModificarView extends JInternalFrame {
     private JButton btnEditar;
     private JPanel panelPrincipal;
     private JTextField txtUsername;
+    private JLabel lblBuscar;
+    private JLabel lblUsername;
+    private JLabel lblContrasenia;
+    private MensajeInternacionalizacionHandler mi;
 
-    public UsuarioModificarView() {
+    public UsuarioModificarView(MensajeInternacionalizacionHandler mi) {
         super("Editar Usuarios", true,true,false,true);
+        this.mi = mi;
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(500, 500);
+        cambiarIdioma();
     }
+
+    public void cambiarIdioma() {
+        setTitle(mi.get("usuario.modificar.titulo.ventana"));
+        lblBuscar.setText(mi.get("usuario.modificar.buscar"));
+        lblUsername.setText(mi.get("usuario.modificar.nombre"));
+        lblContrasenia.setText(mi.get("usuario.modificar.contrasena"));
+        btnBuscar.setText(mi.get("usuario.modificar.buscar.btn"));
+        btnEditar.setText(mi.get("usuario.modificar.editar.btn"));
+    }
+
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }

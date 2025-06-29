@@ -281,8 +281,8 @@ public class PrincipalView extends JFrame {
         getMenuItemEditarUsuario().setEnabled(false);
     }
 
-    public void cambiarIdioma(String idioma, String pais) {
-        mi.setLenguaje(idioma, pais);
+    public void cambiarIdioma() {
+        mi.setLenguaje(mi.getLocale().getLanguage(), mi.getLocale().getCountry());
         actualizarTextos();
     }
 

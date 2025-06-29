@@ -59,14 +59,14 @@ public class Main {
                         CarritoModificarView carritoModificarView = new CarritoModificarView();
                         CarritoEliminarView carritoEliminarView = new CarritoEliminarView();
 
-                        ProductoAnadirView productoAnadirView = new ProductoAnadirView();
-                        ProductoEditarView productoEditarView = new ProductoEditarView();
-                        ProductoEliminarView productoEliminarView = new ProductoEliminarView();
+                        ProductoAnadirView productoAnadirView = new ProductoAnadirView(mi);
+                        ProductoEditarView productoEditarView = new ProductoEditarView(mi);
+                        ProductoEliminarView productoEliminarView = new ProductoEliminarView(mi);
                         ProductoListaView productoListaView = new ProductoListaView();
 
-                        UsuarioCrearView usuarioCrearView = new UsuarioCrearView();
-                        UsuarioEliminarView usuarioEliminarView = new UsuarioEliminarView();
-                        UsuarioModificarView usuarioModificarView = new UsuarioModificarView();
+                        UsuarioCrearView usuarioCrearView = new UsuarioCrearView(mi);
+                        UsuarioEliminarView usuarioEliminarView = new UsuarioEliminarView(mi);
+                        UsuarioModificarView usuarioModificarView = new UsuarioModificarView(mi);
                         UsuarioListarView usuarioListarView = new UsuarioListarView();
 
                         ProductoController productoController = new ProductoController(productoDAO, productoAnadirView,
@@ -78,7 +78,7 @@ public class Main {
                         UsuarioController usuarioController = new UsuarioController(usuarioDAO, usuarioCrearView, usuarioEliminarView, usuarioModificarView,
                                 usuarioListarView, mi);
 
-                        principalView.mostrarMensaje("Bienvenido: " + usuarioAuntenticado.getUsername());
+                        principalView.mostrarMensaje(mi.get("principal.bienvenido") + usuarioAuntenticado.getUsername());
                         principalView.setTitle(mi.get("principal.titulo") + " - " + usuarioAuntenticado.getUsername());
                         if (usuarioAuntenticado.getRol().equals(Rol.USUARIO)) {
                             principalView.deshabilitarMenusAdministrador();
@@ -217,21 +217,42 @@ public class Main {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 mi.setLenguaje("es", "EC");
-                                principalView.cambiarIdioma(mi.getLocale().getLanguage(), mi.getLocale().getCountry());
+                                principalView.cambiarIdioma();
+                                usuarioCrearView.cambiarIdioma();
+                                usuarioEliminarView.cambiarIdioma();
+                                usuarioModificarView.cambiarIdioma();
+
+                                productoAnadirView.cambiarIdioma();
+                                productoEditarView.cambiarIdioma();
+                                productoEliminarView.cambiarIdioma();
                             }
                         });
                         principalView.getMenuItemIngles().addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 mi.setLenguaje("en", "US");
-                                principalView.cambiarIdioma(mi.getLocale().getLanguage(), mi.getLocale().getCountry());
+                                principalView.cambiarIdioma();
+                                usuarioCrearView.cambiarIdioma();
+                                usuarioEliminarView.cambiarIdioma();
+                                usuarioModificarView.cambiarIdioma();
+
+                                productoAnadirView.cambiarIdioma();
+                                productoEditarView.cambiarIdioma();
+                                productoEliminarView.cambiarIdioma();
                             }
                         });
                         principalView.getMenuItemFrances().addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 mi.setLenguaje("fr", "FR");
-                                principalView.cambiarIdioma(mi.getLocale().getLanguage(), mi.getLocale().getCountry());
+                                principalView.cambiarIdioma();
+                                usuarioCrearView.cambiarIdioma();
+                                usuarioEliminarView.cambiarIdioma();
+                                usuarioModificarView.cambiarIdioma();
+
+                                productoAnadirView.cambiarIdioma();
+                                productoEditarView.cambiarIdioma();
+                                productoEliminarView.cambiarIdioma();
                             }
                         });
                     }

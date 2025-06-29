@@ -1,6 +1,7 @@
 package ec.edu.ups.poo.clases.vista.producto;
 
 import ec.edu.ups.poo.clases.modelo.Producto;
+import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -15,8 +16,13 @@ public class ProductoAnadirView extends JInternalFrame{
     private JTextField txtCodigo;
     private JTextField txtNombre;
     private JTextField txtPrecio;
+    private JLabel lblTitulo;
+    private JLabel lblCodigo;
+    private JLabel lblNombre;
+    private JLabel lblPrecio;
+    private MensajeInternacionalizacionHandler mi;
 
-    public ProductoAnadirView() {
+    public ProductoAnadirView(MensajeInternacionalizacionHandler mi) {
         setContentPane(panelPrincipal);
         setTitle("Datos del Productos");
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
@@ -29,6 +35,7 @@ public class ProductoAnadirView extends JInternalFrame{
         setMaximizable(true);
         setResizable(true);
         setIconifiable(true);
+        this.mi = mi;
 
         btnLimpiar.addActionListener(new ActionListener() {
             @Override
@@ -36,6 +43,7 @@ public class ProductoAnadirView extends JInternalFrame{
                 limpiarCampos();
             }
         });
+        cambiarIdioma();
     }
     public void mostrarProductos(List<Producto> productos) {
         for (Producto producto : productos) {
@@ -49,6 +57,49 @@ public class ProductoAnadirView extends JInternalFrame{
         txtCodigo.setText("");
         txtNombre.setText("");
         txtPrecio.setText("");
+    }
+
+    public void cambiarIdioma() {
+        setTitle(mi.get("producto.anadir.titulo.ventana"));
+        lblTitulo.setText(mi.get("producto.anadir.titulo"));
+        lblCodigo.setText(mi.get("producto.anadir.codigo"));
+        lblNombre.setText(mi.get("producto.anadir.nombre"));
+        lblPrecio.setText(mi.get("producto.anadir.precio"));
+        btnAceptar.setText(mi.get("producto.anadir.aceptar"));
+        btnLimpiar.setText(mi.get("producto.anadir.limpiar"));
+    }
+
+
+    public JLabel getLblTitulo() {
+        return lblTitulo;
+    }
+
+    public void setLblTitulo(JLabel lblTitulo) {
+        this.lblTitulo = lblTitulo;
+    }
+
+    public JLabel getLblCodigo() {
+        return lblCodigo;
+    }
+
+    public void setLblCodigo(JLabel lblCodigo) {
+        this.lblCodigo = lblCodigo;
+    }
+
+    public JLabel getLblNombre() {
+        return lblNombre;
+    }
+
+    public void setLblNombre(JLabel lblNombre) {
+        this.lblNombre = lblNombre;
+    }
+
+    public JLabel getLblPrecio() {
+        return lblPrecio;
+    }
+
+    public void setLblPrecio(JLabel lblPrecio) {
+        this.lblPrecio = lblPrecio;
     }
 
     public JPanel getPanelPrincipal() {

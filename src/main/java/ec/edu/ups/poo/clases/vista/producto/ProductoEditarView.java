@@ -1,5 +1,7 @@
 package ec.edu.ups.poo.clases.vista.producto;
 
+import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -11,10 +13,13 @@ public class ProductoEditarView extends JInternalFrame{
     private JTextField txtNombre;
     private JTextField txtPrecio;
     private JButton btnActualizar;
+    private JLabel lblCodigo;
+    private JLabel lblNombre;
+    private JLabel lblPrecio;
     private JButton btnEliminar;
     private DefaultTableModel modelo;
-
-    public ProductoEditarView() {
+    private MensajeInternacionalizacionHandler mi;
+    public ProductoEditarView(MensajeInternacionalizacionHandler mi) {
         setContentPane(panelPrincipal);
         setTitle("Edición de Productos");
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
@@ -27,8 +32,34 @@ public class ProductoEditarView extends JInternalFrame{
         setMaximizable(true);
         setResizable(true);
         setIconifiable(true);
+        this.mi = mi;
+        cambiarIdioma();
+    }
 
 
+
+    public JLabel getLblCodigo() {
+        return lblCodigo;
+    }
+
+    public void setLblCodigo(JLabel lblCodigo) {
+        this.lblCodigo = lblCodigo;
+    }
+
+    public JLabel getLblNombre() {
+        return lblNombre;
+    }
+
+    public void setLblNombre(JLabel lblNombre) {
+        this.lblNombre = lblNombre;
+    }
+
+    public JLabel getLblPrecio() {
+        return lblPrecio;
+    }
+
+    public void setLblPrecio(JLabel lblPrecio) {
+        this.lblPrecio = lblPrecio;
     }
 
     public JTextField getTxtBuscar() {
@@ -107,4 +138,17 @@ public class ProductoEditarView extends JInternalFrame{
         txtNombre.setText("");
         txtPrecio.setText("");
     }
+
+    public void cambiarIdioma() {
+        setTitle(mi.get("producto.editar.titulo.ventana"));
+
+        if (lblCodigo != null) lblCodigo.setText(mi.get("producto.editar.codigo"));
+        if (lblNombre != null) lblNombre.setText(mi.get("producto.editar.nombre"));
+        if (lblPrecio != null) lblPrecio.setText(mi.get("producto.editar.precio"));
+
+        if (btnBuscar != null) btnBuscar.setText(mi.get("producto.editar.buscar"));
+        if (btnActualizar != null) btnActualizar.setText(mi.get("producto.editar.actualizar"));
+        if (btnEliminar != null) btnEliminar.setText(mi.get("producto.editar.eliminar"));
+    }
+
 }

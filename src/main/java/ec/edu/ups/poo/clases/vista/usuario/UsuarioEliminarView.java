@@ -1,5 +1,7 @@
 package ec.edu.ups.poo.clases.vista.usuario;
 
+import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
+
 import javax.swing.*;
 
 public class UsuarioEliminarView extends JInternalFrame {
@@ -8,12 +10,18 @@ public class UsuarioEliminarView extends JInternalFrame {
     private JTextField txtContrasenia;
     private JButton btnEliminar;
     private JButton btnBuscar;
+    private JLabel lblTitulo;
+    private JLabel lblUsername;
+    private JLabel lblContrasenia;
+    private MensajeInternacionalizacionHandler mi;
 
-    public UsuarioEliminarView() {
+    public UsuarioEliminarView(MensajeInternacionalizacionHandler mi) {
         super("Eliminar Usuarios", true,true,false,true);
+        this.mi = mi;
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(500, 500);
+        cambiarIdioma();
     }
     public void limpiarCampos() {
         txtUsername.setText("");
@@ -27,6 +35,30 @@ public class UsuarioEliminarView extends JInternalFrame {
         int respuesta = JOptionPane.showConfirmDialog(this, mensaje, "Confirmación",
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         return respuesta == JOptionPane.YES_OPTION;
+    }
+
+    public JLabel getLblTitulo() {
+        return lblTitulo;
+    }
+
+    public void setLblTitulo(JLabel lblTitulo) {
+        this.lblTitulo = lblTitulo;
+    }
+
+    public JLabel getLblUsername() {
+        return lblUsername;
+    }
+
+    public void setLblUsername(JLabel lblUsername) {
+        this.lblUsername = lblUsername;
+    }
+
+    public JLabel getLblContrasenia() {
+        return lblContrasenia;
+    }
+
+    public void setLblContrasenia(JLabel lblContrasenia) {
+        this.lblContrasenia = lblContrasenia;
     }
 
     public JButton getBtnBuscar() {
@@ -60,4 +92,16 @@ public class UsuarioEliminarView extends JInternalFrame {
     public void setBtnEliminar(JButton btnEliminar) {
         this.btnEliminar = btnEliminar;
     }
+
+    public void cambiarIdioma() {
+        mi.setLenguaje(mi.getLocale().getLanguage(), mi.getLocale().getCountry());
+
+        setTitle(mi.get("usuario.eliminar.titulo.ventana"));
+        lblTitulo.setText(mi.get("usuario.eliminar.titulo"));
+        lblUsername.setText(mi.get("usuario.eliminar.nombre"));
+        lblContrasenia.setText(mi.get("usuario.eliminar.contrasena"));
+        btnBuscar.setText(mi.get("usuario.eliminar.buscar"));
+        btnEliminar.setText(mi.get("usuario.eliminar.eliminar"));
+    }
+
 }

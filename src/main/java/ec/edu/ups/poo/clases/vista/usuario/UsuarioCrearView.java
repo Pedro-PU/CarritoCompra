@@ -1,5 +1,7 @@
 package ec.edu.ups.poo.clases.vista.usuario;
 
+import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,8 +12,14 @@ public class UsuarioCrearView extends JInternalFrame {
     private JPasswordField txtContrasenia;
     private JButton btnAceptar;
     private JButton btnLimpiar;
-    public UsuarioCrearView() {
+    private JLabel lblTitulo;
+    private JLabel lblUsername;
+    private JLabel lblContrasenia;
+    private MensajeInternacionalizacionHandler mi;
+
+    public UsuarioCrearView(MensajeInternacionalizacionHandler mi) {
         super("Registrar Usuarios", true,true,false,true);
+        this.mi = mi;
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(500, 500);
@@ -22,6 +30,7 @@ public class UsuarioCrearView extends JInternalFrame {
                 limpiarCampos();
             }
         });
+        cambiarIdioma();
     }
     public void limpiarCampos() {
         txtUsername.setText("");
@@ -35,6 +44,30 @@ public class UsuarioCrearView extends JInternalFrame {
         int respuesta = JOptionPane.showConfirmDialog(this, mensaje, "Confirmación",
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         return respuesta == JOptionPane.YES_OPTION;
+    }
+
+    public JLabel getLblTitulo() {
+        return lblTitulo;
+    }
+
+    public void setLblTitulo(JLabel lblTitulo) {
+        this.lblTitulo = lblTitulo;
+    }
+
+    public JLabel getLblUsername() {
+        return lblUsername;
+    }
+
+    public void setLblUsername(JLabel lblUsername) {
+        this.lblUsername = lblUsername;
+    }
+
+    public JLabel getLblContrasenia() {
+        return lblContrasenia;
+    }
+
+    public void setLblContrasenia(JLabel lblContrasenia) {
+        this.lblContrasenia = lblContrasenia;
     }
 
     public JTextField getTxtUsername() {
@@ -67,5 +100,14 @@ public class UsuarioCrearView extends JInternalFrame {
 
     public void setBtnSalir(JButton btnSalir) {
         this.btnLimpiar = btnSalir;
+    }
+
+    public void cambiarIdioma() {
+        setTitle(mi.get("usuario.crear.titulo.ventana"));
+        lblTitulo.setText(mi.get("usuario.crear.titulo"));
+        lblUsername.setText(mi.get("usuario.crear.nombre"));
+        lblContrasenia.setText(mi.get("usuario.crear.contrasena"));
+        btnAceptar.setText(mi.get("usuario.crear.aceptar"));
+        btnLimpiar.setText(mi.get("usuario.crear.limpiar"));
     }
 }

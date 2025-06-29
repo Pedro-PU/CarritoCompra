@@ -262,34 +262,34 @@ public class UsuarioController {
 
 
     private void crear() {
-        boolean confirmado = usuarioCrearView.mostrarMensajePregunta("¿Desea crear el usuario?");
+        boolean confirmado = usuarioCrearView.mostrarMensajePregunta(mi.get("usuario.mensaje.crear.pregunta"));
         if (confirmado) {
             String username = usuarioCrearView.getTxtUsername().getText();
             String contrasenia = usuarioCrearView.getTxtContrasenia().getText();
 
             if (usuarioDAO.buscarPorUsername(username) != null) {
-                usuarioCrearView.mostrarMensaje("Error: El nombre de usuario ya existe");
+                usuarioCrearView.mostrarMensaje(mi.get("usuario.mensaje.crear.existe"));
                 return;
             }
 
             Usuario usuario1 = new Usuario(username, contrasenia, Rol.USUARIO);
             usuarioDAO.crear(usuario1);
-            usuarioCrearView.mostrarMensaje("Usuario creado");
+            usuarioCrearView.mostrarMensaje(mi.get("usuario.mensaje.creado"));
             usuarioCrearView.limpiarCampos();
         } else {
-            usuarioCrearView.mostrarMensaje("Creación cancelada");
+            usuarioCrearView.mostrarMensaje(mi.get("usuario.mensaje.crear.cancelado"));
         }
     }
     private void eliminar(){
-        boolean confirmado = usuarioEliminarView.mostrarMensajePregunta("¿Desea eliminar el usuario?");
+        boolean confirmado = usuarioEliminarView.mostrarMensajePregunta(mi.get("usuario.mensaje.eliminar.pregunta"));
         if (confirmado) {
             String username = usuarioEliminarView.getTxtUsername().getText();
             Usuario usuario1 = usuarioDAO.buscarPorUsername(username);
             usuarioDAO.eliminar(username);
-            usuarioEliminarView.mostrarMensaje("Usuario eliminado");
+            usuarioEliminarView.mostrarMensaje(mi.get("usuario.mensaje.eliminado"));
             usuarioEliminarView.limpiarCampos();
         }else{
-            usuarioEliminarView.mostrarMensaje("Creación cancelada");
+            usuarioEliminarView.mostrarMensaje(mi.get("usuario.mensaje.crear.cancelado"));
         }
     }
     private void buscarEliminar(){
@@ -298,7 +298,7 @@ public class UsuarioController {
         if(usuario1 != null){
             usuarioEliminarView.getTxtContrasenia().setText(usuario1.getContrasenia());
         }else{
-            usuarioEliminarView.mostrarMensaje("Usuario no encontrado");
+            usuarioEliminarView.mostrarMensaje(mi.get("usuario.mensaje.no.encontrado"));
         }
     }
     private void buscarModificar(){
@@ -308,11 +308,11 @@ public class UsuarioController {
             usuarioModificarView.getTxtUsername().setText(usuario1.getUsername());
             usuarioModificarView.getTxtContrasenia().setText(usuario1.getContrasenia());
         }else{
-            usuarioModificarView.mostrarMensaje("Usuario no encontrado");
+            usuarioModificarView.mostrarMensaje(mi.get("usuario.mensaje.no.encontrado"));
         }
     }
     private void editar(){
-        boolean confirmado = usuarioModificarView.mostrarMensajePregunta("¿Desea editar el usuario?");
+        boolean confirmado = usuarioModificarView.mostrarMensajePregunta(mi.get("usuario.mensaje.editar.pregunta"));
         if (confirmado) {
             String username = usuarioModificarView.getTxtName().getText();
             Usuario usuario1 = usuarioDAO.buscarPorUsername(username);
@@ -320,10 +320,10 @@ public class UsuarioController {
                 usuario1.setUsername(usuarioModificarView.getTxtUsername().getText());
                 usuario1.setContrasenia(usuarioModificarView.getTxtContrasenia().getText());
                 usuarioDAO.actualizar(usuario1);
-                usuarioModificarView.mostrarMensaje("Usuario modificado");
+                usuarioModificarView.mostrarMensaje(mi.get("usuario.mensaje.modificado"));
                 usuarioModificarView.limpiarCampos();
             }else{
-                usuarioModificarView.mostrarMensaje("Usuario no encontrado");
+                usuarioModificarView.mostrarMensaje(mi.get("usuario.mensaje.no.encontrado"));
             }
         }
     }

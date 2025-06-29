@@ -20,7 +20,7 @@
         </properties>
         <border type="none"/>
         <children>
-          <component id="3f780" class="javax.swing.JLabel">
+          <component id="3f780" class="javax.swing.JLabel" binding="lblCodigo">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -70,7 +70,7 @@
             </properties>
             <border type="none"/>
             <children>
-              <component id="8f8a1" class="javax.swing.JLabel">
+              <component id="8f8a1" class="javax.swing.JLabel" binding="lblPrecio">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -79,7 +79,7 @@
                   <text value="Precio: "/>
                 </properties>
               </component>
-              <component id="fb86b" class="javax.swing.JLabel">
+              <component id="fb86b" class="javax.swing.JLabel" binding="lblNombre">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
