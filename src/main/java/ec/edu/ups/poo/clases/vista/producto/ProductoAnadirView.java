@@ -99,5 +99,4 @@ public class ProductoAnadirView extends JInternalFrame{
         this.txtPrecio = txtPrecio;
     }
 
-
 }

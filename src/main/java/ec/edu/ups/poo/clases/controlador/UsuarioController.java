@@ -5,6 +5,7 @@ import ec.edu.ups.poo.clases.dao.impl.CuestionarioDAOMemoria;
 import ec.edu.ups.poo.clases.modelo.Cuestionario;
 import ec.edu.ups.poo.clases.modelo.Rol;
 import ec.edu.ups.poo.clases.modelo.Usuario;
+import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.poo.clases.vista.cuestionario.CuestionarioRecuperarView;
 import ec.edu.ups.poo.clases.vista.cuestionario.CuestionarioView;
 import ec.edu.ups.poo.clases.vista.usuario.*;
@@ -26,22 +27,27 @@ public class UsuarioController {
     private UsuarioModificarView usuarioModificarView;
     private UsuarioListarView usuarioListarView;
     private CuestionarioDAO cuestionarioDAO;
+    private final MensajeInternacionalizacionHandler mi;
 
-    public UsuarioController(UsuarioDAO usuarioDAO, LoginView loginView, CuestionarioDAO cuestionarioDAO) {
+    public UsuarioController(UsuarioDAO usuarioDAO, LoginView loginView, CuestionarioDAO cuestionarioDAO,
+                             MensajeInternacionalizacionHandler mi) {
         this.usuarioDAO = usuarioDAO;
         this.loginView = loginView;
         this.usuario = null;
         this.cuestionarioDAO = cuestionarioDAO;
+        this.mi = mi;
+
         configurarEventosLogin();
     }
 
     public UsuarioController (UsuarioDAO usuarioDAO, UsuarioCrearView usuarioCrearView, UsuarioEliminarView usuarioEliminarView,
-                              UsuarioModificarView usuarioModificarView, UsuarioListarView usuarioListarView) {
+                              UsuarioModificarView usuarioModificarView, UsuarioListarView usuarioListarView, MensajeInternacionalizacionHandler mi) {
         this.usuarioDAO = usuarioDAO;
         this.usuarioCrearView = usuarioCrearView;
         this.usuarioEliminarView = usuarioEliminarView;
         this.usuarioModificarView = usuarioModificarView;
         this.usuarioListarView = usuarioListarView;
+        this.mi = mi;
         configurarEventosUsuario();
     }
     private void configurarEventosLogin(){
@@ -63,7 +69,20 @@ public class UsuarioController {
                 recuperar();
             }
         });
+        loginView.getBtnSalir().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                salir();
+            }
+        });
+        loginView.getCbxIdiomas().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cambiarIdioma();
+            }
+        });
     }
+
     private void configurarEventosUsuario(){
         usuarioCrearView.getBtnAceptar().addActionListener(new ActionListener() {
             @Override
@@ -108,6 +127,24 @@ public class UsuarioController {
             }
         });
     }
+
+    private void cambiarIdioma() {
+        String[] clavesIdiomas = {"es", "en", "fr"};
+        String[] paisesIdiomas = {"EC", "US", "FR"};
+        int index = loginView.getCbxIdiomas().getSelectedIndex();
+
+        if (index >= 0 && index < 3) {
+            mi.setLenguaje(clavesIdiomas[index], paisesIdiomas[index]);
+            loginView.inicializarComponentes();
+            loginView.getCbxIdiomas().setSelectedIndex(index);
+        }
+    }
+
+    private void salir(){
+        loginView.dispose();
+        System.exit(0);
+    }
+
     private void autenticar() {
         String username = loginView.getTxtUsername().getText().trim();
         String contrasenia = loginView.getTxtContrasenia().getText().trim();
@@ -115,17 +152,16 @@ public class UsuarioController {
         usuario = usuarioDAO.autenticar(username, contrasenia);
 
         if (usuario == null) {
-            loginView.mostrarMensaje("Usuario o contraseña incorrectos");
+            loginView.mostrarMensaje(mi.get("login.mensaje.error_autenticacion"));
         } else {
             Cuestionario cuestionario = cuestionarioDAO.buscarPorUsername(username);
 
             if (cuestionario == null || cuestionario.getRespuestas().size() < 3) {
-                loginView.mostrarMensaje("Debes completar tu cuestionario de seguridad antes de iniciar sesión");
+                loginView.mostrarMensaje(mi.get("login.mensaje.incompleto"));
 
-                CuestionarioView cuestionarioView = new CuestionarioView();
+                CuestionarioView cuestionarioView = new CuestionarioView(mi);
                 CuestionarioController controller = new CuestionarioController(
-                        cuestionarioView, cuestionarioDAO, username
-                );
+                        cuestionarioView, cuestionarioDAO, username, mi);
                 cuestionarioView.setVisible(true);
                 loginView.setVisible(false);
 
@@ -153,23 +189,23 @@ public class UsuarioController {
     }
 
     private void registrar() {
-        boolean confirmado = loginView.mostrarMensajePregunta("¿Desea crear el usuario?");
+        boolean confirmado = loginView.mostrarMensajePregunta(mi.get("login.mensaje.pregunta_registro"));
         if (confirmado) {
             String username = loginView.getTxtUsername().getText().trim();
             String contrasenia = loginView.getTxtContrasenia().getText().trim();
 
             if (usuarioDAO.buscarPorUsername(username) != null) {
-                loginView.mostrarMensaje("Error: El nombre de usuario ya está en uso");
+                loginView.mostrarMensaje(mi.get("login.mensaje.error_usuario_existente"));
                 return;
             }
 
             Usuario nuevoUsuario = new Usuario(username, contrasenia, Rol.USUARIO);
             usuarioDAO.crear(nuevoUsuario);
-            loginView.mostrarMensaje("Usuario creado");
+            loginView.mostrarMensaje(mi.get("login.mensaje.usuario_creado"));
 
-            CuestionarioView cuestionarioView = new CuestionarioView();
+            CuestionarioView cuestionarioView = new CuestionarioView(mi);
             CuestionarioController cuestionarioController = new CuestionarioController(cuestionarioView,
-                    cuestionarioDAO, username);
+                    cuestionarioDAO, username, mi);
             cuestionarioView.setVisible(true);
 
             loginView.setVisible(false);
@@ -182,30 +218,30 @@ public class UsuarioController {
                 }
             });
         } else {
-            loginView.mostrarMensaje("Creación cancelada");
+            loginView.mostrarMensaje(mi.get("login.mensaje.creacion_cancelada"));
         }
     }
 
     private void recuperar() {
-        boolean confirmado = loginView.mostrarMensajePregunta("¿Desea recuperar la contraseña?");
+        boolean confirmado = loginView.mostrarMensajePregunta(mi.get("login.mensaje.pregunta_recuperar"));
         if (confirmado) {
             String username = loginView.getTxtUsername().getText().trim();
 
             Usuario usuario = usuarioDAO.buscarPorUsername(username);
             if (usuario == null) {
-                loginView.mostrarMensaje("Usuario no encontrado");
+                loginView.mostrarMensaje(mi.get("login.mensaje.usuario_no_encontrado"));
                 return;
             }
 
             Cuestionario cuestionario = cuestionarioDAO.buscarPorUsername(username);
             if (cuestionario == null || cuestionario.getRespuestas().isEmpty()) {
-                loginView.mostrarMensaje("Este usuario no tiene preguntas de seguridad registradas");
+                loginView.mostrarMensaje(mi.get("login.mensaje.sin_preguntas"));
                 return;
             }
 
-            CuestionarioRecuperarView recuperarView = new CuestionarioRecuperarView();
+            CuestionarioRecuperarView recuperarView = new CuestionarioRecuperarView(mi);
             CuestionarioController controller = new CuestionarioController(
-                    recuperarView, cuestionarioDAO, username, usuario.getContrasenia()
+                    recuperarView, cuestionarioDAO, username, usuario.getContrasenia(), mi
             );
 
             recuperarView.setVisible(true);
@@ -220,7 +256,7 @@ public class UsuarioController {
             });
 
         } else {
-            loginView.mostrarMensaje("Recuperación cancelada");
+            loginView.mostrarMensaje(mi.get("login.mensaje.recuperacion_cancelada"));
         }
     }
 

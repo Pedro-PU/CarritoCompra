@@ -1,5 +1,7 @@
 package ec.edu.ups.poo.clases.vista.usuario;
 
+import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
+
 import javax.swing.*;
 
 public class LoginView extends JFrame{
@@ -9,13 +11,70 @@ public class LoginView extends JFrame{
     private JButton btnIniciar;
     private JButton btnRegistrar;
     private JButton btnOlvidar;
+    private JButton btnSalir;
+    private JLabel lblTitulo;
+    private JLabel lblUsuario;
+    private JLabel lblContrasenia;
+    private JComboBox cbxIdiomas;
+    private JLabel lblIdioma;
+    private MensajeInternacionalizacionHandler mi;
 
-    public LoginView() {
+    public LoginView(MensajeInternacionalizacionHandler mi) {
+        this.mi = mi;
         setTitle("Iniciar Sesion");
         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
         setLocationRelativeTo(null);
         add(panelPrincipal);
+        inicializarComponentes();
+    }
+
+    public JComboBox getCbxIdiomas() {
+        return cbxIdiomas;
+    }
+
+    public void setCbxIdiomas(JComboBox cbxIdiomas) {
+        this.cbxIdiomas = cbxIdiomas;
+    }
+
+    public JLabel getLblIdioma() {
+        return lblIdioma;
+    }
+
+    public void setLblIdioma(JLabel lblIdioma) {
+        this.lblIdioma = lblIdioma;
+    }
+
+    public JLabel getLblTitulo() {
+        return lblTitulo;
+    }
+
+    public void setLblTitulo(JLabel lblTitulo) {
+        this.lblTitulo = lblTitulo;
+    }
+
+    public JLabel getLblUsuario() {
+        return lblUsuario;
+    }
+
+    public void setLblUsuario(JLabel lblUsuario) {
+        this.lblUsuario = lblUsuario;
+    }
+
+    public JLabel getLblContrasenia() {
+        return lblContrasenia;
+    }
+
+    public void setLblContrasenia(JLabel lblContrasenia) {
+        this.lblContrasenia = lblContrasenia;
+    }
+
+    public JButton getBtnSalir() {
+        return btnSalir;
+    }
+
+    public void setBtnSalir(JButton btnSalir) {
+        this.btnSalir = btnSalir;
     }
 
     public JButton getBtnOlvidar() {
@@ -67,4 +126,28 @@ public class LoginView extends JFrame{
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         return respuesta == JOptionPane.YES_OPTION;
     }
+
+    public void inicializarComponentes() {
+        cbxIdiomas.removeAllItems();
+
+        cbxIdiomas.addItem(mi.get("menu.idioma.es")); // Español
+        cbxIdiomas.addItem(mi.get("menu.idioma.en")); // Inglés
+        cbxIdiomas.addItem(mi.get("menu.idioma.fr")); // Francés
+
+        actualizarTextos();
+    }
+
+    public void actualizarTextos() {
+        setTitle(mi.get("app.titulo"));
+        lblTitulo.setText(mi.get("login.titulo"));
+        lblUsuario.setText(mi.get("login.usuario"));
+        lblContrasenia.setText(mi.get("login.contrasenia"));
+        lblIdioma.setText(mi.get("login.idioma"));
+
+        btnIniciar.setText(mi.get("login.boton.iniciar"));
+        btnRegistrar.setText(mi.get("login.boton.registrar"));
+        btnOlvidar.setText(mi.get("login.boton.olvidar"));
+        btnSalir.setText(mi.get("login.boton.salir"));
+    }
+
 }

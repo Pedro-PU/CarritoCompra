@@ -12,7 +12,6 @@ public class Respuesta {
         this.id = id;
         this.enunciado = enunciado;
         this.respuesta = null;
-
     }
 
     public int getId() {

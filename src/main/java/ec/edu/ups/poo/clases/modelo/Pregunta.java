@@ -1,29 +1,40 @@
 package ec.edu.ups.poo.clases.modelo;
+import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 
 public enum Pregunta {
-    COLOR_FAVORITO("¿Cuál es tu color favorito?"),
-    PRIMERA_MASCOTA("¿Cuál fue tu primera mascota?"),
-    COMIDA_FAVORITA("¿Cuál es tu comida favorita?"),
-    CIUDAD_NACIMIENTO("¿En qué ciudad naciste?"),
-    PROFESOR_FAVORITO("¿Nombre de tu profesor favorito?"),
-    CANCION_FAVORITA("¿Canción que más te gusta?"),
-    NOMBRE_PRIMER_AMIGO("¿Cómo se llama tu primer amigo?"),
-    PELÍCULA_FAVORITA("¿Cuál es tu película favorita?"),
-    NOMBRE_MADRE("¿Cuál es el segundo nombre de tu madre?"),
-    NOMBRE_PADRE("¿Cuál es el segundo nombre de tu padre?"),
-    APODO_INFANCIA("¿Cuál era tu apodo de niño?"),
-    OBJETO_PERSONAL("¿Cuál es tu objeto personal más preciado?"),
-    NOMBRE_HERMANO("¿Nombre de tu hermano mayor?"),
-    NOMBRE_PRIMERA_ESCUELA("¿Cómo se llama tu primera escuela?");
+    COLOR_FAVORITO("pregunta.color_favorito"),
+    PRIMERA_MASCOTA("pregunta.primera_mascota"),
+    COMIDA_FAVORITA("pregunta.comida_favorita"),
+    CIUDAD_NACIMIENTO("pregunta.ciudad_nacimiento"),
+    PROFESOR_FAVORITO("pregunta.profesor_favorito"),
+    CANCION_FAVORITA("pregunta.cancion_favorita"),
+    NOMBRE_PRIMER_AMIGO("pregunta.nombre_primer_amigo"),
+    PELICULA_FAVORITA("pregunta.pelicula_favorita"),
+    NOMBRE_MADRE("pregunta.nombre_madre"),
+    NOMBRE_PADRE("pregunta.nombre_padre"),
+    APODO_INFANCIA("pregunta.apodo_infancia"),
+    OBJETO_PERSONAL("pregunta.objeto_personal"),
+    NOMBRE_HERMANO("pregunta.nombre_hermano"),
+    NOMBRE_PRIMERA_ESCUELA("pregunta.nombre_primera_escuela");
 
-    private final String enunciado;
+    private String enunciado;
+    private MensajeInternacionalizacionHandler mi;
 
     Pregunta(String enunciado) {
         this.enunciado = enunciado;
     }
+    Pregunta() {}
+
+    public void setMensajeIdioma(MensajeInternacionalizacionHandler mi) {
+        this.mi = mi;
+    }
 
     public String getEnunciado() {
-        return enunciado;
+        if (mi != null) {
+            return mi.get(enunciado);
+        } else {
+            return enunciado;
+        }
     }
 
 }

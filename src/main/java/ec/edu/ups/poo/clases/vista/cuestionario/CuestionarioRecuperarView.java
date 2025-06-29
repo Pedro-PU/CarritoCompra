@@ -1,5 +1,7 @@
 package ec.edu.ups.poo.clases.vista.cuestionario;
 
+import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
+
 import javax.swing.*;
 
 public class CuestionarioRecuperarView extends JFrame {
@@ -9,14 +11,35 @@ public class CuestionarioRecuperarView extends JFrame {
     private JButton btnFinalizar;
     private JButton btnGuardar;
     private JPanel panelPrincipal;
-    public CuestionarioRecuperarView() {
-        setTitle("Cuestionario Recuperar Preguntas");
+    private JLabel lblTitulo;
+    private MensajeInternacionalizacionHandler mi;
+
+
+    public CuestionarioRecuperarView(MensajeInternacionalizacionHandler mi) {
+        this.mi = mi;
+        setTitle(mi.get("cuestionario.recuperar.titulo"));
         setSize(600, 400);
         setContentPane(panelPrincipal);
         setLocationRelativeTo(null);
+        actualizarTextos();
     }
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
+    }
+
+    public void actualizarTextos() {
+        lblTitulo.setText(mi.get("cuestionario.recuperar.titulo"));
+        btnGuardar.setText(mi.get("cuestionario.boton.guardar"));
+        btnFinalizar.setText(mi.get("cuestionario.boton.finalizar"));
+    }
+
+
+    public JLabel getLblTitulo() {
+        return lblTitulo;
+    }
+
+    public void setLblTitulo(JLabel lblTitulo) {
+        this.lblTitulo = lblTitulo;
     }
 
     public JComboBox<String> getCbxPreguntas() {

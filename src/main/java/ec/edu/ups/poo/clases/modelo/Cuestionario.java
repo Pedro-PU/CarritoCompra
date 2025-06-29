@@ -1,7 +1,10 @@
 package ec.edu.ups.poo.clases.modelo;
 
+import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
+
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class Cuestionario {
     private String username;
@@ -48,5 +51,11 @@ public class Cuestionario {
             lista.add(new Respuesta(i + 1, preguntas[i].getEnunciado()));
         }
         return lista;
+    }
+
+    public void aplicarIdioma(MensajeInternacionalizacionHandler mi) {
+        for (Pregunta p : Pregunta.values()) {
+            p.setMensajeIdioma(mi);
+        }
     }
 }
