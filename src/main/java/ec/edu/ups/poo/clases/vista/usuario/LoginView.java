@@ -129,11 +129,18 @@ public class LoginView extends JFrame{
 
     public void inicializarComponentes() {
         cbxIdiomas.removeAllItems();
-
         cbxIdiomas.addItem(mi.get("menu.idioma.es")); // Español
         cbxIdiomas.addItem(mi.get("menu.idioma.en")); // Inglés
         cbxIdiomas.addItem(mi.get("menu.idioma.fr")); // Francés
-
+        String lang = mi.getLocale().getLanguage();
+        String country = mi.getLocale().getCountry();
+        int selectedIndex = 0;
+        if ("en".equals(lang) && "US".equals(country)) {
+            selectedIndex = 1;
+        } else if ("fr".equals(lang) && "FR".equals(country)) {
+            selectedIndex = 2;
+        }
+        cbxIdiomas.setSelectedIndex(selectedIndex);
         actualizarTextos();
     }
 

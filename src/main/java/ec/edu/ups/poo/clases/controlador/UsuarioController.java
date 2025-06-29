@@ -128,6 +128,8 @@ public class UsuarioController {
         });
     }
 
+
+
     private void cambiarIdioma() {
         String[] clavesIdiomas = {"es", "en", "fr"};
         String[] paisesIdiomas = {"EC", "US", "FR"};
@@ -136,7 +138,6 @@ public class UsuarioController {
         if (index >= 0 && index < 3) {
             mi.setLenguaje(clavesIdiomas[index], paisesIdiomas[index]);
             loginView.inicializarComponentes();
-            loginView.getCbxIdiomas().setSelectedIndex(index);
         }
     }
 

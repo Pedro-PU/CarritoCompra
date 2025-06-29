@@ -2,6 +2,7 @@ package ec.edu.ups.poo.clases.controlador;
 
 import ec.edu.ups.poo.clases.dao.ProductoDAO;
 import ec.edu.ups.poo.clases.modelo.Producto;
+import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.poo.clases.vista.carrito.CarritoAnadirView;
 import ec.edu.ups.poo.clases.vista.producto.ProductoAnadirView;
 import ec.edu.ups.poo.clases.vista.producto.ProductoEditarView;
@@ -20,18 +21,21 @@ public class ProductoController {
     private final ProductoEditarView productoEditarView;
     private final ProductoEliminarView productoEliminarView;
     private final CarritoAnadirView carritoAnadirView;
+    private final MensajeInternacionalizacionHandler mi;
 
 
     public ProductoController(ProductoDAO productoDAO,
                               ProductoAnadirView productoAnadirView,
                               ProductoListaView productoListaView,
-                              ProductoEditarView productoGestionView, ProductoEliminarView productoEliminarView, CarritoAnadirView carritoAnadirView) {
+                              ProductoEditarView productoGestionView, ProductoEliminarView productoEliminarView,
+                              CarritoAnadirView carritoAnadirView, MensajeInternacionalizacionHandler mi) {
         this.productoDAO = productoDAO;
         this.productoAnadirView = productoAnadirView;
         this.productoListaView = productoListaView;
         this.productoEditarView = productoGestionView;
         this.productoEliminarView = productoEliminarView;
         this.carritoAnadirView = carritoAnadirView;
+        this.mi = mi;
         configurarEventos();
     }
 
@@ -100,11 +104,11 @@ public class ProductoController {
         double precio = Double.parseDouble(productoAnadirView.getTxtPrecio().getText());
 
         if (productoDAO.buscarPorCodigo(codigo) != null) {
-            productoAnadirView.mostrarMensaje("Error: Ya existe un producto con ese código");
+            productoAnadirView.mostrarMensaje(mi.get("producto.mensaje.error.codigo.existe"));
             return;
         }
         productoDAO.crear(new Producto(codigo, nombre, precio));
-        productoAnadirView.mostrarMensaje("Producto guardado correctamente");
+        productoAnadirView.mostrarMensaje(mi.get("producto.mensaje.guardado.correctamente"));
         productoAnadirView.limpiarCampos();
         productoAnadirView.mostrarProductos(productoDAO.listarTodos());
     }
@@ -132,19 +136,19 @@ public class ProductoController {
         if (codigo != -1 ) {
             Producto producto = productoDAO.buscarPorCodigo(codigo);
             if (producto != null) {
-                boolean confirmado = productoEditarView.mostrarMensajePregunta("¿Desea actualizar el producto?");
+                boolean confirmado = productoEditarView.mostrarMensajePregunta(mi.get("producto.mensaje.actualizar.pregunta"));
                 if (confirmado) {
                     double precio = Double.parseDouble(txtPrecio);
                     producto.setNombre(nombre);
                     producto.setPrecio(precio);
                     productoDAO.actualizar(producto);
-                    productoEditarView.mostrarMensaje("Producto actualizado correctamente");
+                    productoEditarView.mostrarMensaje(mi.get("producto.mensaje.actualizado.correctamente"));
                 }else{
-                    productoEliminarView.mostrarMensaje("Actualización cancelada");
+                    productoEliminarView.mostrarMensaje(mi.get("producto.mensaje.actualizacion.cancelada"));
                 }
             }
         } else {
-            productoEditarView.mostrarMensaje("Ingrese un código de producto válido");
+            productoEditarView.mostrarMensaje(mi.get("producto.mensaje.error.codigo.invalido"));
         }
     }
 
@@ -156,17 +160,17 @@ public class ProductoController {
         if(codigo != -1 && !nombre.isEmpty() && !txtPrecio.isEmpty()){
             Producto producto = productoDAO.buscarPorCodigo(codigo);
             if (producto != null) {
-                boolean confirmado = productoEliminarView.mostrarMensajePregunta("¿Desea eliminar el producto?");
+                boolean confirmado = productoEliminarView.mostrarMensajePregunta(mi.get("producto.mensaje.eliminar.pregunta"));
                 if (confirmado) {
                     productoDAO.eliminar(codigo);
-                    productoEliminarView.mostrarMensaje("Producto eliminado correctamente");
+                    productoEliminarView.mostrarMensaje(mi.get("producto.mensaje.eliminado.correctamente"));
                     productoEliminarView.limpiarCampos();
                 } else {
-                    productoEliminarView.mostrarMensaje("Eliminación cancelada");
+                    productoEliminarView.mostrarMensaje(mi.get("producto.mensaje.eliminacion.cancelada"));
                 }
             }
         }else{
-            productoEliminarView.mostrarMensaje("Ingrese un código de producto válido");
+            productoEliminarView.mostrarMensaje(mi.get("producto.mensaje.error.codigo.invalido"));
         }
     }
     private void buscarProductoEliminar() {
@@ -178,11 +182,11 @@ public class ProductoController {
                 productoEliminarView.getTxtNombre().setText(producto.getNombre());
                 productoEliminarView.getTxtPrecio().setText(String.valueOf(producto.getPrecio()));
             } else {
-                productoEliminarView.mostrarMensaje("Producto no encontrado");
+                productoEliminarView.mostrarMensaje(mi.get("producto.mensaje.no.encontrado"));
                 productoEliminarView.limpiarCampos();
             }
         } else {
-            productoEliminarView.mostrarMensaje("Ingresa un código para buscar");
+            productoEliminarView.mostrarMensaje(mi.get("producto.mensaje.error.ingresar.codigo"));
         }
     }
     private void buscarProductoEdicion() {
@@ -194,11 +198,11 @@ public class ProductoController {
                 productoEditarView.getTxtNombre().setText(producto.getNombre());
                 productoEditarView.getTxtPrecio().setText(String.valueOf(producto.getPrecio()));
             } else {
-                productoEditarView.mostrarMensaje("Producto no encontrado");
+                productoEditarView.mostrarMensaje(mi.get("producto.mensaje.no.encontrado"));productoEditarView.mostrarMensaje("Producto no encontrado");
                 productoEditarView.limpiarCampos();
             }
         } else {
-            productoEditarView.mostrarMensaje("Ingresa un código para buscar");
+            productoEditarView.mostrarMensaje(mi.get("producto.mensaje.error.ingresar.codigo"));
         }
     }
     private void buscarProductoCarrito() {
@@ -210,11 +214,11 @@ public class ProductoController {
                 carritoAnadirView.getTxtNombre().setText(producto.getNombre());
                 carritoAnadirView.getTxtPrecio().setText(String.valueOf(producto.getPrecio()));
             } else {
-                carritoAnadirView.mostrarMensaje("Producto no encontrado");
+                carritoAnadirView.mostrarMensaje(mi.get("producto.mensaje.no.encontrado"));
                 carritoAnadirView.limpiarCampos();
             }
         } else {
-            carritoAnadirView.mostrarMensaje("Ingresa un código para buscar");
+            carritoAnadirView.mostrarMensaje(mi.get("producto.mensaje.error.ingresar.codigo"));
         }
     }
 }

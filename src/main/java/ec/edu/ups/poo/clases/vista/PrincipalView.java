@@ -101,7 +101,7 @@ public class PrincipalView extends JFrame {
         setVisible(true);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        actualizarTextos();
+        cambiarIdioma();
     }
 
     public JMenuItem getMenuItemEspanol() {
@@ -282,11 +282,6 @@ public class PrincipalView extends JFrame {
     }
 
     public void cambiarIdioma() {
-        mi.setLenguaje(mi.getLocale().getLanguage(), mi.getLocale().getCountry());
-        actualizarTextos();
-    }
-
-    public void actualizarTextos() {
         setTitle(mi.get("principal.titulo") + " - " + usuarioAutenticado);
 
         menuProducto.setText(mi.get("principal.menu.producto"));

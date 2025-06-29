@@ -70,7 +70,7 @@ public class Main {
                         UsuarioListarView usuarioListarView = new UsuarioListarView();
 
                         ProductoController productoController = new ProductoController(productoDAO, productoAnadirView,
-                                productoListaView, productoEditarView, productoEliminarView, carritoAnadirView);
+                                productoListaView, productoEditarView, productoEliminarView, carritoAnadirView, mi);
 
                         CarritoController carritoController = new CarritoController(carritoAnadirView, productoDAO, carritoDAO,usuarioAuntenticado,
                                 carritoListaView, carritoModificarView, carritoEliminarView);
@@ -195,10 +195,11 @@ public class Main {
                         principalView.getMenuItemCerrarSesion().addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                boolean confirmado = principalView.mostrarMensajePregunta("¿Desea cerrar sesión?");
+                                boolean confirmado = principalView.mostrarMensajePregunta(mi.get("principal.cerrar"));
                                 if(confirmado) {
                                     principalView.dispose();
                                     usuarioController.setUsuarioAutenticado(null);
+                                    loginView.actualizarTextos();
                                     loginView.setVisible(true);
                                 }
                             }
@@ -206,7 +207,7 @@ public class Main {
                         principalView.getMenuItemSalir().addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                boolean confirmado = principalView.mostrarMensajePregunta("¿Desea Salir?");
+                                boolean confirmado = principalView.mostrarMensajePregunta(mi.get("principal.salir"));
                                 if(confirmado) {
                                     principalView.dispose();
                                     System.exit(0);
