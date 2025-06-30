@@ -23,7 +23,6 @@ public enum Pregunta {
     Pregunta(String enunciado) {
         this.enunciado = enunciado;
     }
-    Pregunta() {}
 
     public void setMensajeIdioma(MensajeInternacionalizacionHandler mi) {
         this.mi = mi;

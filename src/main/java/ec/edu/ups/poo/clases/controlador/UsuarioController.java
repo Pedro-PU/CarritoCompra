@@ -234,6 +234,11 @@ public class UsuarioController {
                 return;
             }
 
+            if (usuario.getRol() == Rol.ADMINISTRADOR) {
+                loginView.mostrarMensaje(mi.get("login.mensaje.recuperacion_no_disponible_admin"));
+                return;
+            }
+
             Cuestionario cuestionario = cuestionarioDAO.buscarPorUsername(username);
             if (cuestionario == null || cuestionario.getRespuestas().isEmpty()) {
                 loginView.mostrarMensaje(mi.get("login.mensaje.sin_preguntas"));

@@ -27,14 +27,6 @@ public class Cuestionario {
         respuestas.add(respuesta);
     }
 
-    public boolean eliminarRespuestaPorId(int idPregunta) {
-        return respuestas.removeIf(r -> r.getId() == idPregunta);
-    }
-
-    public void limpiarRespuestas() {
-        respuestas.clear();
-    }
-
     public Respuesta buscarRespuestaPorId(int idPregunta) {
         for (Respuesta r : respuestas) {
             if (r.getId() == idPregunta) {
