@@ -3,6 +3,7 @@ package ec.edu.ups.poo.clases.vista.cuestionario;
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import java.net.URL;
 
 public class CuestionarioRecuperarView extends JFrame {
     private JComboBox<String> cbxPreguntas;
@@ -22,6 +23,7 @@ public class CuestionarioRecuperarView extends JFrame {
         setContentPane(panelPrincipal);
         setLocationRelativeTo(null);
         actualizarTextos();
+        inicializarImagenes();
     }
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
@@ -36,6 +38,24 @@ public class CuestionarioRecuperarView extends JFrame {
         UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
+    }
+
+    public void inicializarImagenes(){
+        URL guardar = CuestionarioRecuperarView.class.getClassLoader().getResource("imagenes/guardar.png");
+        if (guardar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(guardar);
+            btnGuardar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
+
+        URL finalizar = CuestionarioRecuperarView.class.getClassLoader().getResource("imagenes/finalizar.png");
+        if (finalizar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(finalizar);
+            btnFinalizar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
     }
 
 

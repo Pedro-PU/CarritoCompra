@@ -3,6 +3,7 @@ package ec.edu.ups.poo.clases.vista.usuario;
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import java.net.URL;
 
 public class UsuarioEliminarView extends JInternalFrame {
     private JPanel panelPrincipal;
@@ -22,6 +23,7 @@ public class UsuarioEliminarView extends JInternalFrame {
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(500, 500);
         cambiarIdioma();
+        inicializarImagenes();
     }
     public void limpiarCampos() {
         txtUsername.setText("");
@@ -107,6 +109,24 @@ public class UsuarioEliminarView extends JInternalFrame {
         UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
+    }
+
+    public void inicializarImagenes(){
+        URL buscar = UsuarioEliminarView.class.getClassLoader().getResource("imagenes/buscar.png");
+        if (buscar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(buscar);
+            btnBuscar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
+
+        URL eliminar = UsuarioEliminarView.class.getClassLoader().getResource("imagenes/eliminar.png");
+        if (eliminar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(eliminar);
+            btnEliminar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
     }
 
 }

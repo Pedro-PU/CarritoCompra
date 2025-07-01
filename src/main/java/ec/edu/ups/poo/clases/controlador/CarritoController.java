@@ -254,10 +254,10 @@ public class CarritoController {
                 carritoDetalleView.requestFocusInWindow();
 
             } else {
-                carritoDetalleView.mostrarMensaje(mi.get("carrito.msj.no.encontrado"));
+                carritoListaView.mostrarMensaje(mi.get("carrito.msj.no.encontrado"));
             }
         } else {
-            carritoDetalleView.mostrarMensaje(mi.get("carrito.msj.seleccione.carrito"));
+            carritoListaView.mostrarMensaje(mi.get("carrito.msj.seleccione.carrito"));
         }
     }
 

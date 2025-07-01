@@ -1,8 +1,10 @@
 package ec.edu.ups.poo.clases.vista.producto;
 
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
+import ec.edu.ups.poo.clases.vista.usuario.UsuarioEliminarView;
 
 import javax.swing.*;
+import java.net.URL;
 
 public class ProductoEliminarView extends JInternalFrame {
     private JPanel panelPrincipal;
@@ -31,6 +33,7 @@ public class ProductoEliminarView extends JInternalFrame {
         setIconifiable(true);
         this.mi = mi;
         cambiarIdioma();
+        inicializarImagenes();
     }
 
     public JLabel getLblCodigo() {
@@ -126,6 +129,23 @@ public class ProductoEliminarView extends JInternalFrame {
         UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
+    }
+    public void inicializarImagenes(){
+        URL buscar = ProductoEditarView.class.getClassLoader().getResource("imagenes/buscar.png");
+        if (buscar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(buscar);
+            btnBuscar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
+
+        URL eliminar = ProductoEditarView.class.getClassLoader().getResource("imagenes/eliminar.png");
+        if (eliminar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(eliminar);
+            btnEliminar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
     }
 
 }

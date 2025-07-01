@@ -1,9 +1,11 @@
 package ec.edu.ups.poo.clases.vista.producto;
 
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
+import ec.edu.ups.poo.clases.vista.usuario.UsuarioModificarView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.net.URL;
 
 public class ProductoEditarView extends JInternalFrame{
     private JPanel panelPrincipal;
@@ -34,9 +36,8 @@ public class ProductoEditarView extends JInternalFrame{
         setIconifiable(true);
         this.mi = mi;
         cambiarIdioma();
+        inicializarImagenes();
     }
-
-
 
     public JLabel getLblCodigo() {
         return lblCodigo;
@@ -156,4 +157,21 @@ public class ProductoEditarView extends JInternalFrame{
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
 
+    public void inicializarImagenes(){
+        URL buscar = ProductoEditarView.class.getClassLoader().getResource("imagenes/buscar.png");
+        if (buscar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(buscar);
+            btnBuscar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
+
+        URL editar = ProductoEditarView.class.getClassLoader().getResource("imagenes/editar.png");
+        if (editar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(editar);
+            btnActualizar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
+    }
 }

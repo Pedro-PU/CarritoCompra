@@ -2,10 +2,12 @@ package ec.edu.ups.poo.clases.vista.producto;
 
 import ec.edu.ups.poo.clases.modelo.Producto;
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
+import ec.edu.ups.poo.clases.vista.usuario.UsuarioCrearView;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.util.List;
 
 
@@ -44,6 +46,7 @@ public class ProductoAnadirView extends JInternalFrame{
             }
         });
         cambiarIdioma();
+        inicializarImagenes();
     }
     public void mostrarProductos(List<Producto> productos) {
         for (Producto producto : productos) {
@@ -74,6 +77,23 @@ public class ProductoAnadirView extends JInternalFrame{
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
 
+    public void inicializarImagenes(){
+        URL aceptar = ProductoAnadirView.class.getClassLoader().getResource("imagenes/aceptar.png");
+        if (aceptar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(aceptar);
+            btnAceptar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
+
+        URL limpiar = ProductoAnadirView.class.getClassLoader().getResource("imagenes/limpiar.png");
+        if (limpiar != null) {
+            ImageIcon iconoBtnRegistrarse = new ImageIcon(limpiar);
+            btnLimpiar.setIcon(iconoBtnRegistrarse);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Registrarse");
+        }
+    }
 
     public JLabel getLblTitulo() {
         return lblTitulo;

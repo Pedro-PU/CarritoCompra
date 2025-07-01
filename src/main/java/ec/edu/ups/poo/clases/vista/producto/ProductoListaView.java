@@ -3,9 +3,11 @@ package ec.edu.ups.poo.clases.vista.producto;
 import ec.edu.ups.poo.clases.modelo.Producto;
 import ec.edu.ups.poo.clases.util.FormateadorUtils;
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
+import ec.edu.ups.poo.clases.vista.usuario.UsuarioListarView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.net.URL;
 import java.util.List;
 
 public class ProductoListaView extends JInternalFrame {
@@ -37,6 +39,7 @@ public class ProductoListaView extends JInternalFrame {
 
         this.mi = mi;
         cambiarIdioma();
+        inicializarImagenes();
     }
 
     public JLabel getLblNombre() {
@@ -124,6 +127,23 @@ public class ProductoListaView extends JInternalFrame {
                     FormateadorUtils.formatearMoneda(producto.getPrecio(), mi.getLocale())
             };
             modelo.addRow(fila);
+        }
+    }
+
+    public void inicializarImagenes(){
+        URL buscar = ProductoListaView.class.getClassLoader().getResource("imagenes/buscar.png");
+        if (buscar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(buscar);
+            btnBuscar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
+        URL listar = ProductoListaView.class.getClassLoader().getResource("imagenes/listar.png");
+        if (listar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(listar);
+            btnListar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
         }
     }
 }

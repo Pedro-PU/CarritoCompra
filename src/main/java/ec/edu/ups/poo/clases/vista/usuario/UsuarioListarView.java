@@ -5,6 +5,7 @@ import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.net.URL;
 import java.util.List;
 
 public class UsuarioListarView extends JInternalFrame {
@@ -26,6 +27,7 @@ public class UsuarioListarView extends JInternalFrame {
         tblUsuarios.setModel(modelo);
         this.mi = mi;
         cambiarIdioma();
+        inicializarImagenes();
     }
 
     public void cambiarIdioma() {
@@ -54,6 +56,23 @@ public class UsuarioListarView extends JInternalFrame {
                     usuario.getContrasenia()
             };
             modelo.addRow(fila);
+        }
+    }
+
+    public void inicializarImagenes(){
+        URL buscar = UsuarioListarView.class.getClassLoader().getResource("imagenes/buscar.png");
+        if (buscar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(buscar);
+            btnBuscar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
+        URL listar = UsuarioListarView.class.getClassLoader().getResource("imagenes/listar.png");
+        if (listar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(listar);
+            btnListar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
         }
     }
 

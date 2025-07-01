@@ -3,6 +3,7 @@ package ec.edu.ups.poo.clases.vista.usuario;
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import java.net.URL;
 
 public class UsuarioModificarView extends JInternalFrame {
     private JTextField txtName;
@@ -23,6 +24,7 @@ public class UsuarioModificarView extends JInternalFrame {
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(500, 500);
         cambiarIdioma();
+        inicializarImagenes();
     }
 
     public void cambiarIdioma() {
@@ -52,6 +54,24 @@ public class UsuarioModificarView extends JInternalFrame {
         txtName.setText("");
         txtUsername.setText("");
         txtContrasenia.setText("");
+    }
+
+    public void inicializarImagenes(){
+        URL buscar = UsuarioModificarView.class.getClassLoader().getResource("imagenes/buscar.png");
+        if (buscar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(buscar);
+            btnBuscar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
+
+        URL editar = UsuarioModificarView.class.getClassLoader().getResource("imagenes/editar.png");
+        if (editar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(editar);
+            btnEditar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
     }
 
     public JTextField getTxtName() {

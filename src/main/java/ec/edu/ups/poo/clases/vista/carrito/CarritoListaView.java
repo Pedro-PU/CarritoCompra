@@ -6,6 +6,7 @@ import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.net.URL;
 import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -35,6 +36,7 @@ public class CarritoListaView extends JInternalFrame{
 
         this.mi = mi;
         cambiarIdioma();
+        inicializarImagenes();
     }
 
     public JLabel getLblBuscarCodigo() {
@@ -140,5 +142,31 @@ public class CarritoListaView extends JInternalFrame{
         UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
+    }
+
+    public void inicializarImagenes(){
+        URL eliminar = CarritoListaView.class.getClassLoader().getResource("imagenes/listar.png");
+        if (eliminar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(eliminar);
+            btnListar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
+
+        URL buscar = CarritoListaView.class.getClassLoader().getResource("imagenes/buscar.png");
+        if (buscar != null) {
+            ImageIcon iconoBtnRegistrarse = new ImageIcon(buscar);
+            btnBuscar.setIcon(iconoBtnRegistrarse);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Registrarse");
+        }
+
+        URL detalle = CarritoListaView.class.getClassLoader().getResource("imagenes/detalles.png");
+        if (detalle != null) {
+            ImageIcon iconoBtnRegistrarse = new ImageIcon(detalle);
+            btnDetalle.setIcon(iconoBtnRegistrarse);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Registrarse");
+        }
     }
 }

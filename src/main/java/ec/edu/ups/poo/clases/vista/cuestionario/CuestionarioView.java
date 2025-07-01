@@ -1,8 +1,10 @@
 package ec.edu.ups.poo.clases.vista.cuestionario;
 
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
+import ec.edu.ups.poo.clases.vista.usuario.LoginView;
 
 import javax.swing.*;
+import java.net.URL;
 
 public class CuestionarioView extends JFrame {
     private JPanel panelPrincipal;
@@ -21,6 +23,7 @@ public class CuestionarioView extends JFrame {
         setContentPane(panelPrincipal);
         setLocationRelativeTo(null);
         actualizarTextos();
+        inicializarImagenes();
     }
 
     public void mostrarMensaje(String mensaje) {
@@ -38,6 +41,23 @@ public class CuestionarioView extends JFrame {
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
 
+    public void inicializarImagenes(){
+        URL guardar = CuestionarioView.class.getClassLoader().getResource("imagenes/guardar.png");
+        if (guardar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(guardar);
+            btnGuardar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
+
+        URL finalizar = CuestionarioView.class.getClassLoader().getResource("imagenes/finalizar.png");
+        if (finalizar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(finalizar);
+            btnFinalizar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
+    }
 
     public JLabel getLblTitulo() {
         return lblTitulo;

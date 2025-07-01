@@ -13,6 +13,7 @@ public class Cuestionario {
     public Cuestionario(String username) {
         this.username = username;
         this.respuestas = new ArrayList<>();
+
     }
 
     public String getUsername() {

@@ -5,6 +5,7 @@ import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 
 public class UsuarioCrearView extends JInternalFrame {
     private JPanel panelPrincipal;
@@ -31,6 +32,7 @@ public class UsuarioCrearView extends JInternalFrame {
             }
         });
         cambiarIdioma();
+        inicializarImagenes();
     }
     public void limpiarCampos() {
         txtUsername.setText("");
@@ -44,6 +46,24 @@ public class UsuarioCrearView extends JInternalFrame {
         int respuesta = JOptionPane.showConfirmDialog(this, mensaje, "Confirmación",
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         return respuesta == JOptionPane.YES_OPTION;
+    }
+
+    public void inicializarImagenes(){
+        URL aceptar = UsuarioCrearView.class.getClassLoader().getResource("imagenes/aceptar.png");
+        if (aceptar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(aceptar);
+            btnAceptar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
+
+        URL limpiar = UsuarioCrearView.class.getClassLoader().getResource("imagenes/limpiar.png");
+        if (limpiar != null) {
+            ImageIcon iconoBtnRegistrarse = new ImageIcon(limpiar);
+            btnLimpiar.setIcon(iconoBtnRegistrarse);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Registrarse");
+        }
     }
 
     public JLabel getLblTitulo() {

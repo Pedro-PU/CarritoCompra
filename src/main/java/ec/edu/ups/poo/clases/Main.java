@@ -40,7 +40,7 @@ public class Main {
             CarritoDAO carritoDAO = new CarritoDAOMemoria();
 
             CuestionarioDAO cuestionarioDAO = new CuestionarioDAOMemoria();
-            UsuarioDAO usuarioDAO = new UsuarioDAOMemoria(cuestionarioDAO);
+            UsuarioDAO usuarioDAO = new UsuarioDAOMemoria();
 
             LoginView loginView = new LoginView(mi);
 

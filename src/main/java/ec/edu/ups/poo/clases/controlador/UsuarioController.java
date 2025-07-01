@@ -1,7 +1,6 @@
 package ec.edu.ups.poo.clases.controlador;
 import ec.edu.ups.poo.clases.dao.CuestionarioDAO;
 import ec.edu.ups.poo.clases.dao.UsuarioDAO;
-import ec.edu.ups.poo.clases.dao.impl.CuestionarioDAOMemoria;
 import ec.edu.ups.poo.clases.modelo.Cuestionario;
 import ec.edu.ups.poo.clases.modelo.Rol;
 import ec.edu.ups.poo.clases.modelo.Usuario;
@@ -195,6 +194,12 @@ public class UsuarioController {
             String username = loginView.getTxtUsername().getText().trim();
             String contrasenia = loginView.getTxtContrasenia().getText().trim();
 
+            // Verificar campos vacíos
+            if (username.isEmpty() || contrasenia.isEmpty()) {
+                loginView.mostrarMensaje(mi.get("login.mensaje.error_campos_vacios"));
+                return;
+            }
+
             if (usuarioDAO.buscarPorUsername(username) != null) {
                 loginView.mostrarMensaje(mi.get("login.mensaje.error_usuario_existente"));
                 return;
@@ -205,8 +210,8 @@ public class UsuarioController {
             loginView.mostrarMensaje(mi.get("login.mensaje.usuario_creado"));
 
             CuestionarioView cuestionarioView = new CuestionarioView(mi);
-            CuestionarioController cuestionarioController = new CuestionarioController(cuestionarioView,
-                    cuestionarioDAO, username, mi);
+            CuestionarioController cuestionarioController = new CuestionarioController(
+                    cuestionarioView, cuestionarioDAO, username, mi);
             cuestionarioView.setVisible(true);
 
             loginView.setVisible(false);
@@ -222,6 +227,7 @@ public class UsuarioController {
             loginView.mostrarMensaje(mi.get("login.mensaje.creacion_cancelada"));
         }
     }
+
 
     private void recuperar() {
         boolean confirmado = loginView.mostrarMensajePregunta(mi.get("login.mensaje.pregunta_recuperar"));

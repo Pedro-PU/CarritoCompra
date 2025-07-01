@@ -1,9 +1,11 @@
 package ec.edu.ups.poo.clases.vista.carrito;
 
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
+import ec.edu.ups.poo.clases.vista.usuario.UsuarioCrearView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.net.URL;
 
 public class CarritoAnadirView extends JInternalFrame {
     private JPanel panelPrincipal;
@@ -41,6 +43,7 @@ public class CarritoAnadirView extends JInternalFrame {
         cargarDatos();
         this.mi = mi;
         cambiarIdioma();
+        inicializarImagenes();
     }
 
     private void cargarDatos() {
@@ -81,6 +84,47 @@ public class CarritoAnadirView extends JInternalFrame {
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
 
+    public void inicializarImagenes(){
+        URL aceptar = CarritoAnadirView.class.getClassLoader().getResource("imagenes/aceptar.png");
+        if (aceptar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(aceptar);
+            btnAceptar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
+
+        URL limpiar = CarritoAnadirView.class.getClassLoader().getResource("imagenes/limpiar.png");
+        if (limpiar != null) {
+            ImageIcon iconoBtnRegistrarse = new ImageIcon(limpiar);
+            btnLimpiar.setIcon(iconoBtnRegistrarse);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Registrarse");
+        }
+
+        URL anadir = CarritoAnadirView.class.getClassLoader().getResource("imagenes/anadir.png");
+        if (anadir != null) {
+            ImageIcon iconoBtnRegistrarse = new ImageIcon(anadir);
+            btnAnadir.setIcon(iconoBtnRegistrarse);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Registrarse");
+        }
+
+        URL borrar = CarritoAnadirView.class.getClassLoader().getResource("imagenes/anadir.png");
+        if (borrar != null) {
+            ImageIcon iconoBtnRegistrarse = new ImageIcon(borrar);
+            btnBorrar.setIcon(iconoBtnRegistrarse);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Registrarse");
+        }
+
+        URL buscar = CarritoAnadirView.class.getClassLoader().getResource("imagenes/buscar.png");
+        if (buscar != null) {
+            ImageIcon iconoBtnRegistrarse = new ImageIcon(buscar);
+            btnBuscar.setIcon(iconoBtnRegistrarse);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Registrarse");
+        }
+    }
 
     public JLabel getLblBuscarCodigo() {
         return lblBuscarCodigo;

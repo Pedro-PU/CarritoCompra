@@ -4,6 +4,7 @@ import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import java.util.Locale;
+import java.net.URL;
 
 public class LoginView extends JFrame{
     private JPanel panelPrincipal;
@@ -28,6 +29,7 @@ public class LoginView extends JFrame{
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         add(panelPrincipal);
+        inicializarImagenes();
         inicializarComponentes();
     }
 
@@ -135,6 +137,41 @@ public class LoginView extends JFrame{
         cbxIdiomas.addItem(mi.get("menu.idioma.en")); // Inglés
         cbxIdiomas.addItem(mi.get("menu.idioma.fr")); // Francés
         actualizarTextos();
+    }
+
+    public void inicializarImagenes(){
+        URL loginURL = LoginView.class.getClassLoader().getResource("imagenes/login.png");
+        if (loginURL != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(loginURL);
+            btnIniciar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
+
+        URL registrarseURL = LoginView.class.getClassLoader().getResource("imagenes/registrarse.png");
+        if (registrarseURL != null) {
+            ImageIcon iconoBtnRegistrarse = new ImageIcon(registrarseURL);
+            btnRegistrar.setIcon(iconoBtnRegistrarse);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Registrarse");
+        }
+
+        URL olvido = LoginView.class.getClassLoader().getResource("imagenes/confusion.png");
+        if (olvido != null) {
+            ImageIcon iconoBtnRegistrarse = new ImageIcon(olvido);
+            btnOlvidar.setIcon(iconoBtnRegistrarse);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Registrarse");
+        }
+
+        URL salir = LoginView.class.getClassLoader().getResource("imagenes/salir.png");
+        if (salir != null) {
+            ImageIcon iconoBtnRegistrarse = new ImageIcon(salir);
+            btnSalir.setIcon(iconoBtnRegistrarse);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Registrarse");
+        }
+
     }
 
     public void actualizarTextos() {
