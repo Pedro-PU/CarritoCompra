@@ -1,12 +1,14 @@
 package ec.edu.ups.poo.clases.vista.usuario;
 
 import ec.edu.ups.poo.clases.modelo.Usuario;
+import ec.edu.ups.poo.clases.util.FormateadorUtils;
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 
 public class UsuarioListarView extends JInternalFrame {
     private JTextField txtBuscar;
@@ -21,7 +23,7 @@ public class UsuarioListarView extends JInternalFrame {
         super("Listar Usuarios", true,true,false,true);
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        setSize(500, 500);
+        setSize(700, 500);
 
         modelo = new DefaultTableModel();
         tblUsuarios.setModel(modelo);
@@ -38,7 +40,11 @@ public class UsuarioListarView extends JInternalFrame {
 
         Object[] columnas = {
                 mi.get("usuario.listar.columna.username"),
-                mi.get("usuario.listar.columna.contrasenia")
+                mi.get("usuario.listar.columna.contrasenia"),
+                mi.get("usuario.listar.columna.nombre"),
+                mi.get("usuario.listar.columna.celular"),
+                mi.get("usuario.listar.columna.correo"),
+                mi.get("usuario.listar.columna.fecha")
         };
         modelo.setColumnIdentifiers(columnas);
 
@@ -50,14 +56,23 @@ public class UsuarioListarView extends JInternalFrame {
 
     public void cargarDatos(List<Usuario> listaUsuarios) {
         modelo.setNumRows(0);
+        Locale locale = mi.getLocale();
+
         for (Usuario usuario : listaUsuarios) {
+            String fechaFormateada = FormateadorUtils.formatearFecha(usuario.getFecha().getTime(), locale);
+
             Object[] fila = {
                     usuario.getUsername(),
-                    usuario.getContrasenia()
+                    usuario.getContrasenia(),
+                    usuario.getNombre(),
+                    usuario.getCelular(),
+                    usuario.getEmail(),
+                    fechaFormateada
             };
             modelo.addRow(fila);
         }
     }
+
 
     public void inicializarImagenes(){
         URL buscar = UsuarioListarView.class.getClassLoader().getResource("imagenes/buscar.png");

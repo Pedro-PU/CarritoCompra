@@ -13,7 +13,7 @@ public class PrincipalView extends JFrame {
     private JMenuItem menuItemEliminarProducto;
     private JMenuItem menuItemActualizarProducto;
     private JMenuItem menuItemBuscarProducto;
-    private JDesktopPane jDesktopPane;
+    private MiJDesktopPane jDesktopPane;
     private JMenuItem menuItemCrearCarrito;
     private JMenuItem menuItemListarCarrito;
     private JMenuItem menuItemEditarCarrito;
@@ -38,8 +38,7 @@ public class PrincipalView extends JFrame {
         this.usuarioAutenticado = usuarioAutenticado;
 
         JPanel panelPrincipal = new JPanel(new BorderLayout());
-
-        jDesktopPane = new JDesktopPane();
+        jDesktopPane = new MiJDesktopPane();
 
         // Barra de menú y menús
         menuBar = new JMenuBar();

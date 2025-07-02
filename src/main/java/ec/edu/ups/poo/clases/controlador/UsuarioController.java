@@ -15,6 +15,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class UsuarioController {
@@ -161,7 +163,7 @@ public class UsuarioController {
 
                 CuestionarioView cuestionarioView = new CuestionarioView(mi);
                 CuestionarioController controller = new CuestionarioController(
-                        cuestionarioView, cuestionarioDAO, username, mi);
+                        cuestionarioView, cuestionarioDAO, usuarioDAO, usuario, mi, true);
                 cuestionarioView.setVisible(true);
                 loginView.setVisible(false);
 
@@ -177,6 +179,7 @@ public class UsuarioController {
                 loginView.dispose();
             }
         }
+
     }
 
 
@@ -191,27 +194,10 @@ public class UsuarioController {
     private void registrar() {
         boolean confirmado = loginView.mostrarMensajePregunta(mi.get("login.mensaje.pregunta_registro"));
         if (confirmado) {
-            String username = loginView.getTxtUsername().getText().trim();
-            String contrasenia = loginView.getTxtContrasenia().getText().trim();
-
-            // Verificar campos vacíos
-            if (username.isEmpty() || contrasenia.isEmpty()) {
-                loginView.mostrarMensaje(mi.get("login.mensaje.error_campos_vacios"));
-                return;
-            }
-
-            if (usuarioDAO.buscarPorUsername(username) != null) {
-                loginView.mostrarMensaje(mi.get("login.mensaje.error_usuario_existente"));
-                return;
-            }
-
-            Usuario nuevoUsuario = new Usuario(username, contrasenia, Rol.USUARIO);
-            usuarioDAO.crear(nuevoUsuario);
-            loginView.mostrarMensaje(mi.get("login.mensaje.usuario_creado"));
-
             CuestionarioView cuestionarioView = new CuestionarioView(mi);
             CuestionarioController cuestionarioController = new CuestionarioController(
-                    cuestionarioView, cuestionarioDAO, username, mi);
+                    cuestionarioView, cuestionarioDAO, usuarioDAO, mi
+            );
             cuestionarioView.setVisible(true);
 
             loginView.setVisible(false);
@@ -219,7 +205,7 @@ public class UsuarioController {
             cuestionarioView.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             cuestionarioView.addWindowListener(new WindowAdapter() {
                 @Override
-                public void windowClosed(WindowEvent e){
+                public void windowClosed(WindowEvent e) {
                     loginView.setVisible(true);
                 }
             });
@@ -227,7 +213,6 @@ public class UsuarioController {
             loginView.mostrarMensaje(mi.get("login.mensaje.creacion_cancelada"));
         }
     }
-
 
     private void recuperar() {
         boolean confirmado = loginView.mostrarMensajePregunta(mi.get("login.mensaje.pregunta_recuperar"));
@@ -275,70 +260,189 @@ public class UsuarioController {
 
     private void crear() {
         boolean confirmado = usuarioCrearView.mostrarMensajePregunta(mi.get("usuario.mensaje.crear.pregunta"));
-        if (confirmado) {
-            String username = usuarioCrearView.getTxtUsername().getText();
-            String contrasenia = usuarioCrearView.getTxtContrasenia().getText();
-
-            if (usuarioDAO.buscarPorUsername(username) != null) {
-                usuarioCrearView.mostrarMensaje(mi.get("usuario.mensaje.crear.existe"));
-                return;
-            }
-
-            Usuario usuario1 = new Usuario(username, contrasenia, Rol.USUARIO);
-            usuarioDAO.crear(usuario1);
-            usuarioCrearView.mostrarMensaje(mi.get("usuario.mensaje.creado"));
-            usuarioCrearView.limpiarCampos();
-        } else {
+        if (!confirmado) {
             usuarioCrearView.mostrarMensaje(mi.get("usuario.mensaje.crear.cancelado"));
+            return;
         }
+
+        String username = usuarioCrearView.getTxtUsername().getText().trim();
+        String contrasenia = usuarioCrearView.getTxtContrasenia().getText().trim();
+        String nombre = usuarioCrearView.getTxtNombre().getText().trim();
+        String celular = usuarioCrearView.getTxtCelular().getText().trim();
+        String correo = usuarioCrearView.getTxtCorreo().getText().trim();
+        int dia = (int) usuarioCrearView.getSpnDia().getValue();
+        int mes = (int) usuarioCrearView.getSpnMes().getValue();
+        int anio = (int) usuarioCrearView.getSpnAnio().getValue();
+
+        if (username.isEmpty() || contrasenia.isEmpty() || nombre.isEmpty() || celular.isEmpty() || correo.isEmpty()) {
+            usuarioCrearView.mostrarMensaje(mi.get("cuestionario.finalizar.error_datos_vacios"));
+            return;
+        }
+
+        if (!celular.matches("\\d{7,15}")) {
+            usuarioCrearView.mostrarMensaje("Número de celular inválido. Solo dígitos y al menos 7 números.");
+            return;
+        }
+
+        if (!correo.matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$")) {
+            usuarioCrearView.mostrarMensaje("Correo electrónico inválido.");
+            return;
+        }
+
+        if (dia < 1 || dia > 31 || mes < 1 || mes > 12 || anio < 1) {
+            usuarioCrearView.mostrarMensaje("Fecha de nacimiento inválida.");
+            return;
+        }
+
+        if (usuarioDAO.buscarPorUsername(username) != null) {
+            usuarioCrearView.mostrarMensaje(mi.get("usuario.mensaje.crear.existe"));
+            return;
+        }
+
+        GregorianCalendar fechaNacimiento = new GregorianCalendar(anio, mes - 1, dia); // mes - 1 porque enero = 0
+        Usuario usuario1 = new Usuario(username, contrasenia, Rol.USUARIO, nombre, celular, fechaNacimiento, correo);
+        usuarioDAO.crear(usuario1);
+
+        usuarioCrearView.mostrarMensaje(mi.get("usuario.mensaje.creado"));
+        usuarioCrearView.limpiarCampos();
     }
-    private void eliminar(){
+
+
+    private void eliminar() {
         boolean confirmado = usuarioEliminarView.mostrarMensajePregunta(mi.get("usuario.mensaje.eliminar.pregunta"));
-        if (confirmado) {
-            String username = usuarioEliminarView.getTxtUsername().getText();
-            Usuario usuario1 = usuarioDAO.buscarPorUsername(username);
-            usuarioDAO.eliminar(username);
-            usuarioEliminarView.mostrarMensaje(mi.get("usuario.mensaje.eliminado"));
-            usuarioEliminarView.limpiarCampos();
-        }else{
+        if (!confirmado) {
             usuarioEliminarView.mostrarMensaje(mi.get("usuario.mensaje.crear.cancelado"));
+            return;
         }
-    }
-    private void buscarEliminar(){
-        String username = usuarioEliminarView.getTxtUsername().getText();
-        Usuario usuario1 = usuarioDAO.buscarPorUsername(username);
-        if(usuario1 != null){
-            usuarioEliminarView.getTxtContrasenia().setText(usuario1.getContrasenia());
-        }else{
-            usuarioEliminarView.mostrarMensaje(mi.get("usuario.mensaje.no.encontrado"));
+
+        String username = usuarioEliminarView.getTxtUsername().getText().trim();
+
+        if (username.isEmpty()) {
+            usuarioEliminarView.mostrarMensaje("Debe ingresar un nombre de usuario.");
+            return;
         }
+
+        Usuario usuario = usuarioDAO.buscarPorUsername(username);
+
+        if (usuario == null) {
+            usuarioEliminarView.mostrarMensaje("El usuario no existe.");
+            return;
+        }
+
+        usuarioDAO.eliminar(username);
+        usuarioEliminarView.mostrarMensaje(mi.get("usuario.mensaje.eliminado"));
+        usuarioEliminarView.limpiarCampos();
     }
-    private void buscarModificar(){
-        String username = usuarioModificarView.getTxtName().getText();
+
+    private void buscarEliminar() {
+        String username = usuarioEliminarView.getTxtUsername().getText().trim();
+
+        if (username.isEmpty()) {
+            usuarioEliminarView.mostrarMensaje("Ingrese un nombre de usuario para buscar.");
+            return;
+        }
+
+        Usuario usuario = usuarioDAO.buscarPorUsername(username);
+
+        if (usuario == null) {
+            usuarioEliminarView.mostrarMensaje("Usuario no encontrado.");
+            usuarioEliminarView.limpiarCampos();
+            return;
+        }
+
+        usuarioEliminarView.getTxtContrasenia().setText(usuario.getContrasenia());
+        usuarioEliminarView.getTxtNombre().setText(usuario.getNombre());
+        usuarioEliminarView.getTxtCelular().setText(usuario.getCelular());
+        usuarioEliminarView.getTxtCorreo().setText(usuario.getEmail());
+
+        GregorianCalendar fecha = usuario.getFecha();
+        usuarioEliminarView.getSpnDia().setValue(fecha.get(Calendar.DAY_OF_MONTH));
+        usuarioEliminarView.getSpnMes().setValue(fecha.get(Calendar.MONTH) + 1);
+        usuarioEliminarView.getSpnAnio().setValue(fecha.get(Calendar.YEAR));
+    }
+
+    private void buscarModificar() {
+        String username = usuarioModificarView.getTxtName().getText().trim();
         Usuario usuario1 = usuarioDAO.buscarPorUsername(username);
-        if(usuario1 != null){
+
+        if (usuario1 != null) {
             usuarioModificarView.getTxtUsername().setText(usuario1.getUsername());
             usuarioModificarView.getTxtContrasenia().setText(usuario1.getContrasenia());
-        }else{
+            usuarioModificarView.getTxtNombre().setText(usuario1.getNombre());
+            usuarioModificarView.getTxtCelular().setText(usuario1.getCelular());
+            usuarioModificarView.getTxtCorreo().setText(usuario1.getEmail());
+
+            GregorianCalendar fecha = usuario1.getFecha();
+            usuarioModificarView.getSpnDia().setValue(fecha.get(Calendar.DAY_OF_MONTH));
+            usuarioModificarView.getSpnMes().setValue(fecha.get(Calendar.MONTH) + 1);
+            usuarioModificarView.getSpnAnio().setValue(fecha.get(Calendar.YEAR));
+
+            usuarioModificarView.habilitarCampos(true);
+        } else {
             usuarioModificarView.mostrarMensaje(mi.get("usuario.mensaje.no.encontrado"));
+            usuarioModificarView.habilitarCampos(false);
         }
     }
-    private void editar(){
+
+    private void editar() {
         boolean confirmado = usuarioModificarView.mostrarMensajePregunta(mi.get("usuario.mensaje.editar.pregunta"));
-        if (confirmado) {
-            String username = usuarioModificarView.getTxtName().getText();
-            Usuario usuario1 = usuarioDAO.buscarPorUsername(username);
-            if(usuario1 != null){
-                usuario1.setUsername(usuarioModificarView.getTxtUsername().getText());
-                usuario1.setContrasenia(usuarioModificarView.getTxtContrasenia().getText());
-                usuarioDAO.actualizar(usuario1);
-                usuarioModificarView.mostrarMensaje(mi.get("usuario.mensaje.modificado"));
-                usuarioModificarView.limpiarCampos();
-            }else{
-                usuarioModificarView.mostrarMensaje(mi.get("usuario.mensaje.no.encontrado"));
-            }
+        if (!confirmado) return;
+
+        String usernameOriginal = usuarioModificarView.getTxtName().getText().trim();
+        Usuario usuario1 = usuarioDAO.buscarPorUsername(usernameOriginal);
+
+        if (usuario1 == null) {
+            usuarioModificarView.mostrarMensaje(mi.get("usuario.mensaje.no.encontrado"));
+            return;
         }
+
+        String usernameNuevo = usuarioModificarView.getTxtUsername().getText().trim();
+        String contrasenia = usuarioModificarView.getTxtContrasenia().getText().trim();
+        String nombre = usuarioModificarView.getTxtNombre().getText().trim();
+        String celular = usuarioModificarView.getTxtCelular().getText().trim();
+        String correo = usuarioModificarView.getTxtCorreo().getText().trim();
+        int dia = (int) usuarioModificarView.getSpnDia().getValue();
+        int mes = (int) usuarioModificarView.getSpnMes().getValue();
+        int anio = (int) usuarioModificarView.getSpnAnio().getValue();
+
+        if (usernameNuevo.isEmpty() || contrasenia.isEmpty() || nombre.isEmpty() || celular.isEmpty() || correo.isEmpty()) {
+            usuarioModificarView.mostrarMensaje(mi.get("cuestionario.finalizar.error_datos_vacios"));
+            return;
+        }
+
+        if (!celular.matches("\\d{7,15}")) {
+            usuarioModificarView.mostrarMensaje("Número de celular inválido. Solo dígitos y mínimo 7 caracteres.");
+            return;
+        }
+
+        if (!correo.matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$")) {
+            usuarioModificarView.mostrarMensaje("Correo electrónico inválido.");
+            return;
+        }
+
+        if (dia < 1 || dia > 31 || mes < 1 || mes > 12 || anio < 1) {
+            usuarioModificarView.mostrarMensaje("Fecha de nacimiento inválida.");
+            return;
+        }
+        if (!usernameNuevo.equals(usernameOriginal) && usuarioDAO.buscarPorUsername(usernameNuevo) != null) {
+            usuarioModificarView.mostrarMensaje(mi.get("usuario.mensaje.crear.existe"));
+            return;
+        }
+
+        usuario1.setUsername(usernameNuevo);
+        usuario1.setContrasenia(contrasenia);
+        usuario1.setNombre(nombre);
+        usuario1.setCelular(celular);
+        usuario1.setEmail(correo);
+        usuario1.setFecha(new GregorianCalendar(anio, mes - 1, dia));
+
+        usuarioDAO.actualizar(usuario1);
+        usuarioModificarView.mostrarMensaje(mi.get("usuario.mensaje.modificado"));
+        usuarioModificarView.limpiarCampos();
+        usuarioModificarView.habilitarCampos(false);
     }
+
+
     private void buscarUsario(){
         String username = usuarioListarView.getTxtBuscar().getText();
         Usuario usuarioEncontrado = usuarioDAO.buscarPorUsername(username);

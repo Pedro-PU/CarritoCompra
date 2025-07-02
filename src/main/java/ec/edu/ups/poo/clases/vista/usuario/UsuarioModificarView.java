@@ -15,6 +15,16 @@ public class UsuarioModificarView extends JInternalFrame {
     private JLabel lblBuscar;
     private JLabel lblUsername;
     private JLabel lblContrasenia;
+    private JLabel lblNombre;
+    private JTextField txtNombre;
+    private JLabel lblFecha;
+    private JSpinner spnDia;
+    private JSpinner spnMes;
+    private JSpinner spnAnio;
+    private JLabel lblCelular;
+    private JTextField txtCelular;
+    private JLabel lblCorreo;
+    private JTextField txtCorreo;
     private MensajeInternacionalizacionHandler mi;
 
     public UsuarioModificarView(MensajeInternacionalizacionHandler mi) {
@@ -25,6 +35,10 @@ public class UsuarioModificarView extends JInternalFrame {
         setSize(500, 500);
         cambiarIdioma();
         inicializarImagenes();
+        spnDia.setModel(new SpinnerNumberModel(1, 1, 31, 1));
+        spnMes.setModel(new SpinnerNumberModel(1, 1, 12, 1));
+        spnAnio.setModel(new SpinnerNumberModel(2000, 1, 2100, 1));
+        habilitarCampos(false);
     }
 
     public void cambiarIdioma() {
@@ -54,6 +68,12 @@ public class UsuarioModificarView extends JInternalFrame {
         txtName.setText("");
         txtUsername.setText("");
         txtContrasenia.setText("");
+        txtNombre.setText("");
+        txtCelular.setText("");
+        txtCorreo.setText("");
+        spnDia.setValue(0);
+        spnMes.setValue(0);
+        spnAnio.setValue(0);
     }
 
     public void inicializarImagenes(){
@@ -72,6 +92,120 @@ public class UsuarioModificarView extends JInternalFrame {
         } else {
             System.err.println("Error: No se ha cargado el icono de Login");
         }
+    }
+    public void habilitarCampos(boolean habilitar) {
+        txtUsername.setEnabled(habilitar);
+        txtContrasenia.setEnabled(habilitar);
+        txtNombre.setEnabled(habilitar);
+        txtCelular.setEnabled(habilitar);
+        txtCorreo.setEnabled(habilitar);
+        spnDia.setEnabled(habilitar);
+        spnMes.setEnabled(habilitar);
+        spnAnio.setEnabled(habilitar);
+    }
+
+    public JLabel getLblBuscar() {
+        return lblBuscar;
+    }
+
+    public void setLblBuscar(JLabel lblBuscar) {
+        this.lblBuscar = lblBuscar;
+    }
+
+    public JLabel getLblUsername() {
+        return lblUsername;
+    }
+
+    public void setLblUsername(JLabel lblUsername) {
+        this.lblUsername = lblUsername;
+    }
+
+    public JLabel getLblContrasenia() {
+        return lblContrasenia;
+    }
+
+    public void setLblContrasenia(JLabel lblContrasenia) {
+        this.lblContrasenia = lblContrasenia;
+    }
+
+    public JLabel getLblNombre() {
+        return lblNombre;
+    }
+
+    public void setLblNombre(JLabel lblNombre) {
+        this.lblNombre = lblNombre;
+    }
+
+    public JTextField getTxtNombre() {
+        return txtNombre;
+    }
+
+    public void setTxtNombre(JTextField txtNombre) {
+        this.txtNombre = txtNombre;
+    }
+
+    public JLabel getLblFecha() {
+        return lblFecha;
+    }
+
+    public void setLblFecha(JLabel lblFecha) {
+        this.lblFecha = lblFecha;
+    }
+
+    public JSpinner getSpnDia() {
+        return spnDia;
+    }
+
+    public void setSpnDia(JSpinner spnDia) {
+        this.spnDia = spnDia;
+    }
+
+    public JSpinner getSpnMes() {
+        return spnMes;
+    }
+
+    public void setSpnMes(JSpinner spnMes) {
+        this.spnMes = spnMes;
+    }
+
+    public JSpinner getSpnAnio() {
+        return spnAnio;
+    }
+
+    public void setSpnAnio(JSpinner spnAnio) {
+        this.spnAnio = spnAnio;
+    }
+
+    public JLabel getLblCelular() {
+        return lblCelular;
+    }
+
+    public void setLblCelular(JLabel lblCelular) {
+        this.lblCelular = lblCelular;
+    }
+
+    public JTextField getTxtCelular() {
+        return txtCelular;
+    }
+
+    public void setTxtCelular(JTextField txtCelular) {
+        this.txtCelular = txtCelular;
+    }
+
+    public JLabel getLblCorreo() {
+        return lblCorreo;
+    }
+
+    public void setLblCorreo(JLabel lblCorreo) {
+        this.lblCorreo = lblCorreo;
+    }
+
+    public JTextField getTxtCorreo() {
+        return txtCorreo;
+    }
+
+    public void setTxtCorreo(JTextField txtCorreo) {
+        this.txtCorreo = txtCorreo;
     }
 
     public JTextField getTxtName() {

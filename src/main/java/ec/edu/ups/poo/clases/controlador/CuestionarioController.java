@@ -1,63 +1,48 @@
 package ec.edu.ups.poo.clases.controlador;
 
 import ec.edu.ups.poo.clases.dao.CuestionarioDAO;
+import ec.edu.ups.poo.clases.dao.UsuarioDAO;
 import ec.edu.ups.poo.clases.modelo.Cuestionario;
 import ec.edu.ups.poo.clases.modelo.Respuesta;
+import ec.edu.ups.poo.clases.modelo.Rol;
+import ec.edu.ups.poo.clases.modelo.Usuario;
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.poo.clases.vista.cuestionario.CuestionarioRecuperarView;
 import ec.edu.ups.poo.clases.vista.cuestionario.CuestionarioView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class CuestionarioController {
 
     private final CuestionarioView cuestionarioView;
     private final CuestionarioRecuperarView recuperarView;
     private final CuestionarioDAO cuestionarioDAO;
-    private final Cuestionario cuestionario;
+    private Cuestionario cuestionario;
     private List<Respuesta> preguntasAleatorias;
     private List<Respuesta> respuestasCorrectas;
     private final MensajeInternacionalizacionHandler mi;
+    private UsuarioDAO usuarioDAO;
+    private boolean usuarioYaRegistrado;
+    private Usuario usuario;
 
 
-    public CuestionarioController(CuestionarioView vista, CuestionarioDAO dao, String username,
-                                  MensajeInternacionalizacionHandler mi) {
+    public CuestionarioController(CuestionarioView vista, CuestionarioDAO dao,
+                                  UsuarioDAO usuarioDAO, MensajeInternacionalizacionHandler mi) {
         this.mi = mi;
         this.cuestionarioView = vista;
         this.cuestionarioDAO = dao;
-        this.cuestionario = new Cuestionario(username);
+        this.usuarioDAO = usuarioDAO;
         this.recuperarView = null;
-
-        this.cuestionario.aplicarIdioma(mi);
-
-        List<Respuesta> todasLasPreguntas = cuestionario.preguntasPorDefecto();
-        preguntasAleatorias = new ArrayList<>();
-
-        boolean[] usadas = new boolean[todasLasPreguntas.size()];
-        int cantidadDeseada = 6;
-        int cantidadActual = 0;
-        Random random = new Random();
-
-        while (cantidadActual < cantidadDeseada) {
-            int indice = random.nextInt(todasLasPreguntas.size());
-            if (!usadas[indice]) {
-                preguntasAleatorias.add(todasLasPreguntas.get(indice));
-                usadas[indice] = true;
-                cantidadActual++;
-            }
-        }
-
+        this.cuestionario = null;
 
         cargarComboPreguntas();
         configurarEventosCuestionario();
     }
+
     public CuestionarioController(CuestionarioRecuperarView recuperarView, CuestionarioDAO dao,
-                                  String username, String contrasenia, MensajeInternacionalizacionHandler mi){
+                                  String username, String contrasenia, MensajeInternacionalizacionHandler mi){//Constructor para recuperar contraseña de usuario
         this.mi = mi;
         this.cuestionarioDAO = dao;
         this.cuestionarioView = null;
@@ -86,6 +71,35 @@ public class CuestionarioController {
 
     }
 
+    public CuestionarioController(CuestionarioView vista, CuestionarioDAO cuestionarioDAO,
+                                  UsuarioDAO usuarioDAO, Usuario usuario,
+                                  MensajeInternacionalizacionHandler mi, boolean usuarioYaRegistrado) {
+        this.mi = mi;
+        this.cuestionarioView = vista;
+        this.cuestionarioDAO = cuestionarioDAO;
+        this.usuarioDAO = usuarioDAO;
+        this.recuperarView = null;
+        this.usuarioYaRegistrado = usuarioYaRegistrado;
+        this.usuario = usuario;
+
+        if (usuarioYaRegistrado) {
+            this.cuestionario = cuestionarioDAO.buscarPorUsername(usuario.getUsername());
+            if (this.cuestionario == null) {
+                this.cuestionario = new Cuestionario(usuario.getUsername());
+            }
+        } else {
+            this.cuestionario = new Cuestionario(usuario.getUsername());
+        }
+
+        this.cuestionario.aplicarIdioma(mi);
+
+        setearCamposVista(usuario);
+        configurarEventosCuestionario();
+    }
+
+
+
+
     private void configurarEventosCuestionario() {
         cuestionarioView.getCbxPreguntas().addActionListener(new ActionListener() {
             @Override
@@ -105,6 +119,12 @@ public class CuestionarioController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 finalizar();
+            }
+        });
+        cuestionarioView.getBtnIniciarCuestionario().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                iniciarCuestionario();
             }
         });
     }
@@ -174,7 +194,6 @@ public class CuestionarioController {
         }
     }
 
-
     private void finalizarRecuperar(String contrasenia) {
         if (respuestasCorrectas.size() >= 3) {
             recuperarView.mostrarMensaje(String.format(mi.get("cuestionario.recuperar.recuperada"), contrasenia));
@@ -183,7 +202,6 @@ public class CuestionarioController {
             recuperarView.mostrarMensaje(mi.get("cuestionario.recuperar.minimo"));
         }
     }
-
 
     private void preguntasCuestionario(){
         int index = cuestionarioView.getCbxPreguntas().getSelectedIndex();
@@ -220,26 +238,138 @@ public class CuestionarioController {
         cuestionarioView.mostrarMensaje(mi.get("cuestionario.guardar.ok"));
     }
 
-    private void finalizar(){
+    private void finalizar() {
+        if (preguntasAleatorias == null || preguntasAleatorias.isEmpty()) {
+            cuestionarioView.mostrarMensaje("Error: No se han cargado preguntas.");
+            return;
+        }
+
+        if (cuestionario == null) {
+            // Esta parte ya no se usa más si el Cuestionario siempre se crea en el constructor
+            return;
+        }
+
         if (cuestionario.getRespuestas().size() < 3) {
             cuestionarioView.mostrarMensaje(mi.get("cuestionario.finalizar.minimo"));
             return;
         }
 
+        if (!usuarioYaRegistrado) {
+            // Solo si el usuario NO está registrado, crea el usuario
+
+            String username = cuestionarioView.getTxtUsername().getText().trim();
+            String contrasenia = cuestionarioView.getTxtContrasenia().getText().trim();
+            String nombre = cuestionarioView.getTxtNombre().getText().trim();
+            String celular = cuestionarioView.getTxtCelular().getText().trim();
+            String correo = cuestionarioView.getTxtCorreo().getText().trim();
+            int dia = (int) cuestionarioView.getSpnDia().getValue();
+            int mes = (int) cuestionarioView.getSpnMes().getValue();
+            int anio = (int) cuestionarioView.getSpnAnio().getValue();
+
+            if (username.isEmpty() || contrasenia.isEmpty() || nombre.isEmpty() || celular.isEmpty() || correo.isEmpty()) {
+                cuestionarioView.mostrarMensaje("Los campos estan vacíos");
+                return;
+            }
+
+            if (!celular.matches("\\d{7,15}")) {
+                cuestionarioView.mostrarMensaje("Número de celular inválido.");
+                return;
+            }
+
+            if (!correo.matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$")) {
+                cuestionarioView.mostrarMensaje("Correo electrónico inválido.");
+                return;
+            }
+
+            if (dia < 1 || dia > 31 || mes < 1 || mes > 12 || anio < 1) {
+                cuestionarioView.mostrarMensaje("Fecha de nacimiento inválida.");
+                return;
+            }
+
+            if (usuarioDAO.buscarPorUsername(username) != null) {
+                cuestionarioView.mostrarMensaje(mi.get("login.mensaje.error_usuario_existente"));
+                return;
+            }
+
+            GregorianCalendar fechaNacimiento = new GregorianCalendar(anio, mes - 1, dia);
+            Usuario nuevoUsuario = new Usuario(username, contrasenia, Rol.USUARIO, nombre, celular, fechaNacimiento, correo);
+            usuarioDAO.crear(nuevoUsuario);
+        }
+
+        // Guardar el cuestionario, ya sea usuario nuevo o ya registrado
         cuestionarioDAO.guardar(cuestionario);
+
         cuestionarioView.mostrarMensaje(mi.get("cuestionario.finalizar.ok"));
         cuestionarioView.dispose();
     }
 
+
+
+    private void iniciarCuestionario(){
+        String username = cuestionarioView.getTxtUsername().getText().trim();
+        if (usuarioDAO.buscarPorUsername(username) != null) {
+            cuestionarioView.mostrarMensaje(mi.get("login.mensaje.error_usuario_existente"));
+            return;
+        }
+        cuestionario = new Cuestionario(username);
+        cuestionario.aplicarIdioma(mi);
+        cargarComboPreguntas();
+        cuestionarioView.habilitarPreguntas(true);
+    }
+
     private void cargarComboPreguntas() {
-        for (int i = 0; i < preguntasAleatorias.size(); i++) {
-            String etiqueta = mi.get("cuestionario.pregunta");
-            cuestionarioView.getCbxPreguntas().addItem(etiqueta + " " + (i + 1));
+        if (preguntasAleatorias != null && !preguntasAleatorias.isEmpty()) return;
+
+        preguntasAleatorias = new ArrayList<>();
+
+        Cuestionario temporal = new Cuestionario("");
+        temporal.aplicarIdioma(mi);
+        List<Respuesta> todasLasPreguntas = temporal.preguntasPorDefecto();
+
+        boolean[] usadas = new boolean[todasLasPreguntas.size()];
+        int cantidadDeseada = 6;
+        int cantidadActual = 0;
+        Random random = new Random();
+
+        while (cantidadActual < cantidadDeseada) {
+            int indice = random.nextInt(todasLasPreguntas.size());
+            if (!usadas[indice]) {
+                preguntasAleatorias.add(todasLasPreguntas.get(indice));
+                usadas[indice] = true;
+                cantidadActual++;
+            }
         }
 
-        if (!preguntasAleatorias.isEmpty()) {
-            cuestionarioView.getLblPregunta().setText(preguntasAleatorias.get(0).getEnunciado());
+        cuestionarioView.getCbxPreguntas().removeAllItems();
+        for (Respuesta r : preguntasAleatorias) {
+            cuestionarioView.getCbxPreguntas().addItem(r.getEnunciado());
         }
     }
 
+    private void setearCamposVista(Usuario usuario){
+        cuestionarioView.getTxtUsername().setText(usuario.getUsername());
+        cuestionarioView.getTxtContrasenia().setText(usuario.getContrasenia());
+        cuestionarioView.getTxtNombre().setText(usuario.getNombre());
+        cuestionarioView.getTxtCelular().setText(usuario.getCelular());
+        cuestionarioView.getTxtCorreo().setText(usuario.getEmail());
+
+        GregorianCalendar fecha = usuario.getFecha();
+        cuestionarioView.getSpnDia().setValue(fecha.get(Calendar.DAY_OF_MONTH));
+        cuestionarioView.getSpnMes().setValue(fecha.get(Calendar.MONTH) + 1); // Recuerda que enero = 0
+        cuestionarioView.getSpnAnio().setValue(fecha.get(Calendar.YEAR));
+
+        cuestionarioView.getTxtUsername().setEnabled(false);
+        cuestionarioView.getTxtContrasenia().setEnabled(false);
+        cuestionarioView.getTxtNombre().setEnabled(false);
+        cuestionarioView.getTxtCelular().setEnabled(false);
+        cuestionarioView.getSpnDia().setEnabled(false);
+        cuestionarioView.getSpnMes().setEnabled(false);
+        cuestionarioView.getSpnAnio().setEnabled(false);
+        cuestionarioView.getTxtCorreo().setEnabled(false);
+
+        cuestionarioView.getBtnIniciarCuestionario().setEnabled(false);
+
+        cargarComboPreguntas();
+        cuestionarioView.habilitarPreguntas(true);
+    }
 }

@@ -5,9 +5,7 @@ import ec.edu.ups.poo.clases.dao.UsuarioDAO;
 import ec.edu.ups.poo.clases.modelo.Rol;
 import ec.edu.ups.poo.clases.modelo.Usuario;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class UsuarioDAOMemoria implements UsuarioDAO {
 
@@ -18,9 +16,30 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
         this.usuarios = new ArrayList<>();
         this.cuestionarioDAO = cuestionarioDAO;
 
-        crear(new Usuario("admin", "12345", Rol.ADMINISTRADOR));
-        crear(new Usuario("user", "12345", Rol.USUARIO));
+        // Usuarios por defecto con todos los campos
+        Usuario admin = new Usuario(
+                "admin",
+                "12345",
+                Rol.ADMINISTRADOR,
+                "Administrador General",
+                "0999999999",
+                new GregorianCalendar(1980, Calendar.JANUARY, 1),
+                "admin@gmail.com"
+        );
+
+        Usuario user = new Usuario(
+                "user",
+                "12345",
+                Rol.USUARIO,
+                "Usuario de Prueba",
+                "0988888888",
+                new GregorianCalendar(1995, Calendar.JUNE, 15),
+                "user@gmail.com"
+        );
+        crear(admin);
+        crear(user);
     }
+
 
     @Override
     public Usuario autenticar(String username, String contrasenia) {

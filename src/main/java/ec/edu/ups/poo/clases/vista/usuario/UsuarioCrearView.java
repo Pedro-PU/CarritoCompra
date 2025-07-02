@@ -10,12 +10,22 @@ import java.net.URL;
 public class UsuarioCrearView extends JInternalFrame {
     private JPanel panelPrincipal;
     private JTextField txtUsername;
-    private JPasswordField txtContrasenia;
+    private JTextField txtContrasenia;
     private JButton btnAceptar;
     private JButton btnLimpiar;
     private JLabel lblTitulo;
     private JLabel lblUsername;
     private JLabel lblContrasenia;
+    private JLabel lblNombre;
+    private JTextField txtNombre;
+    private JLabel lblFecha;
+    private JSpinner spnDia;
+    private JSpinner spnMes;
+    private JSpinner spnAnio;
+    private JLabel lblCelular;
+    private JTextField txtCelular;
+    private JTextField txtCorreo;
+    private JLabel lblCorreo;
     private MensajeInternacionalizacionHandler mi;
 
     public UsuarioCrearView(MensajeInternacionalizacionHandler mi) {
@@ -24,6 +34,9 @@ public class UsuarioCrearView extends JInternalFrame {
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(500, 500);
+        spnDia.setModel(new SpinnerNumberModel(1, 1, 31, 1));
+        spnMes.setModel(new SpinnerNumberModel(1, 1, 12, 1));
+        spnAnio.setModel(new SpinnerNumberModel(2000, 1, 2100, 1));
 
         btnLimpiar.addActionListener(new ActionListener() {
             @Override
@@ -37,6 +50,12 @@ public class UsuarioCrearView extends JInternalFrame {
     public void limpiarCampos() {
         txtUsername.setText("");
         txtContrasenia.setText("");
+        txtNombre.setText("");
+        txtCelular.setText("");
+        txtCorreo.setText("");
+        spnDia.setValue(0);
+        spnMes.setValue(0);
+        spnAnio.setValue(0);
     }
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
@@ -64,6 +83,108 @@ public class UsuarioCrearView extends JInternalFrame {
         } else {
             System.err.println("Error: No se ha cargado el icono de Registrarse");
         }
+    }
+
+    public void cambiarIdioma() {
+        setTitle(mi.get("usuario.crear.titulo.ventana"));
+        lblTitulo.setText(mi.get("usuario.crear.titulo"));
+        lblUsername.setText(mi.get("usuario.crear.nombre"));
+        lblContrasenia.setText(mi.get("usuario.crear.contrasena"));
+        btnAceptar.setText(mi.get("usuario.crear.aceptar"));
+        btnLimpiar.setText(mi.get("usuario.crear.limpiar"));
+
+        UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
+        UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
+        UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
+        UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
+    }
+
+    public JTextField getTxtCorreo() {
+        return txtCorreo;
+    }
+
+    public void setTxtCorreo(JTextField txtCorreo) {
+        this.txtCorreo = txtCorreo;
+    }
+
+    public JLabel getLblCorreo() {
+        return lblCorreo;
+    }
+
+    public void setLblCorreo(JLabel lblCorreo) {
+        this.lblCorreo = lblCorreo;
+    }
+
+    public JButton getBtnLimpiar() {
+        return btnLimpiar;
+    }
+
+    public void setBtnLimpiar(JButton btnLimpiar) {
+        this.btnLimpiar = btnLimpiar;
+    }
+
+    public JLabel getLblNombre() {
+        return lblNombre;
+    }
+
+    public void setLblNombre(JLabel lblNombre) {
+        this.lblNombre = lblNombre;
+    }
+
+    public JTextField getTxtNombre() {
+        return txtNombre;
+    }
+
+    public void setTxtNombre(JTextField txtNombre) {
+        this.txtNombre = txtNombre;
+    }
+
+    public JLabel getLblFecha() {
+        return lblFecha;
+    }
+
+    public void setLblFecha(JLabel lblFecha) {
+        this.lblFecha = lblFecha;
+    }
+
+    public JSpinner getSpnDia() {
+        return spnDia;
+    }
+
+    public void setSpnDia(JSpinner spnDia) {
+        this.spnDia = spnDia;
+    }
+
+    public JSpinner getSpnMes() {
+        return spnMes;
+    }
+
+    public void setSpnMes(JSpinner spnMes) {
+        this.spnMes = spnMes;
+    }
+
+    public JSpinner getSpnAnio() {
+        return spnAnio;
+    }
+
+    public void setSpnAnio(JSpinner spnAnio) {
+        this.spnAnio = spnAnio;
+    }
+
+    public JLabel getLblCelular() {
+        return lblCelular;
+    }
+
+    public void setLblCelular(JLabel lblCelular) {
+        this.lblCelular = lblCelular;
+    }
+
+    public JTextField getTxtCelular() {
+        return txtCelular;
+    }
+
+    public void setTxtCelular(JTextField txtCelular) {
+        this.txtCelular = txtCelular;
     }
 
     public JLabel getLblTitulo() {
@@ -98,11 +219,11 @@ public class UsuarioCrearView extends JInternalFrame {
         this.txtUsername = txtUsername;
     }
 
-    public JPasswordField getTxtContrasenia() {
+    public JTextField getTxtContrasenia() {
         return txtContrasenia;
     }
 
-    public void setTxtContrasenia(JPasswordField txtContrasenia) {
+    public void setTxtContrasenia(JTextField txtContrasenia) {
         this.txtContrasenia = txtContrasenia;
     }
 
@@ -122,17 +243,4 @@ public class UsuarioCrearView extends JInternalFrame {
         this.btnLimpiar = btnSalir;
     }
 
-    public void cambiarIdioma() {
-        setTitle(mi.get("usuario.crear.titulo.ventana"));
-        lblTitulo.setText(mi.get("usuario.crear.titulo"));
-        lblUsername.setText(mi.get("usuario.crear.nombre"));
-        lblContrasenia.setText(mi.get("usuario.crear.contrasena"));
-        btnAceptar.setText(mi.get("usuario.crear.aceptar"));
-        btnLimpiar.setText(mi.get("usuario.crear.limpiar"));
-
-        UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
-        UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
-        UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
-        UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
-    }
 }
