@@ -62,7 +62,7 @@ public class UsuarioCrearView extends JInternalFrame {
     }
 
     public boolean mostrarMensajePregunta(String mensaje) {
-        int respuesta = JOptionPane.showConfirmDialog(this, mensaje, "Confirmación",
+        int respuesta = JOptionPane.showConfirmDialog(this, mensaje, mi.get("dialogo.title.pregunta"),
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         return respuesta == JOptionPane.YES_OPTION;
     }
@@ -90,6 +90,10 @@ public class UsuarioCrearView extends JInternalFrame {
         lblTitulo.setText(mi.get("usuario.crear.titulo"));
         lblUsername.setText(mi.get("usuario.crear.nombre"));
         lblContrasenia.setText(mi.get("usuario.crear.contrasena"));
+        lblNombre.setText(mi.get("usuario.crear.nombre.real"));
+        lblFecha.setText(mi.get("usuario.crear.fecha"));
+        lblCelular.setText(mi.get("usuario.crear.celular"));
+        lblCorreo.setText(mi.get("usuario.crear.correo"));
         btnAceptar.setText(mi.get("usuario.crear.aceptar"));
         btnLimpiar.setText(mi.get("usuario.crear.limpiar"));
 
@@ -98,6 +102,7 @@ public class UsuarioCrearView extends JInternalFrame {
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
+
 
     public JTextField getTxtCorreo() {
         return txtCorreo;

@@ -42,21 +42,25 @@ public class CuestionarioController {
     }
 
     public CuestionarioController(CuestionarioRecuperarView recuperarView, CuestionarioDAO dao,
-                                  String username, String contrasenia, MensajeInternacionalizacionHandler mi){//Constructor para recuperar contraseña de usuario
+                                  String username, String contrasenia, MensajeInternacionalizacionHandler mi,
+                                  UsuarioDAO usuarioDAO){//Constructor para recuperar contraseña de usuario
         this.mi = mi;
         this.cuestionarioDAO = dao;
         this.cuestionarioView = null;
         this.cuestionario = cuestionarioDAO.buscarPorUsername(username);
         this.recuperarView = recuperarView;
         this.respuestasCorrectas = new ArrayList<>();
+        this.usuarioDAO = usuarioDAO;
+        this.usuario = usuarioDAO.buscarPorUsername(username);
 
         if (cuestionario == null) {
             recuperarView.mostrarMensaje(mi.get("cuestionario.recuperar.noPreguntas"));
             recuperarView.dispose();
             return;
         }
-
-        this.preguntasAleatorias = cuestionario.getRespuestas();
+        List<Respuesta> todas = new ArrayList<>(cuestionario.getRespuestas());
+        Collections.shuffle(todas);
+        this.preguntasAleatorias = todas.subList(0, Math.min(3, todas.size()));
 
         for (int i = 0; i < preguntasAleatorias.size(); i++) {
             String etiqueta = mi.get("cuestionario.pregunta");
@@ -68,7 +72,6 @@ public class CuestionarioController {
         }
 
         configurarEventosRecuperar(contrasenia);
-
     }
 
     public CuestionarioController(CuestionarioView vista, CuestionarioDAO cuestionarioDAO,
@@ -197,11 +200,27 @@ public class CuestionarioController {
     private void finalizarRecuperar(String contrasenia) {
         if (respuestasCorrectas.size() >= 3) {
             recuperarView.mostrarMensaje(String.format(mi.get("cuestionario.recuperar.recuperada"), contrasenia));
+
+            boolean deseaCambiar = recuperarView.mostrarMensajePregunta(mi.get("cuestionario.recuperar.pregunta.cambiar"));
+
+            if (deseaCambiar) {
+                String nuevaContrasenia = recuperarView.ingreso(mi.get("cuestionario.recuperar.pregunta.ingrese"));
+
+                if (nuevaContrasenia != null) {
+                    usuario.setContrasenia(nuevaContrasenia);
+                    usuarioDAO.actualizar(usuario);
+                    recuperarView.mostrarMensaje(mi.get("cuestionario.recuperar.cambiada.ok"));
+                } else {
+                    recuperarView.mostrarMensaje(mi.get("cuestionario.recuperar.cambiada.cancelada"));
+                }
+            }
+
             recuperarView.dispose();
         } else {
             recuperarView.mostrarMensaje(mi.get("cuestionario.recuperar.minimo"));
         }
     }
+
 
     private void preguntasCuestionario(){
         int index = cuestionarioView.getCbxPreguntas().getSelectedIndex();
@@ -240,7 +259,7 @@ public class CuestionarioController {
 
     private void finalizar() {
         if (preguntasAleatorias == null || preguntasAleatorias.isEmpty()) {
-            cuestionarioView.mostrarMensaje("Error: No se han cargado preguntas.");
+            cuestionarioView.mostrarMensaje(mi.get("cuestionario.finalizar.error_preguntas"));
             return;
         }
 
@@ -255,8 +274,6 @@ public class CuestionarioController {
         }
 
         if (!usuarioYaRegistrado) {
-            // Solo si el usuario NO está registrado, crea el usuario
-
             String username = cuestionarioView.getTxtUsername().getText().trim();
             String contrasenia = cuestionarioView.getTxtContrasenia().getText().trim();
             String nombre = cuestionarioView.getTxtNombre().getText().trim();
@@ -267,22 +284,22 @@ public class CuestionarioController {
             int anio = (int) cuestionarioView.getSpnAnio().getValue();
 
             if (username.isEmpty() || contrasenia.isEmpty() || nombre.isEmpty() || celular.isEmpty() || correo.isEmpty()) {
-                cuestionarioView.mostrarMensaje("Los campos estan vacíos");
+                cuestionarioView.mostrarMensaje(mi.get("cuestionario.finalizar.error_datos_vacios"));
                 return;
             }
 
             if (!celular.matches("\\d{7,15}")) {
-                cuestionarioView.mostrarMensaje("Número de celular inválido.");
+                cuestionarioView.mostrarMensaje(mi.get("cuestionario.validacion.celular"));
                 return;
             }
 
             if (!correo.matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$")) {
-                cuestionarioView.mostrarMensaje("Correo electrónico inválido.");
+                cuestionarioView.mostrarMensaje(mi.get("cuestionario.validacion.correo"));
                 return;
             }
 
             if (dia < 1 || dia > 31 || mes < 1 || mes > 12 || anio < 1) {
-                cuestionarioView.mostrarMensaje("Fecha de nacimiento inválida.");
+                cuestionarioView.mostrarMensaje(mi.get("cuestionario.validacion.fecha"));
                 return;
             }
 
@@ -327,7 +344,7 @@ public class CuestionarioController {
         List<Respuesta> todasLasPreguntas = temporal.preguntasPorDefecto();
 
         boolean[] usadas = new boolean[todasLasPreguntas.size()];
-        int cantidadDeseada = 6;
+        int cantidadDeseada = 10;
         int cantidadActual = 0;
         Random random = new Random();
 

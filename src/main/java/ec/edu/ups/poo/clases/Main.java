@@ -78,7 +78,7 @@ public class Main {
                                 carritoListaView, carritoModificarView, carritoEliminarView, mi);
 
                         UsuarioController usuarioController = new UsuarioController(usuarioDAO, usuarioCrearView, usuarioEliminarView, usuarioModificarView,
-                                usuarioListarView, mi);
+                                usuarioListarView, mi, usuarioAuntenticado);
 
                         principalView.mostrarMensaje(mi.get("principal.bienvenido") + usuarioAuntenticado.getUsername());
                         principalView.setTitle(mi.get("principal.titulo") + " - " + usuarioAuntenticado.getUsername());

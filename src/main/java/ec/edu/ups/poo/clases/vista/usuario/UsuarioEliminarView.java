@@ -51,7 +51,7 @@ public class UsuarioEliminarView extends JInternalFrame {
     }
 
     public boolean mostrarMensajePregunta(String mensaje) {
-        int respuesta = JOptionPane.showConfirmDialog(this, mensaje, "Confirmación",
+        int respuesta = JOptionPane.showConfirmDialog(this, mensaje, mi.get("dialogo.title.pregunta"),
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         return respuesta == JOptionPane.YES_OPTION;
     }
@@ -63,6 +63,10 @@ public class UsuarioEliminarView extends JInternalFrame {
         lblTitulo.setText(mi.get("usuario.eliminar.titulo"));
         lblUsername.setText(mi.get("usuario.eliminar.nombre"));
         lblContrasenia.setText(mi.get("usuario.eliminar.contrasena"));
+        lblNombre.setText(mi.get("usuario.eliminar.nombre.real"));
+        lblFecha.setText(mi.get("usuario.eliminar.fecha"));
+        lblCelular.setText(mi.get("usuario.eliminar.celular"));
+        lblCorreo.setText(mi.get("usuario.eliminar.correo"));
         btnBuscar.setText(mi.get("usuario.eliminar.buscar"));
         btnEliminar.setText(mi.get("usuario.eliminar.eliminar"));
 
@@ -71,6 +75,7 @@ public class UsuarioEliminarView extends JInternalFrame {
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
+
 
     public void inicializarImagenes(){
         URL buscar = UsuarioEliminarView.class.getClassLoader().getResource("imagenes/buscar.png");

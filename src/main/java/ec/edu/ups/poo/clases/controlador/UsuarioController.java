@@ -4,20 +4,19 @@ import ec.edu.ups.poo.clases.dao.UsuarioDAO;
 import ec.edu.ups.poo.clases.modelo.Cuestionario;
 import ec.edu.ups.poo.clases.modelo.Rol;
 import ec.edu.ups.poo.clases.modelo.Usuario;
+import ec.edu.ups.poo.clases.util.FormateadorUtils;
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.poo.clases.vista.cuestionario.CuestionarioRecuperarView;
 import ec.edu.ups.poo.clases.vista.cuestionario.CuestionarioView;
 import ec.edu.ups.poo.clases.vista.usuario.*;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 public class UsuarioController {
     private Usuario usuario;
@@ -37,20 +36,23 @@ public class UsuarioController {
         this.usuario = null;
         this.cuestionarioDAO = cuestionarioDAO;
         this.mi = mi;
-
         configurarEventosLogin();
     }
 
     public UsuarioController (UsuarioDAO usuarioDAO, UsuarioCrearView usuarioCrearView, UsuarioEliminarView usuarioEliminarView,
-                              UsuarioModificarView usuarioModificarView, UsuarioListarView usuarioListarView, MensajeInternacionalizacionHandler mi) {
+                              UsuarioModificarView usuarioModificarView, UsuarioListarView usuarioListarView, MensajeInternacionalizacionHandler mi,
+                              Usuario usuarioLogueado) {
         this.usuarioDAO = usuarioDAO;
         this.usuarioCrearView = usuarioCrearView;
         this.usuarioEliminarView = usuarioEliminarView;
         this.usuarioModificarView = usuarioModificarView;
         this.usuarioListarView = usuarioListarView;
+        this.usuario = usuarioLogueado;
         this.mi = mi;
         configurarEventosUsuario();
+        configurarVistaModificar();
     }
+
     private void configurarEventosLogin(){
         loginView.getBtnIniciar().addActionListener(new ActionListener() {
             @Override
@@ -129,8 +131,6 @@ public class UsuarioController {
         });
     }
 
-
-
     private void cambiarIdioma() {
         String[] clavesIdiomas = {"es", "en", "fr"};
         String[] paisesIdiomas = {"EC", "US", "FR"};
@@ -167,7 +167,7 @@ public class UsuarioController {
                 cuestionarioView.setVisible(true);
                 loginView.setVisible(false);
 
-                cuestionarioView.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
                 cuestionarioView.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
@@ -181,7 +181,6 @@ public class UsuarioController {
         }
 
     }
-
 
     public Usuario getUsuarioAutenticado() {
         return usuario;
@@ -238,8 +237,7 @@ public class UsuarioController {
 
             CuestionarioRecuperarView recuperarView = new CuestionarioRecuperarView(mi);
             CuestionarioController controller = new CuestionarioController(
-                    recuperarView, cuestionarioDAO, username, usuario.getContrasenia(), mi
-            );
+                    recuperarView, cuestionarioDAO, username, usuario.getContrasenia(), mi, usuarioDAO);
 
             recuperarView.setVisible(true);
             loginView.setVisible(false);
@@ -256,7 +254,6 @@ public class UsuarioController {
             loginView.mostrarMensaje(mi.get("login.mensaje.recuperacion_cancelada"));
         }
     }
-
 
     private void crear() {
         boolean confirmado = usuarioCrearView.mostrarMensajePregunta(mi.get("usuario.mensaje.crear.pregunta"));
@@ -280,17 +277,17 @@ public class UsuarioController {
         }
 
         if (!celular.matches("\\d{7,15}")) {
-            usuarioCrearView.mostrarMensaje("Número de celular inválido. Solo dígitos y al menos 7 números.");
+            usuarioCrearView.mostrarMensaje(mi.get("usuario.validacion.celular"));
             return;
         }
 
         if (!correo.matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$")) {
-            usuarioCrearView.mostrarMensaje("Correo electrónico inválido.");
+            usuarioCrearView.mostrarMensaje(mi.get("usuario.validacion.correo"));
             return;
         }
 
         if (dia < 1 || dia > 31 || mes < 1 || mes > 12 || anio < 1) {
-            usuarioCrearView.mostrarMensaje("Fecha de nacimiento inválida.");
+            usuarioCrearView.mostrarMensaje(mi.get("usuario.validacion.fecha"));
             return;
         }
 
@@ -307,7 +304,6 @@ public class UsuarioController {
         usuarioCrearView.limpiarCampos();
     }
 
-
     private void eliminar() {
         boolean confirmado = usuarioEliminarView.mostrarMensajePregunta(mi.get("usuario.mensaje.eliminar.pregunta"));
         if (!confirmado) {
@@ -318,14 +314,14 @@ public class UsuarioController {
         String username = usuarioEliminarView.getTxtUsername().getText().trim();
 
         if (username.isEmpty()) {
-            usuarioEliminarView.mostrarMensaje("Debe ingresar un nombre de usuario.");
+            usuarioEliminarView.mostrarMensaje(mi.get("usuario.validacion.username.vacio"));
             return;
         }
 
         Usuario usuario = usuarioDAO.buscarPorUsername(username);
 
         if (usuario == null) {
-            usuarioEliminarView.mostrarMensaje("El usuario no existe.");
+            usuarioEliminarView.mostrarMensaje(mi.get("usuario.validacion.username.noexiste"));
             return;
         }
 
@@ -338,14 +334,14 @@ public class UsuarioController {
         String username = usuarioEliminarView.getTxtUsername().getText().trim();
 
         if (username.isEmpty()) {
-            usuarioEliminarView.mostrarMensaje("Ingrese un nombre de usuario para buscar.");
+            usuarioEliminarView.mostrarMensaje(mi.get("usuario.validacion.username.buscar.vacio"));
             return;
         }
 
         Usuario usuario = usuarioDAO.buscarPorUsername(username);
 
         if (usuario == null) {
-            usuarioEliminarView.mostrarMensaje("Usuario no encontrado.");
+            usuarioEliminarView.mostrarMensaje(mi.get("usuario.mensaje.no.encontrado"));
             usuarioEliminarView.limpiarCampos();
             return;
         }
@@ -363,8 +359,11 @@ public class UsuarioController {
 
     private void buscarModificar() {
         String username = usuarioModificarView.getTxtName().getText().trim();
+        if (usuario.getRol() == Rol.USUARIO) {
+            username = usuario.getUsername();
+            usuarioModificarView.getTxtName().setText(username); // actualiza campo con su propio username
+        }
         Usuario usuario1 = usuarioDAO.buscarPorUsername(username);
-
         if (usuario1 != null) {
             usuarioModificarView.getTxtUsername().setText(usuario1.getUsername());
             usuarioModificarView.getTxtContrasenia().setText(usuario1.getContrasenia());
@@ -411,17 +410,17 @@ public class UsuarioController {
         }
 
         if (!celular.matches("\\d{7,15}")) {
-            usuarioModificarView.mostrarMensaje("Número de celular inválido. Solo dígitos y mínimo 7 caracteres.");
+            usuarioModificarView.mostrarMensaje(mi.get("usuario.validacion.celular"));
             return;
         }
 
         if (!correo.matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$")) {
-            usuarioModificarView.mostrarMensaje("Correo electrónico inválido.");
+            usuarioModificarView.mostrarMensaje(mi.get("usuario.validacion.correo"));
             return;
         }
 
         if (dia < 1 || dia > 31 || mes < 1 || mes > 12 || anio < 1) {
-            usuarioModificarView.mostrarMensaje("Fecha de nacimiento inválida.");
+            usuarioModificarView.mostrarMensaje(mi.get("usuario.validacion.fecha"));
             return;
         }
         if (!usernameNuevo.equals(usernameOriginal) && usuarioDAO.buscarPorUsername(usernameNuevo) != null) {
@@ -438,10 +437,21 @@ public class UsuarioController {
 
         usuarioDAO.actualizar(usuario1);
         usuarioModificarView.mostrarMensaje(mi.get("usuario.mensaje.modificado"));
-        usuarioModificarView.limpiarCampos();
-        usuarioModificarView.habilitarCampos(false);
+        if (usuario.getRol() == Rol.ADMINISTRADOR) {
+            usuarioModificarView.limpiarCampos();
+            usuarioModificarView.habilitarCampos(false);
+        }
     }
 
+    private void configurarVistaModificar() {
+        if (usuario.getRol() == Rol.USUARIO) {
+            usuarioModificarView.getTxtName().setEnabled(false);
+            usuarioModificarView.getBtnBuscar().setEnabled(false);
+            usuarioModificarView.getTxtUsername().setEnabled(false);
+            usuarioModificarView.getBtnBuscar().setEnabled(false);
+            buscarModificar();
+        }
+    }
 
     private void buscarUsario(){
         String username = usuarioListarView.getTxtBuscar().getText();
@@ -452,9 +462,24 @@ public class UsuarioController {
             usuarioListarView.cargarDatos(new ArrayList<>());
         }
     }
+
     private void listar(){
         List<Usuario> usuarios = usuarioDAO.listarTodos();
         usuarioListarView.cargarDatos(usuarios);
+    }
+
+    private void refrescarTablaListaUsuarios(Locale locale) {
+        DefaultTableModel modelo = (DefaultTableModel) usuarioListarView.getTblUsuarios().getModel();
+        int rowCount = modelo.getRowCount();
+
+        for (int i = 0; i < rowCount; i++) {
+            String username = modelo.getValueAt(i, 0).toString();
+            Usuario usuario = usuarioDAO.buscarPorUsername(username);
+            if (usuario != null) {
+                String nuevaFecha = FormateadorUtils.formatearFecha(usuario.getFecha().getTime(), locale);
+                modelo.setValueAt(nuevaFecha, i, 5);
+            }
+        }
     }
 
     public void actualizarIdiomaEnVistas() {
@@ -462,5 +487,6 @@ public class UsuarioController {
         usuarioEliminarView.cambiarIdioma();
         usuarioModificarView.cambiarIdioma();
         usuarioListarView.cambiarIdioma();
+        refrescarTablaListaUsuarios(mi.getLocale());
     }
 }

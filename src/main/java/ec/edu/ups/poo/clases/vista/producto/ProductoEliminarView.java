@@ -101,7 +101,7 @@ public class ProductoEliminarView extends JInternalFrame {
     }
 
     public boolean mostrarMensajePregunta(String mensaje) {
-        int respuesta = JOptionPane.showConfirmDialog(this, mensaje, "Confirmación",
+        int respuesta = JOptionPane.showConfirmDialog(this, mensaje, mi.get("dialogo.title.pregunta"),
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         return respuesta == JOptionPane.YES_OPTION;
     }

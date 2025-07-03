@@ -18,6 +18,7 @@ public class CuestionarioRecuperarView extends JFrame {
 
     public CuestionarioRecuperarView(MensajeInternacionalizacionHandler mi) {
         this.mi = mi;
+
         setTitle(mi.get("cuestionario.recuperar.titulo"));
         setSize(600, 400);
         setContentPane(panelPrincipal);
@@ -27,6 +28,19 @@ public class CuestionarioRecuperarView extends JFrame {
     }
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
+    }
+
+    public boolean mostrarMensajePregunta(String mensaje) {
+        int respuesta = JOptionPane.showConfirmDialog(this, mensaje, mi.get("dialogo.title.pregunta"),
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        return respuesta == JOptionPane.YES_OPTION;
+    }
+    public String ingreso(String mensaje) {
+        String respuesta = JOptionPane.showInputDialog(this, mensaje);
+        if (respuesta != null && !respuesta.trim().isEmpty()) {
+            return respuesta.trim();
+        }
+        return null;
     }
 
     public void actualizarTextos() {

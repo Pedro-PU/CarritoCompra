@@ -10,9 +10,11 @@ import ec.edu.ups.poo.clases.vista.producto.ProductoEditarView;
 import ec.edu.ups.poo.clases.vista.producto.ProductoEliminarView;
 import ec.edu.ups.poo.clases.vista.producto.ProductoListaView;
 
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Locale;
 
 
 public class ProductoController {
@@ -132,9 +134,6 @@ public class ProductoController {
         productoAnadirView.mostrarProductos(productoDAO.listarTodos());
     }
 
-
-
-
     private void buscarProducto() {
         String nombre = productoListaView.getTxtBuscar().getText();
 
@@ -213,7 +212,6 @@ public class ProductoController {
         productoEliminarView.limpiarCampos();
     }
 
-
     private void buscarProductoEliminar() {
         String txtCod = productoEliminarView.getTxtBuscar().getText().trim();
 
@@ -238,7 +236,6 @@ public class ProductoController {
             productoEliminarView.limpiarCampos();
         }
     }
-
 
     private void buscarProductoEdicion() {
         String txtCod = productoEditarView.getTxtBuscar().getText().trim();
@@ -290,11 +287,26 @@ public class ProductoController {
         }
     }
 
+    private void refrescarTablaListaProductos(Locale locale) {
+        DefaultTableModel modelo = (DefaultTableModel) productoListaView.getTblProductos().getModel();
+        int rowCount = modelo.getRowCount();
+
+        for (int i = 0; i < rowCount; i++) {
+            int codigo = (Integer) modelo.getValueAt(i, 0);
+            Producto producto = productoDAO.buscarPorCodigo(codigo);
+            if (producto != null) {
+                modelo.setValueAt(FormateadorUtils.formatearMoneda(producto.getPrecio(), locale), i, 2);
+            }
+        }
+    }
+
+
     public void actualizarIdiomaEnVistas() {
         productoAnadirView.cambiarIdioma();
         productoEditarView.cambiarIdioma();
         productoEliminarView.cambiarIdioma();
         productoListaView.cambiarIdioma();
+        refrescarTablaListaProductos(mi.getLocale());
     }
 
 }

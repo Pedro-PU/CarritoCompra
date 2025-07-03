@@ -374,6 +374,79 @@ public class CarritoController {
         }
     }
 
+    private void refrescarTablaAnadir(Locale locale) {
+        List<ItemCarrito> items = carrito.obtenerItems();
+        DefaultTableModel modelo = (DefaultTableModel) carritoAnadirView.getTblProductos().getModel();
+        for (int i = 0; i < items.size(); i++) {
+            ItemCarrito item = items.get(i);
+            modelo.setValueAt(FormateadorUtils.formatearMoneda(item.getProducto().getPrecio(), locale), i, 2);
+            modelo.setValueAt(FormateadorUtils.formatearMoneda(item.getProducto().getPrecio() * item.getCantidad(), locale), i, 4);
+        }
+        actualizarTotales(); // También refresca los totales con nuevo idioma
+    }
+    private void refrescarTablaLista(Locale locale) {
+        int rowCount = carritoListaView.getModelo().getRowCount();
+
+        for (int i = 0; i < rowCount; i++) {
+            int codigo = (Integer) carritoListaView.getModelo().getValueAt(i, 0);
+
+            Carrito carrito = carritoDAO.buscarPorCodigo(codigo);
+            if (carrito != null) {
+                String nuevaFecha = FormateadorUtils.formatearFecha(carrito.getFechaCreacion().getTime(), locale);
+                carritoListaView.getModelo().setValueAt(nuevaFecha, i, 1);
+                String nuevoSubtotal = FormateadorUtils.formatearMoneda(carrito.calcularSubtotal(), locale);
+                carritoListaView.getModelo().setValueAt(nuevoSubtotal, i, 3);
+                String nuevoIva = FormateadorUtils.formatearMoneda(carrito.calcularIVA(), locale);
+                carritoListaView.getModelo().setValueAt(nuevoIva, i, 4);
+                String nuevoTotal = FormateadorUtils.formatearMoneda(carrito.calcularTotal(), locale);
+                carritoListaView.getModelo().setValueAt(nuevoTotal, i, 5);
+            }
+        }
+    }
+    private void refrescarTablaModificar(Locale locale) {
+        int rowCount = carritoModificarView.getTblProductos().getRowCount();
+
+        for (int i = 0; i < rowCount; i++) {
+            int codigoProducto = (Integer) carritoModificarView.getTblProductos().getValueAt(i, 0);
+            int cantidad = (Integer) carritoModificarView.getTblProductos().getValueAt(i, 3);
+            Producto producto = productoDAO.buscarPorCodigo(codigoProducto);
+
+            if (producto != null) {
+                carritoModificarView.getTblProductos().setValueAt(
+                        FormateadorUtils.formatearMoneda(producto.getPrecio(), locale), i, 2);
+                carritoModificarView.getTblProductos().setValueAt(
+                        FormateadorUtils.formatearMoneda(producto.getPrecio() * cantidad, locale), i, 4);
+            }
+        }
+    }
+    private void refrescarTablaEliminar(Locale locale) {
+        int rowCount = carritoEliminarView.getTblProductos().getRowCount();
+
+        for (int i = 0; i < rowCount; i++) {
+            int codigoProducto = (Integer) carritoEliminarView.getTblProductos().getValueAt(i, 0);
+            int cantidad = (Integer) carritoEliminarView.getTblProductos().getValueAt(i, 3);
+            Producto producto = productoDAO.buscarPorCodigo(codigoProducto);
+
+            if (producto != null) {
+                carritoEliminarView.getTblProductos().setValueAt(
+                        FormateadorUtils.formatearMoneda(producto.getPrecio(), locale), i, 2);
+                carritoEliminarView.getTblProductos().setValueAt(
+                        FormateadorUtils.formatearMoneda(producto.getPrecio() * cantidad, locale), i, 4);
+            }
+        }
+    }
+    private void refrescarDetalle(Locale locale) {
+        if (carritoDetalleView != null && !carritoDetalleView.isClosed()) {
+            Carrito carrito = carritoDAO.buscarPorCodigo(
+                    (int) carritoDetalleView.getTblProductos().getValueAt(0, 0)); // Asumiendo hay código en columna 0
+            if (carrito != null) {
+                carritoDetalleView.getTxtSubTotal().setText(FormateadorUtils.formatearMoneda(carrito.calcularSubtotal(), locale));
+                carritoDetalleView.getTxtIVA().setText(FormateadorUtils.formatearMoneda(carrito.calcularIVA(), locale));
+                carritoDetalleView.getTxtTotal().setText(FormateadorUtils.formatearMoneda(carrito.calcularTotal(), locale));
+            }
+        }
+    }
+
     public void actualizarIdiomaEnVistas() {
         carritoAnadirView.cambiarIdioma();
         carritoListaView.cambiarIdioma();
@@ -382,6 +455,11 @@ public class CarritoController {
         if (carritoDetalleView != null && !carritoDetalleView.isClosed()) {
             carritoDetalleView.cambiarIdioma();
         }
+        Locale locale = mi.getLocale();
+        refrescarTablaAnadir(locale);
+        refrescarTablaLista(locale);
+        refrescarTablaModificar(locale);
+        refrescarTablaEliminar(locale);
+        refrescarDetalle(locale);
     }
-
 }

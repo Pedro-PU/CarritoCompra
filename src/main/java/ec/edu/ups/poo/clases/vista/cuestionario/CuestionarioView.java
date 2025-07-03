@@ -36,6 +36,7 @@ public class CuestionarioView extends JFrame {
         setSize(600, 400);
         setContentPane(panelPrincipal);
         setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         actualizarTextos();
         inicializarImagenes();
         habilitarPreguntas(false);
@@ -53,12 +54,20 @@ public class CuestionarioView extends JFrame {
         btnGuardar.setText(mi.get("cuestionario.boton.guardar"));
         btnFinalizar.setText(mi.get("cuestionario.boton.finalizar"));
         lblPregunta.setText(mi.get("cuestionario.pregunta"));
+        lblNombre.setText(mi.get("cuestionario.nombre"));
+        lblFecha.setText(mi.get("cuestionario.fecha"));
+        lblCelular.setText(mi.get("cuestionario.celular"));
+        lblUsername.setText(mi.get("cuestionario.username"));
+        lblContrasenia.setText(mi.get("cuestionario.contrasenia"));
+        lblCorreo.setText(mi.get("cuestionario.correo"));
+        BtnIniciarCuestionario.setText(mi.get("cuestionario.boton.iniciar"));
 
         UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
         UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
+
 
     public void inicializarImagenes(){
         URL guardar = CuestionarioView.class.getClassLoader().getResource("imagenes/guardar.png");
@@ -73,6 +82,14 @@ public class CuestionarioView extends JFrame {
         if (finalizar != null) {
             ImageIcon iconoBtnIniciarSesion = new ImageIcon(finalizar);
             btnFinalizar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
+
+        URL mostrar = CuestionarioView.class.getClassLoader().getResource("imagenes/mostrar.png");
+        if (mostrar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(mostrar);
+            BtnIniciarCuestionario.setIcon(iconoBtnIniciarSesion);
         } else {
             System.err.println("Error: No se ha cargado el icono de Login");
         }
