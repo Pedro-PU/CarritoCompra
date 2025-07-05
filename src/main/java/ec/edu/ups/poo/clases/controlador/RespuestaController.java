@@ -33,7 +33,7 @@ public class RespuestaController {
     private int intentosFallidos = 0;
     private Respuesta preguntaActual;
     private final UsuarioController usuarioController;
-
+    // Controlador para el registro de nuevos usuarios y sus preguntas de seguridad.
     public RespuestaController(CuestionarioView vista, UsuarioDAO usuarioDAO, PreguntaDAO preguntaDAO,
                                MensajeInternacionalizacionHandler mi, UsuarioController usuarioController) {
         this.mi = mi;
@@ -48,7 +48,7 @@ public class RespuestaController {
         cargarComboPreguntas();
         configurarEventosCuestionario();
     }
-
+    // Controlador para modificar o completar preguntas de seguridad de un usuario ya existente
     public RespuestaController(CuestionarioView vista, UsuarioDAO usuarioDAO, Usuario usuario,
                                PreguntaDAO preguntaDAO, MensajeInternacionalizacionHandler mi,
                                boolean usuarioYaRegistrado, UsuarioController usuarioController) {
@@ -66,7 +66,7 @@ public class RespuestaController {
         cargarComboPreguntas();
         configurarEventosCuestionario();
     }
-
+    // Controlador para el proceso de recuperación de contraseña mediante preguntas de seguridad
     public RespuestaController(CuestionarioRecuperarView recuperarView,
                                PreguntaDAO preguntaDAO,
                                Usuario usuario,
@@ -89,7 +89,7 @@ public class RespuestaController {
         mostrarPreguntaAleatoria();
     }
 
-
+    // Asocia eventos para la vista de recuperación CuestionarioView
     private void configurarEventosCuestionario() {
         cuestionarioView.getCbxPreguntas().addActionListener(new ActionListener() {
             @Override
@@ -127,13 +127,14 @@ public class RespuestaController {
             @Override
             public void windowClosed(WindowEvent e) {
                 if (usuarioController != null) {
+                    // Actualiza sus textos en caso de que el idioma haya cambiado durante el cuestionario.
                     usuarioController.getLoginView().actualizarTextos();
                     usuarioController.getLoginView().setVisible(true);
                 }
             }
         });
     }
-
+    // Asocia eventos para la vista de recuperación CuestionarioRecuperarView
     private void configurarEventosRecuperar(String contrasenia) {
         recuperarView.getBtnFinalizar().addActionListener(new ActionListener() {
             @Override
@@ -152,12 +153,14 @@ public class RespuestaController {
             @Override
             public void windowClosed(WindowEvent e) {
                 if (usuarioController != null) {
+                    // Actualiza sus textos en caso de que el idioma haya cambiado durante el proceso de recuperación
                     usuarioController.getLoginView().actualizarTextos();
                     usuarioController.getLoginView().setVisible(true);
                 }
             }
         });
     }
+    // Cambia el idioma en la vista CuestionarioView
     private void cambiarIdiomaCuestionario() {
         String[] clavesIdiomas = {"es", "en", "fr"};
         String[] paisesIdiomas = {"EC", "US", "FR"};
@@ -168,7 +171,7 @@ public class RespuestaController {
             cuestionarioView.actualizarTextos();
         }
     }
-
+    // Cambia el idioma en la vista CuestionarioRecuperarView y actualiza el texto de la pregunta mostrada
     private void cambiarIdiomaCuestionarioRecuperar() {
         String[] clavesIdiomas = {"es", "en", "fr"};
         String[] paisesIdiomas = {"EC", "US", "FR"};
@@ -180,7 +183,7 @@ public class RespuestaController {
             recuperarView.getLblPregunta().setText(preguntaActual.getPregunta().getEnunciadoPregunta(mi));
         }
     }
-
+    // Muestra una pregunta aleatoria de las registradas por el usuario para el proceso de recuperación
     private void mostrarPreguntaAleatoria() {
         List<Respuesta> disponibles = usuario.getRespuestas().stream()
                 .filter(r -> !respuestasCorrectas.contains(r))
@@ -198,7 +201,8 @@ public class RespuestaController {
         recuperarView.getLblPregunta().setText(preguntaActual.getPregunta().getEnunciadoPregunta(mi));
         recuperarView.getTxtRespuesta().setText("");
     }
-
+    // Verifica si la respuesta ingresada es correcta
+    // Si lo es, permite mostrar o cambiar la contraseña. Si falla, contabiliza intentos hasta un máximo de 3.
     private void procesarRespuesta(String contrasenia) {
         String respuestaUsuario = recuperarView.getTxtRespuesta().getText().trim();
 
@@ -237,7 +241,7 @@ public class RespuestaController {
             }
         }
     }
-
+    // Carga en la vista el enunciado y respuesta de la pregunta seleccionada en el combo
     private void preguntasCuestionario() {
         int index = cuestionarioView.getCbxPreguntas().getSelectedIndex();
         if (index >= 0 && index < preguntasAleatorias.size()) {
@@ -253,7 +257,7 @@ public class RespuestaController {
             cuestionarioView.getTxtRespuesta().setText("");
         }
     }
-
+    // Guarda una respuesta ingresada por el usuario para la pregunta seleccionada
     private void guardar() {
         int index = cuestionarioView.getCbxPreguntas().getSelectedIndex();
         if (index < 0) return;
@@ -282,7 +286,7 @@ public class RespuestaController {
 
         cuestionarioView.mostrarMensaje(mi.get("cuestionario.guardar.ok"));
     }
-
+    // Finaliza el proceso de cuestionario con al menos 3 respuestas
     private void finalizar() {
         if (usuario.getRespuestas().size() < 3) {
             cuestionarioView.mostrarMensaje(mi.get("cuestionario.finalizar.minimo"));
@@ -298,7 +302,7 @@ public class RespuestaController {
         cuestionarioView.mostrarMensaje(mi.get("cuestionario.finalizar.ok"));
         cuestionarioView.dispose();
     }
-
+    // Valida los datos ingresados del usuario, crea el objeto Usuario, y muestra el bloque de preguntas para responder
     private void iniciarCuestionario() {
         // Validar campos del usuario
         String username = cuestionarioView.getTxtUsername().getText().trim();
@@ -349,7 +353,7 @@ public class RespuestaController {
         cargarComboPreguntas();
         cuestionarioView.habilitarPreguntas(true);
     }
-
+    // Carga hasta 10 preguntas aleatorias desde el DAO y las añade al combo de selección en la vista
     private void cargarComboPreguntas() {
         if (preguntasAleatorias != null && !preguntasAleatorias.isEmpty()) return;
 
@@ -367,8 +371,7 @@ public class RespuestaController {
             cuestionarioView.getCbxPreguntas().addItem(r.getPregunta().getEnunciadoPregunta(mi));
         }
     }
-
-
+    // Llena los campos de la vista CuestionarioView con los datos del usuario y desactiva los campos para que no se puedan editar
     private void setearCamposVista(Usuario usuario) {
         cuestionarioView.getTxtUsername().setText(usuario.getUsername());
         cuestionarioView.getTxtContrasenia().setText(usuario.getContrasenia());

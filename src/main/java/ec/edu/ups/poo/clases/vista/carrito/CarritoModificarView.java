@@ -42,11 +42,11 @@ public class CarritoModificarView extends JInternalFrame {
         cambiarIdioma();
         inicializarImagenes();
     }
-
+    // Muestra un mensaje emergente al usuario
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
-
+    // Carga los productos del carrito en la tabla con formato de moneda
     public void cargarDatos(Carrito carrito) {
         modelo.setRowCount(0);
         Locale locale = mi.getLocale();
@@ -62,8 +62,7 @@ public class CarritoModificarView extends JInternalFrame {
             modelo.addRow(fila);
         }
     }
-
-
+    // Solicita al usuario ingresar una nueva cantidad si acepta la confirmación
     public String cantidad(String mensaje) {
         if (mostrarMensajePregunta(mensaje)) {
             String respuesta = JOptionPane.showInputDialog(this, mi.get("carrito.modificar.ingresar.cantidad"));
@@ -73,13 +72,13 @@ public class CarritoModificarView extends JInternalFrame {
         }
         return null;
     }
-
+    // Muestra un diálogo de confirmación y devuelve si el usuario aceptó
     public boolean mostrarMensajePregunta(String mensaje) {
         int respuesta = JOptionPane.showConfirmDialog(this, mensaje, mi.get("dialogo.titulo.confirmacion"),
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         return respuesta == JOptionPane.YES_OPTION;
     }
-
+    // Cambia los textos de la interfaz según el idioma actual
     public void cambiarIdioma(){
         mi.setLenguaje(mi.getLocale().getLanguage(), mi.getLocale().getCountry());
 
@@ -102,7 +101,7 @@ public class CarritoModificarView extends JInternalFrame {
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
-
+    // Asigna los íconos a los botones de buscar y editar
     public void inicializarImagenes(){
         URL eliminar = CarritoModificarView.class.getClassLoader().getResource("imagenes/editar.png");
         if (eliminar != null) {
@@ -120,7 +119,7 @@ public class CarritoModificarView extends JInternalFrame {
             System.err.println("Error: No se ha cargado el icono de Registrarse");
         }
     }
-
+    //Getters y Setters
     public JLabel getLblBuscarCodigo() {
         return lblBuscarCodigo;
     }

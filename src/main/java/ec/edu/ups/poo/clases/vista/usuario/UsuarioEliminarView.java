@@ -35,6 +35,7 @@ public class UsuarioEliminarView extends JInternalFrame {
         cambiarIdioma();
         inicializarImagenes();
     }
+    // Limpia los campos del formulario
     public void limpiarCampos() {
         txtUsername.setText("");
         txtContrasenia.setText("");
@@ -45,17 +46,17 @@ public class UsuarioEliminarView extends JInternalFrame {
         spnMes.setValue(0);
         spnAnio.setValue(0);
     }
-
+    // Muestra un mensaje informativo en un diálogo emergente
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
-
+    // Muestra una pregunta de confirmación y devuelve true si el usuario presiona "Sí"
     public boolean mostrarMensajePregunta(String mensaje) {
         int respuesta = JOptionPane.showConfirmDialog(this, mensaje, mi.get("dialogo.title.pregunta"),
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         return respuesta == JOptionPane.YES_OPTION;
     }
-
+    // Establece los textos traducidos de todos los componentes
     public void cambiarIdioma() {
         mi.setLenguaje(mi.getLocale().getLanguage(), mi.getLocale().getCountry());
 
@@ -75,8 +76,7 @@ public class UsuarioEliminarView extends JInternalFrame {
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
-
-
+    // Carga los íconos en los botones
     public void inicializarImagenes(){
         URL buscar = UsuarioEliminarView.class.getClassLoader().getResource("imagenes/buscar.png");
         if (buscar != null) {
@@ -94,7 +94,7 @@ public class UsuarioEliminarView extends JInternalFrame {
             System.err.println("Error: No se ha cargado el icono de Login");
         }
     }
-
+    // Getters y Setters
     public JLabel getLblNombre() {
         return lblNombre;
     }

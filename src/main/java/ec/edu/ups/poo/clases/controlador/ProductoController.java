@@ -41,8 +41,7 @@ public class ProductoController {
         this.mi = mi;
         configurarEventos();
     }
-
-
+    // Vincula los botones de cada vista con sus respectivas acciones
     private void configurarEventos() {
         productoAnadirView.getBtnAceptar().addActionListener(new ActionListener() {
             @Override
@@ -100,7 +99,7 @@ public class ProductoController {
             }
         });
     }
-
+    // Valida campos y guarda un nuevo producto si no existe el código
     private void guardarProducto() {
         String codigoTexto = productoAnadirView.getTxtCodigo().getText().trim();
         String nombre = productoAnadirView.getTxtNombre().getText().trim();
@@ -133,19 +132,19 @@ public class ProductoController {
         productoAnadirView.limpiarCampos();
         productoAnadirView.mostrarProductos(productoDAO.listarTodos());
     }
-
+    // Filtra productos por nombre desde la vista productoListaView
     private void buscarProducto() {
         String nombre = productoListaView.getTxtBuscar().getText();
 
         List<Producto> productosEncontrados = productoDAO.buscarPorNombre(nombre);
         productoListaView.cargarDatos(productosEncontrados);
     }
-
+    // Muestra todos los productos registrados
     private void listarProductos() {
         List<Producto> productos = productoDAO.listarTodos();
         productoListaView.cargarDatos(productos);
     }
-
+    // Permite modificar nombre y precio de un producto existente
     private void actualizarProducto() {
         String txtCod = productoEditarView.getTxtBuscar().getText().trim();
         String nombre = productoEditarView.getTxtNombre().getText().trim();
@@ -185,7 +184,7 @@ public class ProductoController {
         productoDAO.actualizar(producto);
         productoEditarView.mostrarMensaje(mi.get("producto.mensaje.actualizado.correctamente"));
     }
-
+    // Elimina un producto si el código es válido y se confirma la acción
     private void eliminarProducto() {
         String textCodigo = productoEliminarView.getTxtBuscar().getText().trim();
         if (textCodigo.isEmpty()) {
@@ -211,7 +210,7 @@ public class ProductoController {
         productoEliminarView.mostrarMensaje(mi.get("producto.mensaje.eliminado.correctamente"));
         productoEliminarView.limpiarCampos();
     }
-
+    // Busca un producto y carga los datos en la vista de eliminación
     private void buscarProductoEliminar() {
         String txtCod = productoEliminarView.getTxtBuscar().getText().trim();
 
@@ -236,7 +235,7 @@ public class ProductoController {
             productoEliminarView.limpiarCampos();
         }
     }
-
+    // Busca un producto para editar y muestra sus datos
     private void buscarProductoEdicion() {
         String txtCod = productoEditarView.getTxtBuscar().getText().trim();
 
@@ -261,7 +260,7 @@ public class ProductoController {
             productoEditarView.limpiarCampos();
         }
     }
-
+    // Permite buscar un producto desde la vista del carrito para agregarlo
     private void buscarProductoCarrito() {
         String txtCod = carritoAnadirView.getTxtBuscar().getText().trim();
 
@@ -286,7 +285,7 @@ public class ProductoController {
             carritoAnadirView.limpiarCampos();
         }
     }
-
+    // Actualiza el precio de los productos en la tabla según el idioma
     private void refrescarTablaListaProductos(Locale locale) {
         DefaultTableModel modelo = (DefaultTableModel) productoListaView.getTblProductos().getModel();
         int rowCount = modelo.getRowCount();
@@ -299,8 +298,7 @@ public class ProductoController {
             }
         }
     }
-
-
+    // Cambia el idioma en las vistas y actualiza los datos formateados
     public void actualizarIdiomaEnVistas() {
         productoAnadirView.cambiarIdioma();
         productoEditarView.cambiarIdioma();
@@ -308,5 +306,4 @@ public class ProductoController {
         productoListaView.cambiarIdioma();
         refrescarTablaListaProductos(mi.getLocale());
     }
-
 }

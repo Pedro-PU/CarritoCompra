@@ -11,10 +11,11 @@ public class ProductoDAOMemoria implements ProductoDAO {
     private List<Producto> productos;
 
     public ProductoDAOMemoria() {
+        // Productos por defecto
         productos = new ArrayList<Producto>();
-        crear(new Producto(1, "a",15));
-        crear(new Producto(2, "b",25));
-        crear(new Producto(3, "c",35));
+        crear(new Producto(1, "Prod A",15));
+        crear(new Producto(2, "Prod B",25));
+        crear(new Producto(3, "Prod C",35));
     }
 
     @Override

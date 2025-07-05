@@ -12,6 +12,7 @@ public class PreguntaDAOMemoria implements PreguntaDAO {
     private final List<Pregunta> preguntas = new ArrayList<>();
 
     public PreguntaDAOMemoria(MensajeInternacionalizacionHandler mi) {
+        // Preguntas por defecto
         String[] claves = {
                 "pregunta.color_favorito",
                 "pregunta.primera_mascota",

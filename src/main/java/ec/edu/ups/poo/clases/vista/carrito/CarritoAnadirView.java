@@ -1,7 +1,6 @@
 package ec.edu.ups.poo.clases.vista.carrito;
 
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
-import ec.edu.ups.poo.clases.vista.usuario.UsuarioCrearView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -31,6 +30,7 @@ public class CarritoAnadirView extends JInternalFrame {
     private JLabel lblTotal;
     private DefaultTableModel modelo;
     private MensajeInternacionalizacionHandler mi;
+
     public CarritoAnadirView(MensajeInternacionalizacionHandler mi) {
         super("Carrito de Compras", true,true,false,true);
         setContentPane(panelPrincipal);
@@ -45,14 +45,14 @@ public class CarritoAnadirView extends JInternalFrame {
         cambiarIdioma();
         inicializarImagenes();
     }
-
+    // Llena el comboBox de cantidad con valores del 1 al 20
     private void cargarDatos() {
         cbxCantidad.removeAllItems();
         for(int i = 0; i < 20; i++){
             cbxCantidad.addItem(String.valueOf(i+1));
         }
     }
-
+    // Cambia todos los textos visibles al idioma seleccionado
     public void cambiarIdioma() {
         mi.setLenguaje(mi.getLocale().getLanguage(), mi.getLocale().getCountry());
 
@@ -83,7 +83,7 @@ public class CarritoAnadirView extends JInternalFrame {
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
-
+    // Carga y asigna íconos a los botones si están disponibles
     public void inicializarImagenes(){
         URL aceptar = CarritoAnadirView.class.getClassLoader().getResource("imagenes/aceptar.png");
         if (aceptar != null) {
@@ -125,7 +125,7 @@ public class CarritoAnadirView extends JInternalFrame {
             System.err.println("Error: No se ha cargado el icono de Registrarse");
         }
     }
-
+    //Getters y Setters
     public JLabel getLblBuscarCodigo() {
         return lblBuscarCodigo;
     }

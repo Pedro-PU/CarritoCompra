@@ -38,7 +38,7 @@ public class PrincipalView extends JFrame {
     public PrincipalView(MensajeInternacionalizacionHandler mi, String usuarioAutenticado) {
         this.mi = mi;
         this.usuarioAutenticado = usuarioAutenticado;
-
+        // Panel principal con BorderLayout (para incluir jDesktopPane)
         JPanel panelPrincipal = new JPanel(new BorderLayout());
         jDesktopPane = new MiJDesktopPane(mi);
 
@@ -49,25 +49,29 @@ public class PrincipalView extends JFrame {
         menuSalir = new JMenu("Salir");
         menuUsuario = new JMenu("Usuario");
         menuIdioma = new JMenu("Idioma");
-
+        // Submenús de idioma
         menuItemEspanol = new JMenuItem("Espanol");
         menuItemIngles = new JMenuItem("Ingles");
         menuItemFrances = new JMenuItem("Frances");
+        // Submenús de producto
         menuItemCrearProducto = new JMenuItem("Crear Producto");
         menuItemEliminarProducto = new JMenuItem("Eliminar Producto");
         menuItemActualizarProducto = new JMenuItem("Actualizar Producto");
         menuItemBuscarProducto = new JMenuItem("Buscar Producto");
+        // Submenús de carrito
         menuItemCrearCarrito = new JMenuItem("Crear Carrito");
         menuItemListarCarrito = new JMenuItem("Listar Carrito");
         menuItemEditarCarrito = new JMenuItem("Editar Carrito");
+        // Salida
         menuItemEliminarCarrito = new JMenuItem("Eliminar Carrito");
         menuItemSalir = new JMenuItem("Salir");
         menuItemCerrarSesion = new JMenuItem("Cerrar Sesion");
+        // Submenús de usuario
         menuItemCrearUsuario = new JMenuItem("Crear Usuario");
         menuItemEliminarUsuario = new JMenuItem("Eliminar Usuario");
         menuItemEditarUsuario = new JMenuItem("Editar Usuario");
         menuItemListarUsuario = new JMenuItem("Listar Usuario");
-
+        // Agregar ítems a sus menús correspondientes
         menuIdioma.add(menuItemEspanol);
         menuIdioma.add(menuItemIngles);
         menuIdioma.add(menuItemFrances);
@@ -85,17 +89,17 @@ public class PrincipalView extends JFrame {
         menuProducto.add(menuItemEliminarProducto);
         menuProducto.add(menuItemActualizarProducto);
         menuProducto.add(menuItemBuscarProducto);
+        // Agregar todos los menús a la barra de menú
         menuBar.add(menuCarrito);
         menuBar.add(menuProducto);
         menuBar.add(menuSalir);
         menuBar.add(menuUsuario);
         menuBar.add(menuIdioma);
         setJMenuBar(menuBar);
-
+        // Agregar el área de trabajo (DesktopPane) al panel principal
         panelPrincipal.add(jDesktopPane, BorderLayout.CENTER);
-
         setContentPane(panelPrincipal);
-
+        // Configuración general de la ventana
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sistema Carrito de Compras");
         setLocationRelativeTo(null);
@@ -105,18 +109,17 @@ public class PrincipalView extends JFrame {
         cambiarIdioma();
         inicializarImagenes();
     }
-
-
+    // Muestra mensaje emergente
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
-
+    // Muestra cuadro de confirmación
     public boolean mostrarMensajePregunta(String mensaje) {
         int respuesta = JOptionPane.showConfirmDialog(this, mensaje, "Confirmación",
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         return respuesta == JOptionPane.YES_OPTION;
     }
-
+    // Activa o desactiva todos los campos de edición por rol de usuario
     public void deshabilitarMenusAdministrador() {
         getMenuItemCrearProducto().setEnabled(false);
         getMenuItemActualizarProducto().setEnabled(false);
@@ -125,7 +128,7 @@ public class PrincipalView extends JFrame {
         getMenuItemEliminarUsuario().setEnabled(false);
         getMenuItemListarUsuario().setEnabled(false);
     }
-
+    // Aplica los textos internacionalizados
     public void cambiarIdioma() {
         jDesktopPane.actualizarIdioma();
         setTitle(mi.get("principal.titulo") + " - " + usuarioAutenticado);
@@ -163,7 +166,7 @@ public class PrincipalView extends JFrame {
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
-
+    // Asocia íconos a los botones
     public void inicializarImagenes(){
         //Iconos Carrito
         URL carrito = PrincipalView.class.getClassLoader().getResource("imagenes/carrito.png");
@@ -329,7 +332,7 @@ public class PrincipalView extends JFrame {
             System.err.println("Error: No se ha cargado el icono de Login");
         }
     }
-
+    // Getters y Setters
     public JMenuItem getMenuItemEspanol() {
         return menuItemEspanol;
     }

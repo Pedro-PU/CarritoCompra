@@ -47,6 +47,7 @@ public class UsuarioCrearView extends JInternalFrame {
         cambiarIdioma();
         inicializarImagenes();
     }
+    // Limpia todos los campos del formulario
     public void limpiarCampos() {
         txtUsername.setText("");
         txtContrasenia.setText("");
@@ -57,16 +58,17 @@ public class UsuarioCrearView extends JInternalFrame {
         spnMes.setValue(0);
         spnAnio.setValue(0);
     }
+    // Muestra un mensaje emergente simple
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
-
+    // Muestra un mensaje de confirmación y devuelve true si el usuario elige "Sí"
     public boolean mostrarMensajePregunta(String mensaje) {
         int respuesta = JOptionPane.showConfirmDialog(this, mensaje, mi.get("dialogo.title.pregunta"),
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         return respuesta == JOptionPane.YES_OPTION;
     }
-
+    // Carga las imágenes de los botones (íconos)
     public void inicializarImagenes(){
         URL aceptar = UsuarioCrearView.class.getClassLoader().getResource("imagenes/aceptar.png");
         if (aceptar != null) {
@@ -84,7 +86,7 @@ public class UsuarioCrearView extends JInternalFrame {
             System.err.println("Error: No se ha cargado el icono de Registrarse");
         }
     }
-
+    // Cambia los textos de todos los componentes según el idioma actual
     public void cambiarIdioma() {
         setTitle(mi.get("usuario.crear.titulo.ventana"));
         lblTitulo.setText(mi.get("usuario.crear.titulo"));
@@ -102,8 +104,7 @@ public class UsuarioCrearView extends JInternalFrame {
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
-
-
+    //Getters y Setters
     public JTextField getTxtCorreo() {
         return txtCorreo;
     }

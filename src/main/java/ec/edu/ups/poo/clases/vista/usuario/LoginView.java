@@ -32,17 +32,17 @@ public class LoginView extends JFrame{
         inicializarImagenes();
         inicializarComponentes();
     }
-
+    // Muestra un mensaje emergente al usuario
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
-
+    // Muestra un cuadro de confirmación con opciones Sí y No
     public boolean mostrarMensajePregunta(String mensaje) {
         int respuesta = JOptionPane.showConfirmDialog(this, mensaje, "Confirmación",
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         return respuesta == JOptionPane.YES_OPTION;
     }
-
+    // Inicializa el combo de idiomas con los textos traducidos
     public void inicializarComponentes() {
         cbxIdiomas.removeAllItems();
         cbxIdiomas.addItem(mi.get("menu.idioma.es")); // Español
@@ -50,7 +50,7 @@ public class LoginView extends JFrame{
         cbxIdiomas.addItem(mi.get("menu.idioma.fr")); // Francés
         actualizarTextos();
     }
-
+    // Carga las imágenes/íconos para los botones
     public void inicializarImagenes(){
         URL loginURL = LoginView.class.getClassLoader().getResource("imagenes/login.png");
         if (loginURL != null) {
@@ -85,7 +85,7 @@ public class LoginView extends JFrame{
         }
 
     }
-
+    // Actualiza los textos de todos los componentes según el idioma seleccionado
     public void actualizarTextos() {
         setTitle(mi.get("app.titulo"));
         lblTitulo.setText(mi.get("login.titulo"));
@@ -118,7 +118,7 @@ public class LoginView extends JFrame{
         cbxIdiomas.addItem(mi.get("menu.idioma.fr"));
         cbxIdiomas.setSelectedIndex(selectedIndex);
     }
-
+    //Getters y Setters
     public JComboBox getCbxIdiomas() {
         return cbxIdiomas;
     }

@@ -39,7 +39,52 @@ public class CarritoDetalleView extends JInternalFrame{
         this.mi = mi;
         cambiarIdioma();
     }
+    // Llena la tabla con los productos del carrito recibido como parámetro
+    public void cargarDatos(Carrito carrito) {
+        modelo.setRowCount(0);
+        Locale locale = mi.getLocale();
 
+        for (ItemCarrito itemCarrito : carrito.obtenerItems()) {
+            Producto producto = itemCarrito.getProducto();
+            Object[] fila = {
+                    producto.getCodigo(),
+                    producto.getNombre(),
+                    FormateadorUtils.formatearMoneda(producto.getPrecio(), locale),
+                    itemCarrito.getCantidad(),
+                    FormateadorUtils.formatearMoneda(producto.getPrecio() * itemCarrito.getCantidad(), locale)
+            };
+            modelo.addRow(fila);
+        }
+    }
+    // Muestra un cuadro de diálogo con un mensaje al usuario
+    public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje);
+    }
+    // Cambia todos los textos de la vista al idioma actual del manejador
+    public void cambiarIdioma() {
+        mi.setLenguaje(mi.getLocale().getLanguage(), mi.getLocale().getCountry());
+
+        setTitle(mi.get("carrito.detalle.titulo.ventana"));
+        lblDetalleCarrito.setText(mi.get("carrito.detalle.titulo"));
+        lblSubtotal.setText(mi.get("carrito.detalle.subtotal"));
+        lblIVA.setText(mi.get("carrito.detalle.iva"));
+        lblTotal.setText(mi.get("carrito.detalle.total"));
+
+        Object[] columnas = {
+                mi.get("carrito.detalle.columna.codigo"),
+                mi.get("carrito.detalle.columna.nombre"),
+                mi.get("carrito.detalle.columna.precio"),
+                mi.get("carrito.detalle.columna.cantidad"),
+                mi.get("carrito.detalle.columna.subtotal")
+        };
+        modelo.setColumnIdentifiers(columnas);
+
+        UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
+        UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
+        UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
+        UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
+    }
+    //Getters y Setters
     public JLabel getLblDetalleCarrito() {
         return lblDetalleCarrito;
     }
@@ -111,48 +156,5 @@ public class CarritoDetalleView extends JInternalFrame{
     public void setModelo(DefaultTableModel modelo) {
         this.modelo = modelo;
     }
-    public void cargarDatos(Carrito carrito) {
-        modelo.setRowCount(0);
-        Locale locale = mi.getLocale();
 
-        for (ItemCarrito itemCarrito : carrito.obtenerItems()) {
-            Producto producto = itemCarrito.getProducto();
-            Object[] fila = {
-                    producto.getCodigo(),
-                    producto.getNombre(),
-                    FormateadorUtils.formatearMoneda(producto.getPrecio(), locale),
-                    itemCarrito.getCantidad(),
-                    FormateadorUtils.formatearMoneda(producto.getPrecio() * itemCarrito.getCantidad(), locale)
-            };
-            modelo.addRow(fila);
-        }
-    }
-
-    public void mostrarMensaje(String mensaje) {
-        JOptionPane.showMessageDialog(this, mensaje);
-    }
-
-    public void cambiarIdioma() {
-        mi.setLenguaje(mi.getLocale().getLanguage(), mi.getLocale().getCountry());
-
-        setTitle(mi.get("carrito.detalle.titulo.ventana"));
-        lblDetalleCarrito.setText(mi.get("carrito.detalle.titulo"));
-        lblSubtotal.setText(mi.get("carrito.detalle.subtotal"));
-        lblIVA.setText(mi.get("carrito.detalle.iva"));
-        lblTotal.setText(mi.get("carrito.detalle.total"));
-
-        Object[] columnas = {
-                mi.get("carrito.detalle.columna.codigo"),
-                mi.get("carrito.detalle.columna.nombre"),
-                mi.get("carrito.detalle.columna.precio"),
-                mi.get("carrito.detalle.columna.cantidad"),
-                mi.get("carrito.detalle.columna.subtotal")
-        };
-        modelo.setColumnIdentifiers(columnas);
-
-        UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
-        UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
-        UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
-        UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
-    }
 }

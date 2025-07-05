@@ -42,6 +42,7 @@ public class CarritoController {
         carrito.setCodigo(carrito.hashCode());
         configurarEventosEnVistas();
     }
+    // Configura todos los botones de las vistas con sus respectivas acciones
     private void configurarEventosEnVistas() {
         carritoAnadirView.getBtnAnadir().addActionListener(new ActionListener() {
             @Override
@@ -110,7 +111,7 @@ public class CarritoController {
             }
         });
     }
-
+    // Agrega un producto al carrito desde la vista CarritoAnadirView
     private void anadirProductoACarrito() {
         int codigo = Integer.parseInt(carritoAnadirView.getTxtBuscar().getText());
         Producto producto = productoDAO.buscarPorCodigo(codigo);
@@ -120,7 +121,7 @@ public class CarritoController {
         actualizarTotales();
         carritoAnadirView.limpiarCampos();
     }
-
+    // Actualiza la tabla de productos y los totales del carrito
     private void actualizarTabla() {
         List<ItemCarrito> items = carrito.obtenerItems();
         DefaultTableModel modelo = (DefaultTableModel) carritoAnadirView.getTblProductos().getModel();
@@ -136,14 +137,13 @@ public class CarritoController {
             });
         }
     }
-
     private void actualizarTotales() {
         Locale locale = mi.getLocale();
         carritoAnadirView.getTxtSubTotal().setText(FormateadorUtils.formatearMoneda(carrito.calcularSubtotal(), locale));
         carritoAnadirView.getTxtIVA().setText(FormateadorUtils.formatearMoneda(carrito.calcularIVA(), locale));
         carritoAnadirView.getTxtTotal().setText(FormateadorUtils.formatearMoneda(carrito.calcularTotal(), locale));
     }
-
+    // Finaliza y guarda el carrito en base de datos
     private void aceptarCarrito() {
         if (carrito.estaVacio()) {
             carritoAnadirView.mostrarMensaje(mi.get("carrito.msj.vacio"));
@@ -162,7 +162,7 @@ public class CarritoController {
         actualizarTotales();
         carritoAnadirView.limpiarCampos();
     }
-
+    // Elimina un producto del carrito desde la tabla
     private void borrarItemFormulario(){
         int filaSeleccionada = carritoAnadirView.getTblProductos().getSelectedRow();
         if (filaSeleccionada != -1) {
@@ -180,7 +180,7 @@ public class CarritoController {
             carritoAnadirView.mostrarMensaje(mi.get("carrito.msj.seleccione.fila"));
         }
     }
-
+    // Limpia todos los datos del formulario y tabla
     private void limpiarFormulario() {
         boolean confirmado = carritoAnadirView.mostrarMensajePregunta(mi.get("carrito.msj.confirmar.vaciar"));
         if (confirmado) {
@@ -192,7 +192,7 @@ public class CarritoController {
             carritoAnadirView.mostrarMensaje(mi.get("carrito.msj.vaciado"));
         }
     }
-
+    // Busca un carrito por código para visualizar
     private void buscarCarritoCodigo() {
         String txtCod = carritoListaView.getTxtBuscar().getText().trim();
         if (txtCod.isEmpty()) {
@@ -217,7 +217,7 @@ public class CarritoController {
             carritoListaView.cargarDatos(List.of());
         }
     }
-
+    // Lista todos los carritos según el rol del usuario
     private void listarCarritos() {
         List<Carrito> carritosAMostrar;
 
@@ -229,6 +229,7 @@ public class CarritoController {
 
         carritoListaView.cargarDatos(carritosAMostrar);
     }
+    // Muestra una ventana con detalles del carrito
     private void mostrarDetalle() {
         int filaSeleccionada = carritoListaView.getTblProductos().getSelectedRow();
 
@@ -260,7 +261,7 @@ public class CarritoController {
             carritoListaView.mostrarMensaje(mi.get("carrito.msj.seleccione.carrito"));
         }
     }
-
+    // Busca un carrito para edición y muestra datos en la vista
     private void buscarCarritoCodigoModificar() {
         String txtCod = carritoModificarView.getTxtCodigo().getText().trim();
         if (txtCod.isEmpty()) {
@@ -287,7 +288,7 @@ public class CarritoController {
             carritoModificarView.mostrarMensaje(mi.get("carrito.msj.no.encontrado"));
         }
     }
-
+    // Permite editar la cantidad de un ítem en el carrito
     private void editarCarrito() {
         if (carritoModificarView.getTblProductos().getSelectedRow() != -1) {
             String cantidadStr = carritoModificarView.cantidad(mi.get("carrito.msj.modificar.cantidad"));
@@ -331,7 +332,7 @@ public class CarritoController {
             carritoModificarView.mostrarMensaje(mi.get("carrito.msj.seleccione.item"));
         }
     }
-
+    // Carga un carrito en la vista de eliminación
     private void buscarCarritoCodigoEliminar() {
         String txtCod = carritoEliminarView.getTxtCodigo().getText().trim();
         if (txtCod.isEmpty()) {
@@ -362,7 +363,7 @@ public class CarritoController {
             carritoEliminarView.getBtnEliminar().setEnabled(false);
         }
     }
-
+    // Elimina un carrito del sistema
     private void eliminarCarrito(){
         boolean confirmado = carritoEliminarView.mostrarMensajePregunta(mi.get("carrito.msj.eliminar.confirmar"));
         if(confirmado) {
@@ -373,7 +374,7 @@ public class CarritoController {
             carritoEliminarView.mostrarMensaje(mi.get("carrito.msj.eliminar.cancelada"));
         }
     }
-
+    // Reformatear los datos monetarios y de fecha según el Locale seleccionado
     private void refrescarTablaAnadir(Locale locale) {
         List<ItemCarrito> items = carrito.obtenerItems();
         DefaultTableModel modelo = (DefaultTableModel) carritoAnadirView.getTblProductos().getModel();
@@ -382,7 +383,7 @@ public class CarritoController {
             modelo.setValueAt(FormateadorUtils.formatearMoneda(item.getProducto().getPrecio(), locale), i, 2);
             modelo.setValueAt(FormateadorUtils.formatearMoneda(item.getProducto().getPrecio() * item.getCantidad(), locale), i, 4);
         }
-        actualizarTotales(); // También refresca los totales con nuevo idioma
+        actualizarTotales();
     }
     private void refrescarTablaLista(Locale locale) {
         int rowCount = carritoListaView.getModelo().getRowCount();
@@ -446,7 +447,7 @@ public class CarritoController {
             }
         }
     }
-
+    // Cambia el idioma en todas las vistas asociadas y actualiza datos formateados
     public void actualizarIdiomaEnVistas() {
         carritoAnadirView.cambiarIdioma();
         carritoListaView.cambiarIdioma();

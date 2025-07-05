@@ -28,7 +28,7 @@ public class UsuarioController {
     private UsuarioListarView usuarioListarView;
     private PreguntaDAO preguntaDAO;
     private final MensajeInternacionalizacionHandler mi;
-
+    // Usado en la pantalla de login
     public UsuarioController(UsuarioDAO usuarioDAO, LoginView loginView, PreguntaDAO preguntaDAO,
                              MensajeInternacionalizacionHandler mi) {
         this.usuarioDAO = usuarioDAO;
@@ -38,7 +38,7 @@ public class UsuarioController {
         this.mi = mi;
         configurarEventosLogin();
     }
-
+    // Usado para CRUD de usuarios
     public UsuarioController (UsuarioDAO usuarioDAO, UsuarioCrearView usuarioCrearView, UsuarioEliminarView usuarioEliminarView,
                               UsuarioModificarView usuarioModificarView, UsuarioListarView usuarioListarView, MensajeInternacionalizacionHandler mi,
                               Usuario usuarioLogueado) {
@@ -52,7 +52,7 @@ public class UsuarioController {
         configurarEventosUsuario();
         configurarVistaModificar();
     }
-
+    // Asocia acciones de los botones del login
     private void configurarEventosLogin(){
         loginView.getBtnIniciar().addActionListener(new ActionListener() {
             @Override
@@ -85,7 +85,7 @@ public class UsuarioController {
             }
         });
     }
-
+    // Asocia acciones de los botones del CRUD de usuario
     private void configurarEventosUsuario(){
         usuarioCrearView.getBtnAceptar().addActionListener(new ActionListener() {
             @Override
@@ -130,7 +130,7 @@ public class UsuarioController {
             }
         });
     }
-
+    // Cambia el idioma del sistema en el login según la opción seleccionada en el combo box
     private void cambiarIdioma() {
         String[] clavesIdiomas = {"es", "en", "fr"};
         String[] paisesIdiomas = {"EC", "US", "FR"};
@@ -141,12 +141,13 @@ public class UsuarioController {
             loginView.actualizarTextos();
         }
     }
-
+    // Cierra la aplicación desde la ventana de login
     private void salir(){
         loginView.dispose();
         System.exit(0);
     }
-
+    // Verifica las credenciales del usuario
+    // Comprueba si tiene preguntas de seguridad completas; si no, lo redirige a completarlas
     private void autenticar() {
         String username = loginView.getTxtUsername().getText().trim();
         String contrasenia = loginView.getTxtContrasenia().getText().trim();
@@ -175,15 +176,7 @@ public class UsuarioController {
             }
         }
     }
-
-    public Usuario getUsuarioAutenticado() {
-        return usuario;
-    }
-
-    public void setUsuarioAutenticado(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
+    // Inicia el proceso de recuperación de cuenta por preguntas de seguridad, si el usuario no es administrador
     private void recuperar() {
         boolean confirmado = loginView.mostrarMensajePregunta(mi.get("login.mensaje.pregunta_recuperar"));
         if (confirmado) {
@@ -223,7 +216,7 @@ public class UsuarioController {
             loginView.mostrarMensaje(mi.get("login.mensaje.recuperacion_cancelada"));
         }
     }
-
+    // nicia el registro de un nuevo usuario con preguntas de seguridad desde el CuestionarioView
     private void registrar() {
         boolean confirmado = loginView.mostrarMensajePregunta(mi.get("login.mensaje.pregunta_registro"));
         if (confirmado) {
@@ -243,8 +236,7 @@ public class UsuarioController {
             loginView.mostrarMensaje(mi.get("login.mensaje.creacion_cancelada"));
         }
     }
-
-
+    // Crea un nuevo usuario luego de validar todos los campos
     private void crear() {
         boolean confirmado = usuarioCrearView.mostrarMensajePregunta(mi.get("usuario.mensaje.crear.pregunta"));
         if (!confirmado) {
@@ -293,7 +285,7 @@ public class UsuarioController {
         usuarioCrearView.mostrarMensaje(mi.get("usuario.mensaje.creado"));
         usuarioCrearView.limpiarCampos();
     }
-
+    // Elimina un usuario existente si fue encontrado por su username y se confirma la acción
     private void eliminar() {
         boolean confirmado = usuarioEliminarView.mostrarMensajePregunta(mi.get("usuario.mensaje.eliminar.pregunta"));
         if (!confirmado) {
@@ -319,7 +311,7 @@ public class UsuarioController {
         usuarioEliminarView.mostrarMensaje(mi.get("usuario.mensaje.eliminado"));
         usuarioEliminarView.limpiarCampos();
     }
-
+    // Busca un usuario por su username y carga sus datos en los campos del UsuarioEliminarView
     private void buscarEliminar() {
         String username = usuarioEliminarView.getTxtUsername().getText().trim();
 
@@ -346,7 +338,7 @@ public class UsuarioController {
         usuarioEliminarView.getSpnMes().setValue(fecha.get(Calendar.MONTH) + 1);
         usuarioEliminarView.getSpnAnio().setValue(fecha.get(Calendar.YEAR));
     }
-
+    // Busca un usuario por username (o el actual si es tipo USUARIO) y carga sus datos en UsuarioModificarView
     private void buscarModificar() {
         String username = usuarioModificarView.getTxtName().getText().trim();
         if (usuario.getRol() == Rol.USUARIO) {
@@ -372,7 +364,7 @@ public class UsuarioController {
             usuarioModificarView.habilitarCampos(false);
         }
     }
-
+    // Guarda los cambios del usuario buscado, luego de validar los datos y confirmar la acción
     private void editar() {
         boolean confirmado = usuarioModificarView.mostrarMensajePregunta(mi.get("usuario.mensaje.editar.pregunta"));
         if (!confirmado) return;
@@ -432,7 +424,7 @@ public class UsuarioController {
             usuarioModificarView.habilitarCampos(false);
         }
     }
-
+    //Si es rol USUARIO, deshabilita la opción de buscar otros usuarios para buscar
     private void configurarVistaModificar() {
         if (usuario.getRol() == Rol.USUARIO) {
             usuarioModificarView.getTxtName().setEnabled(false);
@@ -442,7 +434,7 @@ public class UsuarioController {
             buscarModificar();
         }
     }
-
+    // Busca un usuario específico por username y lo muestra en la tabla
     private void buscarUsario(){
         String username = usuarioListarView.getTxtBuscar().getText();
         Usuario usuarioEncontrado = usuarioDAO.buscarPorUsername(username);
@@ -452,12 +444,12 @@ public class UsuarioController {
             usuarioListarView.cargarDatos(new ArrayList<>());
         }
     }
-
+    // Carga todos los usuarios registrados en la tabla de UsuarioListarView
     private void listar(){
         List<Usuario> usuarios = usuarioDAO.listarTodos();
         usuarioListarView.cargarDatos(usuarios);
     }
-
+    // Formatea y actualiza las fechas de nacimiento de los usuarios en la tabla con el idioma actual
     private void refrescarTablaListaUsuarios(Locale locale) {
         DefaultTableModel modelo = (DefaultTableModel) usuarioListarView.getTblUsuarios().getModel();
         int rowCount = modelo.getRowCount();
@@ -471,7 +463,7 @@ public class UsuarioController {
             }
         }
     }
-
+    // Actualiza los textos de todos los formularios de gestión de usuario al idioma seleccionado
     public void actualizarIdiomaEnVistas() {
         usuarioCrearView.cambiarIdioma();
         usuarioEliminarView.cambiarIdioma();
@@ -479,12 +471,20 @@ public class UsuarioController {
         usuarioListarView.cambiarIdioma();
         refrescarTablaListaUsuarios(mi.getLocale());
     }
-
+    // Getters y Setters
     public LoginView getLoginView() {
         return loginView;
     }
 
     public void setLoginView(LoginView loginView) {
         this.loginView = loginView;
+    }
+
+    public Usuario getUsuarioAutenticado() {
+        return usuario;
+    }
+
+    public void setUsuarioAutenticado(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

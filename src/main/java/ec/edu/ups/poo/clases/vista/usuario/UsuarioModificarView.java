@@ -40,7 +40,7 @@ public class UsuarioModificarView extends JInternalFrame {
         spnAnio.setModel(new SpinnerNumberModel(2000, 1, 2100, 1));
         habilitarCampos(false);
     }
-
+    // Aplica los textos internacionalizados
     public void cambiarIdioma() {
         setTitle(mi.get("usuario.modificar.titulo.ventana"));
         lblBuscar.setText(mi.get("usuario.modificar.buscar"));
@@ -54,16 +54,17 @@ public class UsuarioModificarView extends JInternalFrame {
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
-
+    // Muestra mensaje emergente
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
-
+    // Muestra cuadro de confirmación
     public boolean mostrarMensajePregunta(String mensaje) {
         int respuesta = JOptionPane.showConfirmDialog(this, mensaje, mi.get("dialogo.title.pregunta"),
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         return respuesta == JOptionPane.YES_OPTION;
     }
+    // Limpia todos los campos del formulario
     public void limpiarCampos() {
         txtName.setText("");
         txtUsername.setText("");
@@ -75,7 +76,7 @@ public class UsuarioModificarView extends JInternalFrame {
         spnMes.setValue(0);
         spnAnio.setValue(0);
     }
-
+    // Asocia íconos a los botones
     public void inicializarImagenes(){
         URL buscar = UsuarioModificarView.class.getClassLoader().getResource("imagenes/buscar.png");
         if (buscar != null) {
@@ -93,6 +94,7 @@ public class UsuarioModificarView extends JInternalFrame {
             System.err.println("Error: No se ha cargado el icono de Login");
         }
     }
+    // Activa o desactiva todos los campos de edición
     public void habilitarCampos(boolean habilitar) {
         txtUsername.setEnabled(habilitar);
         txtContrasenia.setEnabled(habilitar);
@@ -103,8 +105,7 @@ public class UsuarioModificarView extends JInternalFrame {
         spnMes.setEnabled(habilitar);
         spnAnio.setEnabled(habilitar);
     }
-
-
+    // Getters y Setters
     public JLabel getLblBuscar() {
         return lblBuscar;
     }

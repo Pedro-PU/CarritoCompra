@@ -31,7 +31,7 @@ public class UsuarioListarView extends JInternalFrame {
         cambiarIdioma();
         inicializarImagenes();
     }
-
+    // Método para cambiar los textos a otro idioma
     public void cambiarIdioma() {
         setTitle(mi.get("usuario.listar.titulo"));
         lblNombre.setText(mi.get("usuario.listar.buscar"));
@@ -53,7 +53,7 @@ public class UsuarioListarView extends JInternalFrame {
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
-
+    // Carga la tabla con los datos de los usuarios
     public void cargarDatos(List<Usuario> listaUsuarios) {
         modelo.setNumRows(0);
         Locale locale = mi.getLocale();
@@ -72,8 +72,7 @@ public class UsuarioListarView extends JInternalFrame {
             modelo.addRow(fila);
         }
     }
-
-
+    // Carga los iconos para los botones
     public void inicializarImagenes(){
         URL buscar = UsuarioListarView.class.getClassLoader().getResource("imagenes/buscar.png");
         if (buscar != null) {
@@ -90,7 +89,7 @@ public class UsuarioListarView extends JInternalFrame {
             System.err.println("Error: No se ha cargado el icono de Login");
         }
     }
-
+    //Getters y Setters
     public JLabel getLblNombre() {
         return lblNombre;
     }

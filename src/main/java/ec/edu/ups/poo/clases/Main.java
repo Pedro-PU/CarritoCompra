@@ -27,17 +27,17 @@ import java.awt.event.WindowEvent;
 public class Main {
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(() -> {
-            MensajeInternacionalizacionHandler  mi = new MensajeInternacionalizacionHandler("es", "EC");
 
+            MensajeInternacionalizacionHandler  mi = new MensajeInternacionalizacionHandler("es", "EC");
+            // Instancias de los DAOs
             ProductoDAO productoDAO = new ProductoDAOMemoria();
             CarritoDAO carritoDAO = new CarritoDAOMemoria();
 
             PreguntaDAO preguntaDAO = new PreguntaDAOMemoria(mi);
             UsuarioDAO usuarioDAO = new UsuarioDAOMemoria(preguntaDAO);
-
+            // Instancia de la vista LoginView y el constructor para esa vista
             LoginView loginView = new LoginView(mi);
             loginView.setVisible(true);
-
             UsuarioController usuarioController = new UsuarioController(usuarioDAO, loginView, preguntaDAO, mi);
 
             loginView.addWindowListener(new WindowAdapter() {
@@ -45,7 +45,7 @@ public class Main {
                 public void windowClosed(WindowEvent e) {
                     Usuario usuarioAuntenticado = usuarioController.getUsuarioAutenticado();
                     if(usuarioAuntenticado != null) {
-
+                        //Instancias de las vistas y controladores
                         PrincipalView principalView = new PrincipalView(mi,usuarioAuntenticado.getUsername());
                         CarritoAnadirView carritoAnadirView = new CarritoAnadirView(mi);
                         CarritoListaView carritoListaView = new CarritoListaView(mi);
@@ -74,9 +74,10 @@ public class Main {
                         principalView.mostrarMensaje(mi.get("principal.bienvenido") + usuarioAuntenticado.getUsername());
                         principalView.setTitle(mi.get("principal.titulo") + " - " + usuarioAuntenticado.getUsername());
                         if (usuarioAuntenticado.getRol().equals(Rol.USUARIO)) {
+                            //Deshabilita los campos si es rol Usuario
                             principalView.deshabilitarMenusAdministrador();
                         }
-
+                        // Acciones de los menús
                         principalView.getMenuItemCrearUsuario().addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
@@ -207,6 +208,7 @@ public class Main {
                                 }
                             }
                         });
+                        // Opciones del menu para cambiar el idioma de las vistas
                         principalView.getMenuItemEspanol().addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {

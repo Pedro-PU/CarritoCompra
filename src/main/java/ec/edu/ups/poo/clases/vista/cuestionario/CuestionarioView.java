@@ -47,11 +47,11 @@ public class CuestionarioView extends JFrame {
         spnMes.setModel(new SpinnerNumberModel(1, 1, 12, 1));
         spnAnio.setModel(new SpinnerNumberModel(2000, 1, 2100, 1));
     }
-
+    // Muestra un mensaje emergente de texto al usuario
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
-
+    // Inicializa el combo de idiomas y aplica traducciones
     public void inicializarComponentes() {
         cbxIdiomas.removeAllItems();
         cbxIdiomas.addItem(mi.get("menu.idioma.es")); // Español
@@ -59,7 +59,7 @@ public class CuestionarioView extends JFrame {
         cbxIdiomas.addItem(mi.get("menu.idioma.fr")); // Francés
         actualizarTextos();
     }
-
+    // Cambia todos los textos visibles según el idioma seleccionado
     public void actualizarTextos() {
         lblTitulo.setText(mi.get("cuestionario.titulo"));
         lblIdioma.setText(mi.get("login.idioma"));
@@ -79,6 +79,7 @@ public class CuestionarioView extends JFrame {
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
 
+        // Actualiza el idioma seleccionado visualmente en el combo
         Locale currentLocale = mi.getLocale();
         int selectedIndex = 0;
         if ("en".equals(currentLocale.getLanguage()) && "US".equals(currentLocale.getCountry())) {
@@ -95,8 +96,7 @@ public class CuestionarioView extends JFrame {
         cbxIdiomas.addItem(mi.get("menu.idioma.fr"));
         cbxIdiomas.setSelectedIndex(selectedIndex);
     }
-
-
+    // Asigna iconos a los botones si se encuentran las imágenes
     public void inicializarImagenes(){
         URL guardar = CuestionarioView.class.getClassLoader().getResource("imagenes/guardar.png");
         if (guardar != null) {
@@ -122,7 +122,7 @@ public class CuestionarioView extends JFrame {
             System.err.println("Error: No se ha cargado el icono de Login");
         }
     }
-
+    // Habilita o deshabilita los campos relacionados a preguntas del cuestionario
     public void habilitarPreguntas(boolean habilitar) {
         cbxPreguntas.setEnabled(habilitar);
         txtRespuesta.setEnabled(habilitar);

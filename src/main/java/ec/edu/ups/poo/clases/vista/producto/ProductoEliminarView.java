@@ -35,7 +35,58 @@ public class ProductoEliminarView extends JInternalFrame {
         cambiarIdioma();
         inicializarImagenes();
     }
+    // Muestra un mensaje de confirmación y retorna si el usuario aceptó
+    public boolean mostrarMensajePregunta(String mensaje) {
+        int respuesta = JOptionPane.showConfirmDialog(this, mensaje, mi.get("dialogo.title.pregunta"),
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        return respuesta == JOptionPane.YES_OPTION;
+    }
+    // Muestra un mensaje simple en un cuadro de diálogo
+    public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje);
+    }
+    // Limpia los campos de texto del formulario
+    public void limpiarCampos() {
+        txtNombre.setText("");
+        txtPrecio.setText("");
+    }
+    // Cambia los textos visibles de los componentes al idioma actual
+    public void cambiarIdioma() {
+        if (mi == null) return;
 
+        setTitle(mi.get("producto.eliminar.titulo.ventana"));
+
+        if (lblCodigo != null) lblCodigo.setText(mi.get("producto.eliminar.codigo"));
+        if (lblNombre != null) lblNombre.setText(mi.get("producto.eliminar.nombre"));
+        if (lblPrecio != null) lblPrecio.setText(mi.get("producto.eliminar.precio"));
+
+        if (btnBuscar != null) btnBuscar.setText(mi.get("producto.eliminar.buscar"));
+        if (btnEliminar != null) btnEliminar.setText(mi.get("producto.eliminar.eliminar"));
+
+        UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
+        UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
+        UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
+        UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
+    }
+    // Carga las imágenes de los botones desde los recursos del proyecto
+    public void inicializarImagenes(){
+        URL buscar = ProductoEditarView.class.getClassLoader().getResource("imagenes/buscar.png");
+        if (buscar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(buscar);
+            btnBuscar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
+
+        URL eliminar = ProductoEditarView.class.getClassLoader().getResource("imagenes/eliminar.png");
+        if (eliminar != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(eliminar);
+            btnEliminar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
+    }
+    //Getters y Setters
     public JLabel getLblCodigo() {
         return lblCodigo;
     }
@@ -98,54 +149,6 @@ public class ProductoEliminarView extends JInternalFrame {
 
     public void setBtnEliminar(JButton btnEliminar) {
         this.btnEliminar = btnEliminar;
-    }
-
-    public boolean mostrarMensajePregunta(String mensaje) {
-        int respuesta = JOptionPane.showConfirmDialog(this, mensaje, mi.get("dialogo.title.pregunta"),
-                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        return respuesta == JOptionPane.YES_OPTION;
-    }
-
-    public void mostrarMensaje(String mensaje) {
-        JOptionPane.showMessageDialog(this, mensaje);
-    }
-    public void limpiarCampos() {
-        txtNombre.setText("");
-        txtPrecio.setText("");
-    }
-    public void cambiarIdioma() {
-        if (mi == null) return;
-
-        setTitle(mi.get("producto.eliminar.titulo.ventana"));
-
-        if (lblCodigo != null) lblCodigo.setText(mi.get("producto.eliminar.codigo"));
-        if (lblNombre != null) lblNombre.setText(mi.get("producto.eliminar.nombre"));
-        if (lblPrecio != null) lblPrecio.setText(mi.get("producto.eliminar.precio"));
-
-        if (btnBuscar != null) btnBuscar.setText(mi.get("producto.eliminar.buscar"));
-        if (btnEliminar != null) btnEliminar.setText(mi.get("producto.eliminar.eliminar"));
-
-        UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
-        UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
-        UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
-        UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
-    }
-    public void inicializarImagenes(){
-        URL buscar = ProductoEditarView.class.getClassLoader().getResource("imagenes/buscar.png");
-        if (buscar != null) {
-            ImageIcon iconoBtnIniciarSesion = new ImageIcon(buscar);
-            btnBuscar.setIcon(iconoBtnIniciarSesion);
-        } else {
-            System.err.println("Error: No se ha cargado el icono de Login");
-        }
-
-        URL eliminar = ProductoEditarView.class.getClassLoader().getResource("imagenes/eliminar.png");
-        if (eliminar != null) {
-            ImageIcon iconoBtnIniciarSesion = new ImageIcon(eliminar);
-            btnEliminar.setIcon(iconoBtnIniciarSesion);
-        } else {
-            System.err.println("Error: No se ha cargado el icono de Login");
-        }
     }
 
 }

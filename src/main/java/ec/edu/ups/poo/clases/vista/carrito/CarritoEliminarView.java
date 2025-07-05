@@ -44,10 +44,11 @@ public class CarritoEliminarView extends JInternalFrame {
         cambiarIdioma();
         inicializarImagenes();
     }
+    // Muestra un mensaje emergente al usuario
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
-
+    // Carga los datos de un carrito en la tabla
     public void cargarDatos(Carrito carrito) {
         modelo.setRowCount(0);
         Locale locale = mi.getLocale();
@@ -63,14 +64,13 @@ public class CarritoEliminarView extends JInternalFrame {
             modelo.addRow(fila);
         }
     }
-
-
+    // Muestra un mensaje de confirmación con opciones Sí/No
     public boolean mostrarMensajePregunta(String mensaje) {
         int respuesta = JOptionPane.showConfirmDialog(this, mensaje, mi.get("dialogo.title.pregunta"),
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         return respuesta == JOptionPane.YES_OPTION;
     }
-
+    // Limpia todos los campos del formulario y la tabla
     public void limpiarCampos() {
         txtCodigo.setText("");
         txtFecha.setText("");
@@ -79,7 +79,7 @@ public class CarritoEliminarView extends JInternalFrame {
         txtTotal.setText("");
         modelo.setRowCount(0);
     }
-
+    // Cambia los textos de la interfaz al idioma actual
     public void cambiarIdioma(){
         mi.setLenguaje(mi.getLocale().getLanguage(), mi.getLocale().getCountry());
 
@@ -103,7 +103,7 @@ public class CarritoEliminarView extends JInternalFrame {
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
-
+    // Carga los íconos de los botones de eliminar y buscar
     public void inicializarImagenes(){
         URL eliminar = CarritoEliminarView.class.getClassLoader().getResource("imagenes/eliminar.png");
         if (eliminar != null) {

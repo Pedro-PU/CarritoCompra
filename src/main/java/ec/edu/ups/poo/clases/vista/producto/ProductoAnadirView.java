@@ -48,20 +48,23 @@ public class ProductoAnadirView extends JInternalFrame{
         cambiarIdioma();
         inicializarImagenes();
     }
+    // Muestra por consola los productos recibidos (para depuración o test)
     public void mostrarProductos(List<Producto> productos) {
         for (Producto producto : productos) {
             System.out.println(producto);
         }
     }
+    // Muestra un mensaje emergente al usuario
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
+    // Limpia los campos de texto del formulario
     public void limpiarCampos() {
         txtCodigo.setText("");
         txtNombre.setText("");
         txtPrecio.setText("");
     }
-
+    // Cambia los textos visibles al idioma actual
     public void cambiarIdioma() {
         setTitle(mi.get("producto.anadir.titulo.ventana"));
         lblTitulo.setText(mi.get("producto.anadir.titulo"));
@@ -76,7 +79,7 @@ public class ProductoAnadirView extends JInternalFrame{
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
-
+    // Carga íconos a los botones si los archivos están disponibles
     public void inicializarImagenes(){
         URL aceptar = ProductoAnadirView.class.getClassLoader().getResource("imagenes/aceptar.png");
         if (aceptar != null) {
@@ -94,7 +97,7 @@ public class ProductoAnadirView extends JInternalFrame{
             System.err.println("Error: No se ha cargado el icono de Registrarse");
         }
     }
-
+    //Getters y Setters
     public JLabel getLblTitulo() {
         return lblTitulo;
     }

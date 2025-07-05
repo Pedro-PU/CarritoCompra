@@ -27,15 +27,17 @@ public class CuestionarioRecuperarView extends JFrame {
         inicializarComponentes();
         inicializarImagenes();
     }
+    // Muestra un mensaje emergente con texto plano
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
-
+    // Muestra un diálogo de sí/no y retorna si el usuario aceptó
     public boolean mostrarMensajePregunta(String mensaje) {
         int respuesta = JOptionPane.showConfirmDialog(this, mensaje, mi.get("dialogo.title.pregunta"),
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         return respuesta == JOptionPane.YES_OPTION;
     }
+    // Solicita una entrada textual al usuario mediante un diálogo
     public String ingreso(String mensaje) {
         String respuesta = JOptionPane.showInputDialog(this, mensaje);
         if (respuesta != null && !respuesta.trim().isEmpty()) {
@@ -43,6 +45,7 @@ public class CuestionarioRecuperarView extends JFrame {
         }
         return null;
     }
+    // Inicializa el combo de idiomas y actualiza los textos según el idioma actual
     public void inicializarComponentes() {
         cbxIdiomas.removeAllItems();
         cbxIdiomas.addItem(mi.get("menu.idioma.es")); // Español
@@ -50,7 +53,7 @@ public class CuestionarioRecuperarView extends JFrame {
         cbxIdiomas.addItem(mi.get("menu.idioma.fr")); // Francés
         actualizarTextos();
     }
-
+    // Cambia los textos visibles de la interfaz según el idioma seleccionado
     public void actualizarTextos() {
         lblTitulo.setText(mi.get("cuestionario.recuperar.titulo"));
         btnFinalizar.setText(mi.get("cuestionario.boton.finalizar"));
@@ -76,7 +79,7 @@ public class CuestionarioRecuperarView extends JFrame {
         cbxIdiomas.addItem(mi.get("menu.idioma.fr"));
         cbxIdiomas.setSelectedIndex(selectedIndex);
     }
-
+    // Asigna el ícono al botón de finalizar si se encuentra el recurso
     public void inicializarImagenes(){
         URL guardar = CuestionarioRecuperarView.class.getClassLoader().getResource("imagenes/guardar.png");
 
@@ -88,7 +91,7 @@ public class CuestionarioRecuperarView extends JFrame {
             System.err.println("Error: No se ha cargado el icono de Login");
         }
     }
-
+    //Getters y Setters
     public JLabel getLblIdioma() {
         return lblIdioma;
     }
