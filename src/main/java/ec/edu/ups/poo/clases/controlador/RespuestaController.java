@@ -12,6 +12,8 @@ import ec.edu.ups.poo.clases.vista.cuestionario.CuestionarioView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,9 +32,10 @@ public class RespuestaController {
     private final int MAX_INTENTOS = 3;
     private int intentosFallidos = 0;
     private Respuesta preguntaActual;
+    private final UsuarioController usuarioController;
 
     public RespuestaController(CuestionarioView vista, UsuarioDAO usuarioDAO, PreguntaDAO preguntaDAO,
-                               MensajeInternacionalizacionHandler mi) {
+                               MensajeInternacionalizacionHandler mi, UsuarioController usuarioController) {
         this.mi = mi;
         this.usuarioDAO = usuarioDAO;
         this.preguntaDAO = preguntaDAO;
@@ -40,6 +43,7 @@ public class RespuestaController {
         this.recuperarView = null;
         this.usuario = new Usuario();
         this.usuarioYaRegistrado = false;
+        this.usuarioController = usuarioController;
 
         cargarComboPreguntas();
         configurarEventosCuestionario();
@@ -47,7 +51,7 @@ public class RespuestaController {
 
     public RespuestaController(CuestionarioView vista, UsuarioDAO usuarioDAO, Usuario usuario,
                                PreguntaDAO preguntaDAO, MensajeInternacionalizacionHandler mi,
-                               boolean usuarioYaRegistrado) {
+                               boolean usuarioYaRegistrado, UsuarioController usuarioController) {
         this.mi = mi;
         this.usuarioDAO = usuarioDAO;
         this.preguntaDAO = preguntaDAO;
@@ -56,6 +60,7 @@ public class RespuestaController {
         this.cuestionarioView = vista;
         this.recuperarView = null;
         this.respuestasCorrectas = new ArrayList<>();
+        this.usuarioController = usuarioController;
 
         setearCamposVista(usuario);
         cargarComboPreguntas();
@@ -66,21 +71,22 @@ public class RespuestaController {
                                PreguntaDAO preguntaDAO,
                                Usuario usuario,
                                MensajeInternacionalizacionHandler mi,
-                               UsuarioDAO usuarioDAO) {
+                               UsuarioDAO usuarioDAO, UsuarioController usuarioController) {
         this.mi = mi;
         this.usuarioDAO = usuarioDAO;
         this.preguntaDAO = preguntaDAO;
         this.recuperarView = recuperarView;
         this.usuario = usuario;
         this.respuestasCorrectas = new ArrayList<>();
+        this.usuarioController = usuarioController;
 
         if (usuario == null || usuario.getRespuestas().isEmpty()) {
             recuperarView.mostrarMensaje(mi.get("cuestionario.recuperar.noPreguntas"));
             recuperarView.dispose();
             return;
         }
-
         configurarEventosRecuperar(usuario.getContrasenia());
+        mostrarPreguntaAleatoria();
     }
 
 
@@ -91,7 +97,6 @@ public class RespuestaController {
                 preguntasCuestionario();
             }
         });
-
         cuestionarioView.getBtnGuardar().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -105,19 +110,76 @@ public class RespuestaController {
                 finalizar();
             }
         });
+
         cuestionarioView.getBtnIniciarCuestionario().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 iniciarCuestionario();
             }
         });
+        cuestionarioView.getCbxIdiomas().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cambiarIdiomaCuestionario();
+            }
+        });
+        cuestionarioView.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                if (usuarioController != null) {
+                    usuarioController.getLoginView().actualizarTextos();
+                    usuarioController.getLoginView().setVisible(true);
+                }
+            }
+        });
     }
 
     private void configurarEventosRecuperar(String contrasenia) {
-        recuperarView.getBtnFinalizar().addActionListener(e -> procesarRespuesta(contrasenia));
-        mostrarPreguntaAleatoria();
+        recuperarView.getBtnFinalizar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                procesarRespuesta(contrasenia);
+                mostrarPreguntaAleatoria();
+            }
+        });
+        recuperarView.getCbxIdiomas().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cambiarIdiomaCuestionarioRecuperar();
+            }
+        });
+        recuperarView.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                if (usuarioController != null) {
+                    usuarioController.getLoginView().actualizarTextos();
+                    usuarioController.getLoginView().setVisible(true);
+                }
+            }
+        });
+    }
+    private void cambiarIdiomaCuestionario() {
+        String[] clavesIdiomas = {"es", "en", "fr"};
+        String[] paisesIdiomas = {"EC", "US", "FR"};
+        int index = cuestionarioView.getCbxIdiomas().getSelectedIndex();
+
+        if (index >= 0 && index < 3) {
+            mi.setLenguaje(clavesIdiomas[index], paisesIdiomas[index]);
+            cuestionarioView.actualizarTextos();
+        }
     }
 
+    private void cambiarIdiomaCuestionarioRecuperar() {
+        String[] clavesIdiomas = {"es", "en", "fr"};
+        String[] paisesIdiomas = {"EC", "US", "FR"};
+        int index = recuperarView.getCbxIdiomas().getSelectedIndex();
+
+        if (index >= 0 && index < 3) {
+            mi.setLenguaje(clavesIdiomas[index], paisesIdiomas[index]);
+            recuperarView.actualizarTextos();
+            recuperarView.getLblPregunta().setText(preguntaActual.getPregunta().getEnunciadoPregunta(mi));
+        }
+    }
 
     private void mostrarPreguntaAleatoria() {
         List<Respuesta> disponibles = usuario.getRespuestas().stream()

@@ -4,6 +4,7 @@ import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import java.net.URL;
+import java.util.Locale;
 
 public class CuestionarioRecuperarView extends JFrame {
     private JTextField txtRespuesta;
@@ -12,6 +13,7 @@ public class CuestionarioRecuperarView extends JFrame {
     private JPanel panelPrincipal;
     private JLabel lblTitulo;
     private JComboBox cbxIdiomas;
+    private JLabel lblIdioma;
     private MensajeInternacionalizacionHandler mi;
 
 
@@ -22,7 +24,7 @@ public class CuestionarioRecuperarView extends JFrame {
         setSize(600, 400);
         setContentPane(panelPrincipal);
         setLocationRelativeTo(null);
-        actualizarTextos();
+        inicializarComponentes();
         inicializarImagenes();
     }
     public void mostrarMensaje(String mensaje) {
@@ -41,15 +43,38 @@ public class CuestionarioRecuperarView extends JFrame {
         }
         return null;
     }
+    public void inicializarComponentes() {
+        cbxIdiomas.removeAllItems();
+        cbxIdiomas.addItem(mi.get("menu.idioma.es")); // Español
+        cbxIdiomas.addItem(mi.get("menu.idioma.en")); // Inglés
+        cbxIdiomas.addItem(mi.get("menu.idioma.fr")); // Francés
+        actualizarTextos();
+    }
 
     public void actualizarTextos() {
         lblTitulo.setText(mi.get("cuestionario.recuperar.titulo"));
         btnFinalizar.setText(mi.get("cuestionario.boton.finalizar"));
-
+        lblIdioma.setText(mi.get("login.idioma"));
         UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
         UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
+
+        Locale currentLocale = mi.getLocale();
+        int selectedIndex = 0;
+        if ("en".equals(currentLocale.getLanguage()) && "US".equals(currentLocale.getCountry())) {
+            selectedIndex = 1;
+        } else if ("fr".equals(currentLocale.getLanguage()) && "FR".equals(currentLocale.getCountry())) {
+            selectedIndex = 2;
+        }
+        if (cbxIdiomas.getSelectedIndex() != selectedIndex) {
+            cbxIdiomas.setSelectedIndex(selectedIndex);
+        }
+        cbxIdiomas.removeAllItems();
+        cbxIdiomas.addItem(mi.get("menu.idioma.es"));
+        cbxIdiomas.addItem(mi.get("menu.idioma.en"));
+        cbxIdiomas.addItem(mi.get("menu.idioma.fr"));
+        cbxIdiomas.setSelectedIndex(selectedIndex);
     }
 
     public void inicializarImagenes(){
@@ -64,6 +89,21 @@ public class CuestionarioRecuperarView extends JFrame {
         }
     }
 
+    public JLabel getLblIdioma() {
+        return lblIdioma;
+    }
+
+    public void setLblIdioma(JLabel lblIdioma) {
+        this.lblIdioma = lblIdioma;
+    }
+
+    public JComboBox getCbxIdiomas() {
+        return cbxIdiomas;
+    }
+
+    public void setCbxIdiomas(JComboBox cbxIdiomas) {
+        this.cbxIdiomas = cbxIdiomas;
+    }
 
     public JLabel getLblTitulo() {
         return lblTitulo;

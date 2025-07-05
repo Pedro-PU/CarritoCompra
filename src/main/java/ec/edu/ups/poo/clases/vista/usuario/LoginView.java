@@ -33,6 +33,92 @@ public class LoginView extends JFrame{
         inicializarComponentes();
     }
 
+    public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje);
+    }
+
+    public boolean mostrarMensajePregunta(String mensaje) {
+        int respuesta = JOptionPane.showConfirmDialog(this, mensaje, "Confirmación",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        return respuesta == JOptionPane.YES_OPTION;
+    }
+
+    public void inicializarComponentes() {
+        cbxIdiomas.removeAllItems();
+        cbxIdiomas.addItem(mi.get("menu.idioma.es")); // Español
+        cbxIdiomas.addItem(mi.get("menu.idioma.en")); // Inglés
+        cbxIdiomas.addItem(mi.get("menu.idioma.fr")); // Francés
+        actualizarTextos();
+    }
+
+    public void inicializarImagenes(){
+        URL loginURL = LoginView.class.getClassLoader().getResource("imagenes/login.png");
+        if (loginURL != null) {
+            ImageIcon iconoBtnIniciarSesion = new ImageIcon(loginURL);
+            btnIniciar.setIcon(iconoBtnIniciarSesion);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Login");
+        }
+
+        URL registrarseURL = LoginView.class.getClassLoader().getResource("imagenes/registrarse.png");
+        if (registrarseURL != null) {
+            ImageIcon iconoBtnRegistrarse = new ImageIcon(registrarseURL);
+            btnRegistrar.setIcon(iconoBtnRegistrarse);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Registrarse");
+        }
+
+        URL olvido = LoginView.class.getClassLoader().getResource("imagenes/confusion.png");
+        if (olvido != null) {
+            ImageIcon iconoBtnRegistrarse = new ImageIcon(olvido);
+            btnOlvidar.setIcon(iconoBtnRegistrarse);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Registrarse");
+        }
+
+        URL salir = LoginView.class.getClassLoader().getResource("imagenes/salir.png");
+        if (salir != null) {
+            ImageIcon iconoBtnRegistrarse = new ImageIcon(salir);
+            btnSalir.setIcon(iconoBtnRegistrarse);
+        } else {
+            System.err.println("Error: No se ha cargado el icono de Registrarse");
+        }
+
+    }
+
+    public void actualizarTextos() {
+        setTitle(mi.get("app.titulo"));
+        lblTitulo.setText(mi.get("login.titulo"));
+        lblUsuario.setText(mi.get("login.usuario"));
+        lblContrasenia.setText(mi.get("login.contrasenia"));
+        lblIdioma.setText(mi.get("login.idioma"));
+
+        btnIniciar.setText(mi.get("login.boton.iniciar"));
+        btnRegistrar.setText(mi.get("login.boton.registrar"));
+        btnOlvidar.setText(mi.get("login.boton.olvidar"));
+        btnSalir.setText(mi.get("login.boton.salir"));
+        Locale currentLocale = mi.getLocale();
+        int selectedIndex = 0;
+        if ("en".equals(currentLocale.getLanguage()) && "US".equals(currentLocale.getCountry())) {
+            selectedIndex = 1;
+        } else if ("fr".equals(currentLocale.getLanguage()) && "FR".equals(currentLocale.getCountry())) {
+            selectedIndex = 2;
+        }
+        if (cbxIdiomas.getSelectedIndex() != selectedIndex) {
+            cbxIdiomas.setSelectedIndex(selectedIndex);
+        }
+        UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
+        UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
+        UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
+        UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
+
+        cbxIdiomas.removeAllItems();
+        cbxIdiomas.addItem(mi.get("menu.idioma.es"));
+        cbxIdiomas.addItem(mi.get("menu.idioma.en"));
+        cbxIdiomas.addItem(mi.get("menu.idioma.fr"));
+        cbxIdiomas.setSelectedIndex(selectedIndex);
+    }
+
     public JComboBox getCbxIdiomas() {
         return cbxIdiomas;
     }
@@ -119,86 +205,6 @@ public class LoginView extends JFrame{
 
     public void setBtnRegistrar(JButton btnRegistrar) {
         this.btnRegistrar = btnRegistrar;
-    }
-
-    public void mostrarMensaje(String mensaje) {
-        JOptionPane.showMessageDialog(this, mensaje);
-    }
-
-    public boolean mostrarMensajePregunta(String mensaje) {
-        int respuesta = JOptionPane.showConfirmDialog(this, mensaje, "Confirmación",
-                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        return respuesta == JOptionPane.YES_OPTION;
-    }
-
-    public void inicializarComponentes() {
-        cbxIdiomas.removeAllItems();
-        cbxIdiomas.addItem(mi.get("menu.idioma.es")); // Español
-        cbxIdiomas.addItem(mi.get("menu.idioma.en")); // Inglés
-        cbxIdiomas.addItem(mi.get("menu.idioma.fr")); // Francés
-        actualizarTextos();
-    }
-
-    public void inicializarImagenes(){
-        URL loginURL = LoginView.class.getClassLoader().getResource("imagenes/login.png");
-        if (loginURL != null) {
-            ImageIcon iconoBtnIniciarSesion = new ImageIcon(loginURL);
-            btnIniciar.setIcon(iconoBtnIniciarSesion);
-        } else {
-            System.err.println("Error: No se ha cargado el icono de Login");
-        }
-
-        URL registrarseURL = LoginView.class.getClassLoader().getResource("imagenes/registrarse.png");
-        if (registrarseURL != null) {
-            ImageIcon iconoBtnRegistrarse = new ImageIcon(registrarseURL);
-            btnRegistrar.setIcon(iconoBtnRegistrarse);
-        } else {
-            System.err.println("Error: No se ha cargado el icono de Registrarse");
-        }
-
-        URL olvido = LoginView.class.getClassLoader().getResource("imagenes/confusion.png");
-        if (olvido != null) {
-            ImageIcon iconoBtnRegistrarse = new ImageIcon(olvido);
-            btnOlvidar.setIcon(iconoBtnRegistrarse);
-        } else {
-            System.err.println("Error: No se ha cargado el icono de Registrarse");
-        }
-
-        URL salir = LoginView.class.getClassLoader().getResource("imagenes/salir.png");
-        if (salir != null) {
-            ImageIcon iconoBtnRegistrarse = new ImageIcon(salir);
-            btnSalir.setIcon(iconoBtnRegistrarse);
-        } else {
-            System.err.println("Error: No se ha cargado el icono de Registrarse");
-        }
-
-    }
-
-    public void actualizarTextos() {
-        setTitle(mi.get("app.titulo"));
-        lblTitulo.setText(mi.get("login.titulo"));
-        lblUsuario.setText(mi.get("login.usuario"));
-        lblContrasenia.setText(mi.get("login.contrasenia"));
-        lblIdioma.setText(mi.get("login.idioma"));
-
-        btnIniciar.setText(mi.get("login.boton.iniciar"));
-        btnRegistrar.setText(mi.get("login.boton.registrar"));
-        btnOlvidar.setText(mi.get("login.boton.olvidar"));
-        btnSalir.setText(mi.get("login.boton.salir"));
-        Locale currentLocale = mi.getLocale();
-        int selectedIndex = 0;
-        if ("en".equals(currentLocale.getLanguage()) && "US".equals(currentLocale.getCountry())) {
-            selectedIndex = 1;
-        } else if ("fr".equals(currentLocale.getLanguage()) && "FR".equals(currentLocale.getCountry())) {
-            selectedIndex = 2;
-        }
-        if (cbxIdiomas.getSelectedIndex() != selectedIndex) {
-            cbxIdiomas.setSelectedIndex(selectedIndex);
-        }
-        UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
-        UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
-        UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
-        UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
 
 }

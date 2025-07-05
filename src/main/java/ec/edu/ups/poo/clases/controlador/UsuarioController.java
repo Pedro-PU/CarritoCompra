@@ -160,7 +160,7 @@ public class UsuarioController {
                 loginView.mostrarMensaje(mi.get("login.mensaje.incompleto"));
 
                 CuestionarioView cuestionarioView = new CuestionarioView(mi);
-                RespuestaController controller = new RespuestaController(cuestionarioView, usuarioDAO, usuario,preguntaDAO, mi, true);
+                RespuestaController controller = new RespuestaController(cuestionarioView, usuarioDAO, usuario,preguntaDAO, mi, true, this);
                 cuestionarioView.setVisible(true);
                 loginView.setVisible(false);
 
@@ -175,8 +175,6 @@ public class UsuarioController {
             }
         }
     }
-
-
 
     public Usuario getUsuarioAutenticado() {
         return usuario;
@@ -209,8 +207,7 @@ public class UsuarioController {
 
             CuestionarioRecuperarView recuperarView = new CuestionarioRecuperarView(mi);
             RespuestaController controller = new RespuestaController(
-                    recuperarView, preguntaDAO, usuario, mi, usuarioDAO
-            );
+                    recuperarView, preguntaDAO, usuario, mi, usuarioDAO, this);
 
             recuperarView.setVisible(true);
             loginView.setVisible(false);
@@ -232,10 +229,8 @@ public class UsuarioController {
         if (confirmado) {
             CuestionarioView cuestionarioView = new CuestionarioView(mi);
             RespuestaController controller = new RespuestaController(
-                    cuestionarioView, usuarioDAO, preguntaDAO, mi
-            );
+                    cuestionarioView, usuarioDAO, preguntaDAO, mi, this);
             cuestionarioView.setVisible(true);
-
             loginView.setVisible(false);
             cuestionarioView.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             cuestionarioView.addWindowListener(new WindowAdapter() {
@@ -483,5 +478,13 @@ public class UsuarioController {
         usuarioModificarView.cambiarIdioma();
         usuarioListarView.cambiarIdioma();
         refrescarTablaListaUsuarios(mi.getLocale());
+    }
+
+    public LoginView getLoginView() {
+        return loginView;
+    }
+
+    public void setLoginView(LoginView loginView) {
+        this.loginView = loginView;
     }
 }
