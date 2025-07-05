@@ -28,12 +28,13 @@ public class CuestionarioView extends JFrame {
     private JButton BtnIniciarCuestionario;
     private JTextField txtCorreo;
     private JLabel lblCorreo;
+    private JComboBox cbxIdiomas;
     private MensajeInternacionalizacionHandler mi;
 
     public CuestionarioView(MensajeInternacionalizacionHandler mi) {
         this.mi = mi;
         setTitle(mi.get("cuestionario.titulo"));
-        setSize(600, 400);
+        setSize(600, 500);
         setContentPane(panelPrincipal);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

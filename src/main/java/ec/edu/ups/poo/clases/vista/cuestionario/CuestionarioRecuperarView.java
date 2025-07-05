@@ -11,6 +11,7 @@ public class CuestionarioRecuperarView extends JFrame {
     private JButton btnFinalizar;
     private JPanel panelPrincipal;
     private JLabel lblTitulo;
+    private JComboBox cbxIdiomas;
     private MensajeInternacionalizacionHandler mi;
 
 

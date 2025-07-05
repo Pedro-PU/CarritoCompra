@@ -4,6 +4,7 @@ import ec.edu.ups.poo.clases.dao.PreguntaDAO;
 import ec.edu.ups.poo.clases.dao.UsuarioDAO;
 import ec.edu.ups.poo.clases.modelo.Pregunta;
 import ec.edu.ups.poo.clases.modelo.Respuesta;
+import ec.edu.ups.poo.clases.modelo.Rol;
 import ec.edu.ups.poo.clases.modelo.Usuario;
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.poo.clases.vista.cuestionario.CuestionarioRecuperarView;
@@ -175,7 +176,6 @@ public class RespuestaController {
         }
     }
 
-
     private void preguntasCuestionario() {
         int index = cuestionarioView.getCbxPreguntas().getSelectedIndex();
         if (index >= 0 && index < preguntasAleatorias.size()) {
@@ -228,38 +228,6 @@ public class RespuestaController {
         }
 
         if (!usuarioYaRegistrado) {
-            // Validar campos
-            String username = cuestionarioView.getTxtUsername().getText().trim();
-            String contrasenia = cuestionarioView.getTxtContrasenia().getText().trim();
-            String nombre = cuestionarioView.getTxtNombre().getText().trim();
-            String celular = cuestionarioView.getTxtCelular().getText().trim();
-            String correo = cuestionarioView.getTxtCorreo().getText().trim();
-            int dia = (int) cuestionarioView.getSpnDia().getValue();
-            int mes = (int) cuestionarioView.getSpnMes().getValue();
-            int anio = (int) cuestionarioView.getSpnAnio().getValue();
-
-            if (username.isEmpty() || contrasenia.isEmpty() || nombre.isEmpty() || celular.isEmpty() || correo.isEmpty()) {
-                cuestionarioView.mostrarMensaje(mi.get("cuestionario.finalizar.error_datos_vacios"));
-                return;
-            }
-
-            if (!celular.matches("\\d{7,15}")) {
-                cuestionarioView.mostrarMensaje(mi.get("cuestionario.validacion.celular"));
-                return;
-            }
-
-            if (!correo.matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$")) {
-                cuestionarioView.mostrarMensaje(mi.get("cuestionario.validacion.correo"));
-                return;
-            }
-
-            GregorianCalendar fecha = new GregorianCalendar(anio, mes - 1, dia);
-            usuario.setUsername(username);
-            usuario.setContrasenia(contrasenia);
-            usuario.setNombre(nombre);
-            usuario.setCelular(celular);
-            usuario.setEmail(correo);
-            usuario.setFecha(fecha);
             usuarioDAO.crear(usuario);
         } else {
             usuarioDAO.actualizar(usuario);
@@ -270,11 +238,52 @@ public class RespuestaController {
     }
 
     private void iniciarCuestionario() {
+        // Validar campos del usuario
         String username = cuestionarioView.getTxtUsername().getText().trim();
+        String contrasenia = cuestionarioView.getTxtContrasenia().getText().trim();
+        String nombre = cuestionarioView.getTxtNombre().getText().trim();
+        String celular = cuestionarioView.getTxtCelular().getText().trim();
+        String correo = cuestionarioView.getTxtCorreo().getText().trim();
+        int dia = (int) cuestionarioView.getSpnDia().getValue();
+        int mes = (int) cuestionarioView.getSpnMes().getValue();
+        int anio = (int) cuestionarioView.getSpnAnio().getValue();
+
+        if (username.isEmpty() || contrasenia.isEmpty() || nombre.isEmpty() || celular.isEmpty() || correo.isEmpty()) {
+            cuestionarioView.mostrarMensaje(mi.get("login.mensaje.error_campos_vacios"));
+            return;
+        }
+
         if (usuarioDAO.buscarPorUsername(username) != null) {
             cuestionarioView.mostrarMensaje(mi.get("login.mensaje.error_usuario_existente"));
             return;
         }
+
+        if (!celular.matches("\\d{7,15}")) {
+            cuestionarioView.mostrarMensaje(mi.get("cuestionario.validacion.celular"));
+            return;
+        }
+
+        if (!correo.matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$")) {
+            cuestionarioView.mostrarMensaje(mi.get("cuestionario.validacion.correo"));
+            return;
+        }
+
+        GregorianCalendar fecha = new GregorianCalendar(anio, mes - 1, dia);
+        usuario = new Usuario(username,contrasenia, Rol.USUARIO,nombre,celular, fecha  ,correo);
+        usuario.setRespuestas(new ArrayList<>());
+
+        // Bloquear campos
+        cuestionarioView.getTxtUsername().setEnabled(false);
+        cuestionarioView.getTxtContrasenia().setEnabled(false);
+        cuestionarioView.getTxtNombre().setEnabled(false);
+        cuestionarioView.getTxtCelular().setEnabled(false);
+        cuestionarioView.getTxtCorreo().setEnabled(false);
+        cuestionarioView.getSpnDia().setEnabled(false);
+        cuestionarioView.getSpnMes().setEnabled(false);
+        cuestionarioView.getSpnAnio().setEnabled(false);
+        cuestionarioView.getBtnIniciarCuestionario().setEnabled(false);
+
+        // Mostrar preguntas
         cargarComboPreguntas();
         cuestionarioView.habilitarPreguntas(true);
     }
