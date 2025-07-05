@@ -1,7 +1,9 @@
 package ec.edu.ups.poo.clases.dao.impl;
 
-import ec.edu.ups.poo.clases.dao.CuestionarioDAO;
+import ec.edu.ups.poo.clases.dao.PreguntaDAO;
 import ec.edu.ups.poo.clases.dao.UsuarioDAO;
+import ec.edu.ups.poo.clases.modelo.Pregunta;
+import ec.edu.ups.poo.clases.modelo.Respuesta;
 import ec.edu.ups.poo.clases.modelo.Rol;
 import ec.edu.ups.poo.clases.modelo.Usuario;
 
@@ -10,11 +12,9 @@ import java.util.*;
 public class UsuarioDAOMemoria implements UsuarioDAO {
 
     private List<Usuario> usuarios;
-    private CuestionarioDAO cuestionarioDAO;
 
-    public UsuarioDAOMemoria() {
+    public UsuarioDAOMemoria(PreguntaDAO preguntaDAO) {
         this.usuarios = new ArrayList<>();
-        this.cuestionarioDAO = cuestionarioDAO;
 
         // Usuarios por defecto con todos los campos
         Usuario admin = new Usuario(
@@ -36,6 +36,15 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
                 new GregorianCalendar(1995, Calendar.JUNE, 15),
                 "user@gmail.com"
         );
+
+        List<Pregunta> preguntas = preguntaDAO.listarTodas();
+
+        for (int i = 0; i < 3; i++) {
+            Pregunta pregunta = preguntas.get(i);
+            Respuesta respuesta = new Respuesta(pregunta);
+            respuesta.setRespuesta("respuesta" + (i + 1));
+            admin.getRespuestas().add(respuesta);
+        }
         crear(admin);
         crear(user);
     }

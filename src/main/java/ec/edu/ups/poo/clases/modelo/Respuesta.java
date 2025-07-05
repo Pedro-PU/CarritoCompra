@@ -1,29 +1,17 @@
 package ec.edu.ups.poo.clases.modelo;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Respuesta {
-    private int id;
-    private String enunciado;
+    private Pregunta pregunta;
     private String respuesta;
 
-    public Respuesta(int id, String enunciado) {
-        this.id = id;
-        this.enunciado = enunciado;
+    public Respuesta(Pregunta pregunta) {
+        this.pregunta = pregunta;
         this.respuesta = null;
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getEnunciado() {
-        return enunciado;
+    public Pregunta getPregunta() {
+        return pregunta;
     }
 
     public String getRespuesta() {

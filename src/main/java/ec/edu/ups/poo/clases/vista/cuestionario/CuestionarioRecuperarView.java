@@ -6,11 +6,9 @@ import javax.swing.*;
 import java.net.URL;
 
 public class CuestionarioRecuperarView extends JFrame {
-    private JComboBox<String> cbxPreguntas;
     private JTextField txtRespuesta;
     private JLabel lblPregunta;
     private JButton btnFinalizar;
-    private JButton btnGuardar;
     private JPanel panelPrincipal;
     private JLabel lblTitulo;
     private MensajeInternacionalizacionHandler mi;
@@ -45,7 +43,6 @@ public class CuestionarioRecuperarView extends JFrame {
 
     public void actualizarTextos() {
         lblTitulo.setText(mi.get("cuestionario.recuperar.titulo"));
-        btnGuardar.setText(mi.get("cuestionario.boton.guardar"));
         btnFinalizar.setText(mi.get("cuestionario.boton.finalizar"));
 
         UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
@@ -56,12 +53,6 @@ public class CuestionarioRecuperarView extends JFrame {
 
     public void inicializarImagenes(){
         URL guardar = CuestionarioRecuperarView.class.getClassLoader().getResource("imagenes/guardar.png");
-        if (guardar != null) {
-            ImageIcon iconoBtnIniciarSesion = new ImageIcon(guardar);
-            btnGuardar.setIcon(iconoBtnIniciarSesion);
-        } else {
-            System.err.println("Error: No se ha cargado el icono de Login");
-        }
 
         URL finalizar = CuestionarioRecuperarView.class.getClassLoader().getResource("imagenes/finalizar.png");
         if (finalizar != null) {
@@ -79,14 +70,6 @@ public class CuestionarioRecuperarView extends JFrame {
 
     public void setLblTitulo(JLabel lblTitulo) {
         this.lblTitulo = lblTitulo;
-    }
-
-    public JComboBox<String> getCbxPreguntas() {
-        return cbxPreguntas;
-    }
-
-    public void setCbxPreguntas(JComboBox<String> cbxPreguntas) {
-        this.cbxPreguntas = cbxPreguntas;
     }
 
     public JTextField getTxtRespuesta() {
@@ -113,11 +96,4 @@ public class CuestionarioRecuperarView extends JFrame {
         this.btnFinalizar = btnFinalizar;
     }
 
-    public JButton getBtnGuardar() {
-        return btnGuardar;
-    }
-
-    public void setBtnGuardar(JButton btnGuardar) {
-        this.btnGuardar = btnGuardar;
-    }
 }

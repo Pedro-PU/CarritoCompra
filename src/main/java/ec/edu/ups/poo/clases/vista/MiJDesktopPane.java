@@ -61,7 +61,7 @@ public class MiJDesktopPane extends JDesktopPane {
 
         //Titulo
         String texto = "Tilin";
-        Font fuente = new Font("SansSerif", Font.BOLD, boxHeight / 2);
+        Font fuente = new Font("SansSerif", Font.BOLD, (boxHeight / 2)+30);
         g2d.setFont(fuente);
 
         FontMetrics metrics = g2d.getFontMetrics();

@@ -1,6 +1,8 @@
 package ec.edu.ups.poo.clases.modelo;
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 public class Usuario {
     private String username;
@@ -10,6 +12,7 @@ public class Usuario {
     private String celular;
     private GregorianCalendar fecha;
     private String email;
+    private List<Respuesta> respuestas;
 
     public Usuario(String nombreDeUsuario, String contrasenia, Rol rol, String nombre,
                    String celular, GregorianCalendar fecha, String email) {
@@ -20,8 +23,17 @@ public class Usuario {
         this.celular = celular;
         this.fecha = fecha;
         this.email = email;
+        this.respuestas = new ArrayList<>();
     }
     public Usuario() {}
+
+    public List<Respuesta> getRespuestas() {
+        return respuestas;
+    }
+
+    public void setRespuestas(List<Respuesta> respuestas) {
+        this.respuestas = respuestas;
+    }
 
     public String getEmail() {
         return email;

@@ -3,14 +3,8 @@ package ec.edu.ups.poo.clases;
 import ec.edu.ups.poo.clases.controlador.CarritoController;
 import ec.edu.ups.poo.clases.controlador.ProductoController;
 import ec.edu.ups.poo.clases.controlador.UsuarioController;
-import ec.edu.ups.poo.clases.dao.CarritoDAO;
-import ec.edu.ups.poo.clases.dao.CuestionarioDAO;
-import ec.edu.ups.poo.clases.dao.ProductoDAO;
-import ec.edu.ups.poo.clases.dao.UsuarioDAO;
-import ec.edu.ups.poo.clases.dao.impl.CarritoDAOMemoria;
-import ec.edu.ups.poo.clases.dao.impl.CuestionarioDAOMemoria;
-import ec.edu.ups.poo.clases.dao.impl.ProductoDAOMemoria;
-import ec.edu.ups.poo.clases.dao.impl.UsuarioDAOMemoria;
+import ec.edu.ups.poo.clases.dao.*;
+import ec.edu.ups.poo.clases.dao.impl.*;
 import ec.edu.ups.poo.clases.modelo.Rol;
 import ec.edu.ups.poo.clases.modelo.Usuario;
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
@@ -25,7 +19,6 @@ import ec.edu.ups.poo.clases.vista.producto.ProductoEliminarView;
 import ec.edu.ups.poo.clases.vista.producto.ProductoListaView;
 import ec.edu.ups.poo.clases.vista.usuario.*;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -39,15 +32,13 @@ public class Main {
             ProductoDAO productoDAO = new ProductoDAOMemoria();
             CarritoDAO carritoDAO = new CarritoDAOMemoria();
 
-            CuestionarioDAO cuestionarioDAO = new CuestionarioDAOMemoria();
-            UsuarioDAO usuarioDAO = new UsuarioDAOMemoria();
+            PreguntaDAO preguntaDAO = new PreguntaDAOMemoria(mi);
+            UsuarioDAO usuarioDAO = new UsuarioDAOMemoria(preguntaDAO);
 
             LoginView loginView = new LoginView(mi);
-
             loginView.setVisible(true);
 
-            UsuarioController usuarioController = new UsuarioController(usuarioDAO, loginView, cuestionarioDAO, mi);
-
+            UsuarioController usuarioController = new UsuarioController(usuarioDAO, loginView, preguntaDAO, mi);
 
             loginView.addWindowListener(new WindowAdapter() {
                 @Override

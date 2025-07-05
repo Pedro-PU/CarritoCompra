@@ -1,7 +1,7 @@
 package ec.edu.ups.poo.clases.controlador;
-import ec.edu.ups.poo.clases.dao.CuestionarioDAO;
+import ec.edu.ups.poo.clases.dao.PreguntaDAO;
 import ec.edu.ups.poo.clases.dao.UsuarioDAO;
-import ec.edu.ups.poo.clases.modelo.Cuestionario;
+import ec.edu.ups.poo.clases.modelo.Pregunta;
 import ec.edu.ups.poo.clases.modelo.Rol;
 import ec.edu.ups.poo.clases.modelo.Usuario;
 import ec.edu.ups.poo.clases.util.FormateadorUtils;
@@ -26,15 +26,15 @@ public class UsuarioController {
     private UsuarioEliminarView usuarioEliminarView;
     private UsuarioModificarView usuarioModificarView;
     private UsuarioListarView usuarioListarView;
-    private CuestionarioDAO cuestionarioDAO;
+    private PreguntaDAO preguntaDAO;
     private final MensajeInternacionalizacionHandler mi;
 
-    public UsuarioController(UsuarioDAO usuarioDAO, LoginView loginView, CuestionarioDAO cuestionarioDAO,
+    public UsuarioController(UsuarioDAO usuarioDAO, LoginView loginView, PreguntaDAO preguntaDAO,
                              MensajeInternacionalizacionHandler mi) {
         this.usuarioDAO = usuarioDAO;
         this.loginView = loginView;
         this.usuario = null;
-        this.cuestionarioDAO = cuestionarioDAO;
+        this.preguntaDAO = preguntaDAO;
         this.mi = mi;
         configurarEventosLogin();
     }
@@ -156,17 +156,13 @@ public class UsuarioController {
         if (usuario == null) {
             loginView.mostrarMensaje(mi.get("login.mensaje.error_autenticacion"));
         } else {
-            Cuestionario cuestionario = cuestionarioDAO.buscarPorUsername(username);
-
-            if (cuestionario == null || cuestionario.getRespuestas().size() < 3) {
+            if (usuario.getRespuestas().size() < 3) {
                 loginView.mostrarMensaje(mi.get("login.mensaje.incompleto"));
 
                 CuestionarioView cuestionarioView = new CuestionarioView(mi);
-                CuestionarioController controller = new CuestionarioController(
-                        cuestionarioView, cuestionarioDAO, usuarioDAO, usuario, mi, true);
+                RespuestaController controller = new RespuestaController(cuestionarioView, usuarioDAO, usuario,preguntaDAO, mi, true);
                 cuestionarioView.setVisible(true);
                 loginView.setVisible(false);
-
 
                 cuestionarioView.addWindowListener(new WindowAdapter() {
                     @Override
@@ -174,13 +170,13 @@ public class UsuarioController {
                         loginView.setVisible(true);
                     }
                 });
-
             } else {
                 loginView.dispose();
             }
         }
-
     }
+
+
 
     public Usuario getUsuarioAutenticado() {
         return usuario;
@@ -188,29 +184,6 @@ public class UsuarioController {
 
     public void setUsuarioAutenticado(Usuario usuario) {
         this.usuario = usuario;
-    }
-
-    private void registrar() {
-        boolean confirmado = loginView.mostrarMensajePregunta(mi.get("login.mensaje.pregunta_registro"));
-        if (confirmado) {
-            CuestionarioView cuestionarioView = new CuestionarioView(mi);
-            CuestionarioController cuestionarioController = new CuestionarioController(
-                    cuestionarioView, cuestionarioDAO, usuarioDAO, mi
-            );
-            cuestionarioView.setVisible(true);
-
-            loginView.setVisible(false);
-
-            cuestionarioView.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            cuestionarioView.addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosed(WindowEvent e) {
-                    loginView.setVisible(true);
-                }
-            });
-        } else {
-            loginView.mostrarMensaje(mi.get("login.mensaje.creacion_cancelada"));
-        }
     }
 
     private void recuperar() {
@@ -229,15 +202,15 @@ public class UsuarioController {
                 return;
             }
 
-            Cuestionario cuestionario = cuestionarioDAO.buscarPorUsername(username);
-            if (cuestionario == null || cuestionario.getRespuestas().isEmpty()) {
+            if (usuario.getRespuestas().isEmpty()) {
                 loginView.mostrarMensaje(mi.get("login.mensaje.sin_preguntas"));
                 return;
             }
 
             CuestionarioRecuperarView recuperarView = new CuestionarioRecuperarView(mi);
-            CuestionarioController controller = new CuestionarioController(
-                    recuperarView, cuestionarioDAO, username, usuario.getContrasenia(), mi, usuarioDAO);
+            RespuestaController controller = new RespuestaController(
+                    recuperarView, preguntaDAO, usuario, mi, usuarioDAO
+            );
 
             recuperarView.setVisible(true);
             loginView.setVisible(false);
@@ -249,11 +222,33 @@ public class UsuarioController {
                     loginView.setVisible(true);
                 }
             });
-
         } else {
             loginView.mostrarMensaje(mi.get("login.mensaje.recuperacion_cancelada"));
         }
     }
+
+    private void registrar() {
+        boolean confirmado = loginView.mostrarMensajePregunta(mi.get("login.mensaje.pregunta_registro"));
+        if (confirmado) {
+            CuestionarioView cuestionarioView = new CuestionarioView(mi);
+            RespuestaController controller = new RespuestaController(
+                    cuestionarioView, usuarioDAO, preguntaDAO, mi
+            );
+            cuestionarioView.setVisible(true);
+
+            loginView.setVisible(false);
+            cuestionarioView.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            cuestionarioView.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    loginView.setVisible(true);
+                }
+            });
+        } else {
+            loginView.mostrarMensaje(mi.get("login.mensaje.creacion_cancelada"));
+        }
+    }
+
 
     private void crear() {
         boolean confirmado = usuarioCrearView.mostrarMensajePregunta(mi.get("usuario.mensaje.crear.pregunta"));
