@@ -9,7 +9,7 @@ import java.net.URL;
 
 public class PrincipalView extends JFrame {
     private JMenuBar menuBar;
-    private JMenuItem menuProducto;
+    private JMenu menuProducto;
     private JMenuItem menuCarrito;
     private JMenuItem menuItemCrearProducto;
     private JMenuItem menuItemEliminarProducto;
@@ -20,15 +20,15 @@ public class PrincipalView extends JFrame {
     private JMenuItem menuItemListarCarrito;
     private JMenuItem menuItemEditarCarrito;
     private JMenuItem menuItemEliminarCarrito;
-    private JMenuItem menuSalir;
+    private JMenu menuSalir;
     private JMenuItem menuItemCerrarSesion;
     private JMenuItem menuItemSalir;
-    private JMenuItem menuUsuario;
+    private JMenu menuUsuario;
     private JMenuItem menuItemCrearUsuario;
     private JMenuItem menuItemEliminarUsuario;
     private JMenuItem menuItemEditarUsuario;
     private JMenuItem menuItemListarUsuario;
-    private JMenuItem menuIdioma;
+    private JMenu menuIdioma;
     private JMenuItem menuItemEspanol;
     private JMenuItem menuItemIngles;
     private JMenuItem menuItemFrances;
@@ -409,7 +409,7 @@ public class PrincipalView extends JFrame {
         return menuSalir;
     }
 
-    public void setMenuSalir(JMenuItem menuSalir) {
+    public void setMenuSalir(JMenu menuSalir) {
         this.menuSalir = menuSalir;
     }
 
