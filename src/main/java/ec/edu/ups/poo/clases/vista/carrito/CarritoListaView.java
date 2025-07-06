@@ -25,7 +25,7 @@ public class CarritoListaView extends JInternalFrame{
         setContentPane(panelPrincipal);
         setTitle("Listado de Carritos");
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        setSize(500, 500);
+        setSize(700, 500);
         setClosable(true);
         setMaximizable(true);
         setResizable(true);

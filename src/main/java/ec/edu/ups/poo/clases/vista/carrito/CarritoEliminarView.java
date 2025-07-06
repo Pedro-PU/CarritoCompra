@@ -59,7 +59,7 @@ public class CarritoEliminarView extends JInternalFrame {
                     producto.getCodigo(),
                     producto.getNombre(),
                     FormateadorUtils.formatearMoneda(producto.getPrecio(), locale),
-                    itemCarrito.getCantidad()
+                    itemCarrito.getCantidad(),
             };
             modelo.addRow(fila);
         }
@@ -96,7 +96,7 @@ public class CarritoEliminarView extends JInternalFrame {
                 mi.get("carrito.eliminar.tabla.codigo"),
                 mi.get("carrito.eliminar.tabla.nombre"),
                 mi.get("carrito.eliminar.tabla.precio"),
-                mi.get("carrito.eliminar.tabla.cantidad")
+                mi.get("carrito.eliminar.tabla.cantidad"),
         });
         UIManager.put("OptionPane.yesButtonText", mi.get("dialogo.boton.si"));
         UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));

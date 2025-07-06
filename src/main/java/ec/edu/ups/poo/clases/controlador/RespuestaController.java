@@ -44,9 +44,10 @@ public class RespuestaController {
         this.usuario = new Usuario();
         this.usuarioYaRegistrado = false;
         this.usuarioController = usuarioController;
-
+        this.usuario.setRespuestas(new ArrayList<>());
         cargarComboPreguntas();
         configurarEventosCuestionario();
+
     }
     // Controlador para modificar o completar preguntas de seguridad de un usuario ya existente
     public RespuestaController(CuestionarioView vista, UsuarioDAO usuarioDAO, Usuario usuario,
@@ -170,6 +171,11 @@ public class RespuestaController {
             mi.setLenguaje(clavesIdiomas[index], paisesIdiomas[index]);
             cuestionarioView.actualizarTextos();
         }
+        cuestionarioView.getCbxPreguntas().removeAllItems();
+        for (Respuesta r : preguntasAleatorias) {
+            cuestionarioView.getCbxPreguntas().addItem(r.getPregunta().getEnunciadoPregunta(mi));
+        }
+        preguntasCuestionario();
     }
     // Cambia el idioma en la vista CuestionarioRecuperarView y actualiza el texto de la pregunta mostrada
     private void cambiarIdiomaCuestionarioRecuperar() {
@@ -247,6 +253,11 @@ public class RespuestaController {
         if (index >= 0 && index < preguntasAleatorias.size()) {
             Respuesta r = preguntasAleatorias.get(index);
             cuestionarioView.getLblPregunta().setText(r.getPregunta().getEnunciadoPregunta(mi));
+
+            if (usuario == null || usuario.getRespuestas() == null) {
+                cuestionarioView.getTxtRespuesta().setText("");
+                return;
+            }
 
             for (Respuesta resp : usuario.getRespuestas()) {
                 if (resp.getPregunta().getId() == r.getPregunta().getId()) {

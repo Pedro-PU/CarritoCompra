@@ -57,7 +57,7 @@ public class CarritoModificarView extends JInternalFrame {
                     producto.getCodigo(),
                     producto.getNombre(),
                     FormateadorUtils.formatearMoneda(producto.getPrecio(), locale),
-                    itemCarrito.getCantidad()
+                    itemCarrito.getCantidad(),
             };
             modelo.addRow(fila);
         }
@@ -85,6 +85,7 @@ public class CarritoModificarView extends JInternalFrame {
         setTitle(mi.get("carrito.modificar.titulo.ventana"));
         lblBuscarCodigo.setText(mi.get("carrito.modificar.buscar.codigo"));
         lblFecha.setText(mi.get("carrito.modificar.fecha"));
+
         btnBuscar.setText(mi.get("carrito.modificar.boton.buscar"));
         btnEditar.setText(mi.get("carrito.modificar.boton.editar"));
 
@@ -92,7 +93,7 @@ public class CarritoModificarView extends JInternalFrame {
                 mi.get("carrito.modificar.columna.codigo"),
                 mi.get("carrito.modificar.columna.nombre"),
                 mi.get("carrito.modificar.columna.precio"),
-                mi.get("carrito.modificar.columna.cantidad")
+                mi.get("carrito.modificar.columna.cantidad"),
         };
         modelo.setColumnIdentifiers(columnas);
 
