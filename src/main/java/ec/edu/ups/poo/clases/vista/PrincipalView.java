@@ -10,7 +10,7 @@ import java.net.URL;
 public class PrincipalView extends JFrame {
     private JMenuBar menuBar;
     private JMenu menuProducto;
-    private JMenuItem menuCarrito;
+    private JMenu menuCarrito;
     private JMenuItem menuItemCrearProducto;
     private JMenuItem menuItemEliminarProducto;
     private JMenuItem menuItemActualizarProducto;
@@ -477,7 +477,7 @@ public class PrincipalView extends JFrame {
         return menuCarrito;
     }
 
-    public void setMenuCarrito(JMenuItem menuCarrito) {
+    public void setMenuCarrito(JMenu menuCarrito) {
         this.menuCarrito = menuCarrito;
     }
 
