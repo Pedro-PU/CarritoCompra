@@ -9,7 +9,7 @@ import java.net.URL;
 
 public class PrincipalView extends JFrame {
     private JMenuBar menuBar;
-    private JMenu menuProducto;
+    private JMenuItem menuProducto;
     private JMenuItem menuCarrito;
     private JMenuItem menuItemCrearProducto;
     private JMenuItem menuItemEliminarProducto;
