@@ -54,7 +54,6 @@ El sistema permite gestionar productos, usuarios y carritos de compras mediante 
 -	Emplear componentes avanzados de Swing: JTable, JComboBox, JMenu, JOptionPane, entre otros.
 -	Soportar múltiples idiomas mediante ResourceBundle.
 -	Aplicar NumberFormat y DateFormat para dar formato a datos según el idioma.
--	
 ---
 
 ## 🚀 Cómo Ejecutar
