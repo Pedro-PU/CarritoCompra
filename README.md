@@ -67,3 +67,4 @@ El sistema permite gestionar productos, usuarios y carritos de compras mediante 
 ## 👨‍💻 Autor
 
 Pedro Pesántez  
+Video: https://youtu.be/N4MUhcagvqo
