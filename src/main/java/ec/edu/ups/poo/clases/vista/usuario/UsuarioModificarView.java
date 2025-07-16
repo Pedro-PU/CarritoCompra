@@ -39,6 +39,7 @@ public class UsuarioModificarView extends JInternalFrame {
         spnMes.setModel(new SpinnerNumberModel(1, 1, 12, 1));
         spnAnio.setModel(new SpinnerNumberModel(2000, 1, 2100, 1));
         habilitarCampos(false);
+
     }
     // Aplica los textos internacionalizados
     public void cambiarIdioma() {
@@ -96,7 +97,7 @@ public class UsuarioModificarView extends JInternalFrame {
     }
     // Activa o desactiva todos los campos de edición
     public void habilitarCampos(boolean habilitar) {
-        txtUsername.setEnabled(habilitar);
+        txtUsername.setEnabled(false);
         txtContrasenia.setEnabled(habilitar);
         txtNombre.setEnabled(habilitar);
         txtCelular.setEnabled(habilitar);

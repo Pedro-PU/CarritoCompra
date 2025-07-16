@@ -2,10 +2,7 @@ package ec.edu.ups.poo.clases.controlador;
 
 import ec.edu.ups.poo.clases.dao.PreguntaDAO;
 import ec.edu.ups.poo.clases.dao.UsuarioDAO;
-import ec.edu.ups.poo.clases.modelo.Pregunta;
-import ec.edu.ups.poo.clases.modelo.Respuesta;
-import ec.edu.ups.poo.clases.modelo.Rol;
-import ec.edu.ups.poo.clases.modelo.Usuario;
+import ec.edu.ups.poo.clases.modelo.*;
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.poo.clases.vista.cuestionario.CuestionarioRecuperarView;
 import ec.edu.ups.poo.clases.vista.cuestionario.CuestionarioView;
@@ -222,15 +219,21 @@ public class RespuestaController {
             recuperarView.mostrarMensaje(String.format(mi.get("cuestionario.recuperar.recuperada"), contrasenia));
 
             boolean deseaCambiar = recuperarView.mostrarMensajePregunta(mi.get("cuestionario.recuperar.pregunta.cambiar"));
-
             if (deseaCambiar) {
-                String nuevaContrasenia = recuperarView.ingreso(mi.get("cuestionario.recuperar.pregunta.ingrese"));
-                if (nuevaContrasenia != null) {
-                    usuario.setContrasenia(nuevaContrasenia);
-                    usuarioDAO.actualizar(usuario);
-                    recuperarView.mostrarMensaje(mi.get("cuestionario.recuperar.cambiada.ok"));
-                } else {
-                    recuperarView.mostrarMensaje(mi.get("cuestionario.recuperar.cambiada.cancelada"));
+                while (true) {
+                    String nuevaContrasenia = recuperarView.ingreso(mi.get("cuestionario.recuperar.pregunta.ingrese"));
+                    if (nuevaContrasenia == null) {
+                        recuperarView.mostrarMensaje(mi.get("cuestionario.recuperar.cambiada.cancelada"));
+                        break;
+                    }
+                    try {
+                        usuario.setContrasenia(nuevaContrasenia);
+                        usuarioDAO.actualizar(usuario);
+                        recuperarView.mostrarMensaje(mi.get("cuestionario.recuperar.cambiada.ok"));
+                        break;
+                    } catch (Contrasenia e) {
+                        recuperarView.mostrarMensaje(mi.get("usuario.error.contrasenia"));
+                    }
                 }
             }
 
@@ -247,6 +250,7 @@ public class RespuestaController {
             }
         }
     }
+
     // Carga en la vista el enunciado y respuesta de la pregunta seleccionada en el combo
     private void preguntasCuestionario() {
         int index = cuestionarioView.getCbxPreguntas().getSelectedIndex();
@@ -335,34 +339,42 @@ public class RespuestaController {
             return;
         }
 
-        if (!celular.matches("\\d{7,15}")) {
-            cuestionarioView.mostrarMensaje(mi.get("cuestionario.validacion.celular"));
-            return;
+        try{
+            GregorianCalendar fecha = new GregorianCalendar(anio, mes - 1, dia);
+            usuario = new Usuario(username,contrasenia, Rol.USUARIO,nombre,celular, fecha  ,correo);
+            usuario.setUsername(username);
+            usuario.setContrasenia(contrasenia);
+            usuario.setCelular(celular);
+            usuario.setEmail(correo);
+            usuario.setRespuestas(new ArrayList<>());
+
+            // Bloquear campos
+            cuestionarioView.getTxtUsername().setEnabled(false);
+            cuestionarioView.getTxtContrasenia().setEnabled(false);
+            cuestionarioView.getTxtNombre().setEnabled(false);
+            cuestionarioView.getTxtCelular().setEnabled(false);
+            cuestionarioView.getTxtCorreo().setEnabled(false);
+            cuestionarioView.getSpnDia().setEnabled(false);
+            cuestionarioView.getSpnMes().setEnabled(false);
+            cuestionarioView.getSpnAnio().setEnabled(false);
+            cuestionarioView.getBtnIniciarCuestionario().setEnabled(false);
+
+            // Mostrar preguntas
+            cargarComboPreguntas();
+            cuestionarioView.habilitarPreguntas(true);
+        }catch (Cedula e){
+            System.out.println(e.getMessage());
+            cuestionarioView.mostrarMensaje(mi.get("usuario.error.cedula"));
+        }catch (Contrasenia e){
+            System.out.println(e.getMessage());
+            cuestionarioView.mostrarMensaje(mi.get("usuario.error.contrasenia"));
+        }catch (Celular e){
+            System.out.println(e.getMessage());
+            cuestionarioView.mostrarMensaje(mi.get("usuario.validacion.celular"));
+        }catch (Email e){
+            System.out.println(e.getMessage());
+            cuestionarioView.mostrarMensaje(mi.get("usuario.validacion.correo"));
         }
-
-        if (!correo.matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$")) {
-            cuestionarioView.mostrarMensaje(mi.get("cuestionario.validacion.correo"));
-            return;
-        }
-
-        GregorianCalendar fecha = new GregorianCalendar(anio, mes - 1, dia);
-        usuario = new Usuario(username,contrasenia, Rol.USUARIO,nombre,celular, fecha  ,correo);
-        usuario.setRespuestas(new ArrayList<>());
-
-        // Bloquear campos
-        cuestionarioView.getTxtUsername().setEnabled(false);
-        cuestionarioView.getTxtContrasenia().setEnabled(false);
-        cuestionarioView.getTxtNombre().setEnabled(false);
-        cuestionarioView.getTxtCelular().setEnabled(false);
-        cuestionarioView.getTxtCorreo().setEnabled(false);
-        cuestionarioView.getSpnDia().setEnabled(false);
-        cuestionarioView.getSpnMes().setEnabled(false);
-        cuestionarioView.getSpnAnio().setEnabled(false);
-        cuestionarioView.getBtnIniciarCuestionario().setEnabled(false);
-
-        // Mostrar preguntas
-        cargarComboPreguntas();
-        cuestionarioView.habilitarPreguntas(true);
     }
     // Carga hasta 10 preguntas aleatorias desde el DAO y las añade al combo de selección en la vista
     private void cargarComboPreguntas() {

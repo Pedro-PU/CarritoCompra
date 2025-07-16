@@ -1,9 +1,7 @@
 package ec.edu.ups.poo.clases.controlador;
 import ec.edu.ups.poo.clases.dao.PreguntaDAO;
 import ec.edu.ups.poo.clases.dao.UsuarioDAO;
-import ec.edu.ups.poo.clases.modelo.Pregunta;
-import ec.edu.ups.poo.clases.modelo.Rol;
-import ec.edu.ups.poo.clases.modelo.Usuario;
+import ec.edu.ups.poo.clases.modelo.*;
 import ec.edu.ups.poo.clases.util.FormateadorUtils;
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.poo.clases.vista.cuestionario.CuestionarioRecuperarView;
@@ -258,32 +256,35 @@ public class UsuarioController {
             return;
         }
 
-        if (!celular.matches("\\d{7,15}")) {
-            usuarioCrearView.mostrarMensaje(mi.get("usuario.validacion.celular"));
-            return;
-        }
-
-        if (!correo.matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$")) {
-            usuarioCrearView.mostrarMensaje(mi.get("usuario.validacion.correo"));
-            return;
-        }
-
-        if (dia < 1 || dia > 31 || mes < 1 || mes > 12 || anio < 1) {
-            usuarioCrearView.mostrarMensaje(mi.get("usuario.validacion.fecha"));
-            return;
-        }
-
         if (usuarioDAO.buscarPorUsername(username) != null) {
             usuarioCrearView.mostrarMensaje(mi.get("usuario.mensaje.crear.existe"));
             return;
         }
 
         GregorianCalendar fechaNacimiento = new GregorianCalendar(anio, mes - 1, dia); // mes - 1 porque enero = 0
-        Usuario usuario1 = new Usuario(username, contrasenia, Rol.USUARIO, nombre, celular, fechaNacimiento, correo);
-        usuarioDAO.crear(usuario1);
 
-        usuarioCrearView.mostrarMensaje(mi.get("usuario.mensaje.creado"));
-        usuarioCrearView.limpiarCampos();
+        try{
+            Usuario usuario1 = new Usuario(username, contrasenia, Rol.USUARIO, nombre, celular, fechaNacimiento, correo);
+            usuario1.setUsername(username);
+            usuario1.setContrasenia(contrasenia);
+            usuario1.setCelular(celular);
+            usuario1.setEmail(correo);
+            usuarioDAO.crear(usuario1);
+            usuarioCrearView.mostrarMensaje(mi.get("usuario.mensaje.creado"));
+            usuarioCrearView.limpiarCampos();
+        }catch (Cedula e){
+            System.out.println(e.getMessage());
+            usuarioCrearView.mostrarMensaje(mi.get("usuario.error.cedula"));
+        }catch (Contrasenia e){
+            System.out.println(e.getMessage());
+            usuarioCrearView.mostrarMensaje(mi.get("usuario.error.contrasenia"));
+        }catch (Celular e){
+            System.out.println(e.getMessage());
+            usuarioCrearView.mostrarMensaje(mi.get("usuario.validacion.celular"));
+        }catch (Email e){
+            System.out.println(e.getMessage());
+            usuarioCrearView.mostrarMensaje(mi.get("usuario.validacion.correo"));
+        }
     }
     // Elimina un usuario existente si fue encontrado por su username y se confirma la acción
     private void eliminar() {
@@ -391,37 +392,36 @@ public class UsuarioController {
             return;
         }
 
-        if (!celular.matches("\\d{7,15}")) {
-            usuarioModificarView.mostrarMensaje(mi.get("usuario.validacion.celular"));
-            return;
-        }
-
-        if (!correo.matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$")) {
-            usuarioModificarView.mostrarMensaje(mi.get("usuario.validacion.correo"));
-            return;
-        }
-
-        if (dia < 1 || dia > 31 || mes < 1 || mes > 12 || anio < 1) {
-            usuarioModificarView.mostrarMensaje(mi.get("usuario.validacion.fecha"));
-            return;
-        }
         if (!usernameNuevo.equals(usernameOriginal) && usuarioDAO.buscarPorUsername(usernameNuevo) != null) {
             usuarioModificarView.mostrarMensaje(mi.get("usuario.mensaje.crear.existe"));
             return;
         }
+        try{
+            usuario1.setUsername(usernameNuevo);
+            usuario1.setContrasenia(contrasenia);
+            usuario1.setNombre(nombre);
+            usuario1.setCelular(celular);
+            usuario1.setEmail(correo);
+            usuario1.setFecha(new GregorianCalendar(anio, mes - 1, dia));
 
-        usuario1.setUsername(usernameNuevo);
-        usuario1.setContrasenia(contrasenia);
-        usuario1.setNombre(nombre);
-        usuario1.setCelular(celular);
-        usuario1.setEmail(correo);
-        usuario1.setFecha(new GregorianCalendar(anio, mes - 1, dia));
-
-        usuarioDAO.actualizar(usuario1);
-        usuarioModificarView.mostrarMensaje(mi.get("usuario.mensaje.modificado"));
-        if (usuario.getRol() == Rol.ADMINISTRADOR) {
-            usuarioModificarView.limpiarCampos();
-            usuarioModificarView.habilitarCampos(false);
+            usuarioDAO.actualizar(usuario1);
+            usuarioModificarView.mostrarMensaje(mi.get("usuario.mensaje.modificado"));
+            if (usuario.getRol() == Rol.ADMINISTRADOR) {
+                usuarioModificarView.limpiarCampos();
+                usuarioModificarView.habilitarCampos(false);
+            }
+        }catch (Cedula e){
+            System.out.println(e.getMessage());
+            usuarioModificarView.mostrarMensaje(mi.get("usuario.error.cedula"));
+        }catch (Contrasenia e){
+            System.out.println(e.getMessage());
+            usuarioModificarView.mostrarMensaje(mi.get("usuario.error.contrasenia"));
+        }catch (Celular e){
+            System.out.println(e.getMessage());
+            usuarioModificarView.mostrarMensaje(mi.get("usuario.validacion.celular"));
+        }catch (Email e){
+            System.out.println(e.getMessage());
+            usuarioModificarView.mostrarMensaje(mi.get("usuario.validacion.correo"));
         }
     }
     //Si es rol USUARIO, deshabilita la opción de buscar otros usuarios para buscar

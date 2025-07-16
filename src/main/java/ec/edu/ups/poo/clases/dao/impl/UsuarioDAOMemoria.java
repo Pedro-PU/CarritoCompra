@@ -28,7 +28,7 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
         );
 
         Usuario user = new Usuario(
-                "user",
+                "0301127569",
                 "12345",
                 Rol.USUARIO,
                 "Usuario de Prueba",
