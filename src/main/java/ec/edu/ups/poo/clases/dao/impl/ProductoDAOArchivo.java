@@ -71,7 +71,6 @@ public class ProductoDAOArchivo implements ProductoDAO {
     public void crear(Producto producto) {
         try {
             if (buscarPorCodigo(producto.getCodigo()) != null) {
-                System.out.println("Producto con código ya existente");
                 return;
             }
             try (RandomAccessFile raf = new RandomAccessFile(archivo, "rw")) {

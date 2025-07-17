@@ -25,255 +25,255 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.Locale;
 
 public class Main {
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(() -> {
 
-            MensajeInternacionalizacionHandler  mi = new MensajeInternacionalizacionHandler("es", "EC");
+            ArchivoView archivoView = new ArchivoView(new MensajeInternacionalizacionHandler("es", "EC"));
+            archivoView.setVisible(true);
 
-            String[] opciones = {"Memoria", "Archivo"};
-            int opcion = JOptionPane.showOptionDialog(null,
-                    "¿Cómo deseas guardar los datos?",
-                    "Selecciona el tipo de almacenamiento",
-                    JOptionPane.DEFAULT_OPTION,
-                    JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    opciones,
-                    opciones[0]);
+            archivoView.setOnGuardar(e -> {
+                Locale locale = archivoView.getIdiomaSeleccionado();
+                MensajeInternacionalizacionHandler mi = new MensajeInternacionalizacionHandler(locale.getLanguage(), locale.getCountry());
+                mi.setLenguaje(locale.getLanguage(), locale.getCountry());
+                String tipo = archivoView.getTipoAlmacenamientoSeleccionado();
 
-            ProductoDAO productoDAO;
-            CarritoDAO carritoDAO;
-            PreguntaDAO preguntaDAO;
-            UsuarioDAO usuarioDAO;
+                ProductoDAO productoDAO;
+                CarritoDAO carritoDAO;
+                PreguntaDAO preguntaDAO;
+                UsuarioDAO usuarioDAO;
 
-            if (opcion == 1) {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                if (tipo.equals(mi.get("archivo"))) {
+                    JFileChooser fileChooser = new JFileChooser();
+                    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-                int seleccion = fileChooser.showOpenDialog(null);
-
-                if (seleccion == JFileChooser.APPROVE_OPTION) {
-                    File directorio = fileChooser.getSelectedFile();
-
-                    productoDAO = new ProductoDAOArchivo(new File(directorio, "productos.dat"));
-                    carritoDAO = new CarritoDAOArchivo(new File(directorio, "carrito.txt"), productoDAO);
-                    preguntaDAO = new PreguntaDAOArchivo(new File(directorio, "preguntas.dat"), mi);
-                    usuarioDAO = new UsuarioDAOArchivo(new File(directorio, "usuarios.txt"),preguntaDAO);
-                } else {
-                    JOptionPane.showMessageDialog(null, "No seleccionaste un directorio. Cerrando aplicación.");
-                    return;
-                }
-            } else {
-                productoDAO = new ProductoDAOMemoria();
-                carritoDAO = new CarritoDAOMemoria();
-                preguntaDAO = new PreguntaDAOMemoria(mi);
-                usuarioDAO = new UsuarioDAOMemoria(preguntaDAO);
-            }
-
-            LoginView loginView = new LoginView(mi);
-            loginView.setVisible(true);
-            UsuarioController usuarioController = new UsuarioController(usuarioDAO, loginView, preguntaDAO, mi);
-
-            loginView.addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosed(WindowEvent e) {
-                    Usuario usuarioAuntenticado = usuarioController.getUsuarioAutenticado();
-                    if(usuarioAuntenticado != null) {
-                        PrincipalView principalView = new PrincipalView(mi,usuarioAuntenticado.getUsername());
-                        CarritoAnadirView carritoAnadirView = new CarritoAnadirView(mi);
-                        CarritoListaView carritoListaView = new CarritoListaView(mi);
-                        CarritoModificarView carritoModificarView = new CarritoModificarView(mi);
-                        CarritoEliminarView carritoEliminarView = new CarritoEliminarView(mi);
-
-                        ProductoAnadirView productoAnadirView = new ProductoAnadirView(mi);
-                        ProductoEditarView productoEditarView = new ProductoEditarView(mi);
-                        ProductoEliminarView productoEliminarView = new ProductoEliminarView(mi);
-                        ProductoListaView productoListaView = new ProductoListaView(mi);
-
-                        UsuarioCrearView usuarioCrearView = new UsuarioCrearView(mi);
-                        UsuarioEliminarView usuarioEliminarView = new UsuarioEliminarView(mi);
-                        UsuarioModificarView usuarioModificarView = new UsuarioModificarView(mi);
-                        UsuarioListarView usuarioListarView = new UsuarioListarView(mi);
-
-                        ProductoController productoController = new ProductoController(productoDAO, productoAnadirView,
-                                productoListaView, productoEditarView, productoEliminarView, carritoAnadirView, mi);
-
-                        CarritoController carritoController = new CarritoController(carritoAnadirView, productoDAO, carritoDAO,usuarioAuntenticado,
-                                carritoListaView, carritoModificarView, carritoEliminarView, mi);
-
-                        UsuarioController usuarioController = new UsuarioController(usuarioDAO, usuarioCrearView, usuarioEliminarView, usuarioModificarView,
-                                usuarioListarView, mi, usuarioAuntenticado);
-
-                        principalView.mostrarMensaje(mi.get("principal.bienvenido") + usuarioAuntenticado.getUsername());
-                        principalView.setTitle(mi.get("principal.titulo") + " - " + usuarioAuntenticado.getUsername());
-                        if (usuarioAuntenticado.getRol().equals(Rol.USUARIO)) {
-                            principalView.deshabilitarMenusAdministrador();
-                        }
-                        principalView.getMenuItemCrearUsuario().addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                if(!usuarioCrearView.isVisible()) {
-                                    usuarioCrearView.setVisible(true);
-                                    principalView.getjDesktopPane().add(usuarioCrearView);
-                                }
-                            }
-                        });
-                        principalView.getMenuItemEliminarUsuario().addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                if(!usuarioEliminarView.isVisible()) {
-                                    usuarioEliminarView.setVisible(true);
-                                    principalView.getjDesktopPane().add(usuarioEliminarView);
-                                }
-                            }
-                        });
-                        principalView.getMenuItemEditarUsuario().addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                if(!usuarioModificarView.isVisible()) {
-                                    usuarioModificarView.setVisible(true);
-                                    principalView.getjDesktopPane().add(usuarioModificarView);
-                                }
-                            }
-                        });
-                        principalView.getMenuItemListarUsuario().addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                if(!usuarioListarView.isVisible()) {
-                                    usuarioListarView.setVisible(true);
-                                    principalView.getjDesktopPane().add(usuarioListarView);
-                                }
-                            }
-                        });
-                        principalView.getMenuItemCrearCarrito().addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                if(!carritoAnadirView.isVisible()) {
-                                    carritoAnadirView.setVisible(true);
-                                    principalView.getjDesktopPane().add(carritoAnadirView);
-                                }
-                            }
-                        });
-                        principalView.getMenuItemListarCarrito().addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                if(!carritoListaView.isVisible()) {
-                                    carritoListaView.setVisible(true);
-                                    principalView.getjDesktopPane().add(carritoListaView);
-                                }
-                            }
-                        });
-                        principalView.getMenuItemEditarCarrito().addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                if(!carritoModificarView.isVisible()) {
-                                    carritoModificarView.setVisible(true);
-                                    principalView.getjDesktopPane().add(carritoModificarView);
-                                }
-                            }
-                        });
-                        principalView.getMenuItemEliminarCarrito().addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                if(!carritoEliminarView.isVisible()) {
-                                    carritoEliminarView.setVisible(true);
-                                    principalView.getjDesktopPane().add(carritoEliminarView);
-                                }
-                            }
-                        });
-                        principalView.getMenuItemCrearProducto().addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                if(!productoAnadirView.isVisible()) {
-                                    productoAnadirView.setVisible(true);
-                                    principalView.getjDesktopPane().add(productoAnadirView);
-                                }
-                            }
-                        });
-                        principalView.getMenuItemActualizarProducto().addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                if(!productoEditarView.isVisible()) {
-                                    productoEditarView.setVisible(true);
-                                    principalView.getjDesktopPane().add(productoEditarView);
-                                }
-                            }
-                        });
-                        principalView.getMenuItemEliminarProducto().addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                if(!productoEliminarView.isVisible()) {
-                                    productoEliminarView.setVisible(true);
-                                    principalView.getjDesktopPane().add(productoEliminarView);
-                                }
-                            }
-                        });
-                        principalView.getMenuItemBuscarProducto().addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                if(!productoListaView.isVisible()) {
-                                    productoListaView.setVisible(true);
-                                    principalView.getjDesktopPane().add(productoListaView);
-                                }
-                            }
-                        });
-                        principalView.getMenuItemCerrarSesion().addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                boolean confirmado = principalView.mostrarMensajePregunta(mi.get("principal.cerrar"));
-                                if(confirmado) {
-                                    principalView.dispose();
-                                    usuarioController.setUsuarioAutenticado(null);
-                                    loginView.actualizarTextos();
-                                    loginView.setVisible(true);
-                                }
-                            }
-                        });
-                        principalView.getMenuItemSalir().addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                boolean confirmado = principalView.mostrarMensajePregunta(mi.get("principal.salir"));
-                                if(confirmado) {
-                                    principalView.dispose();
-                                    System.exit(0);
-                                }
-                            }
-                        });
-                        // Opciones del menu para cambiar el idioma de las vistas
-                        principalView.getMenuItemEspanol().addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                mi.setLenguaje("es", "EC");
-                                principalView.cambiarIdioma();
-                                usuarioController.actualizarIdiomaEnVistas();
-                                productoController.actualizarIdiomaEnVistas();
-                                carritoController.actualizarIdiomaEnVistas();
-                            }
-                        });
-                        principalView.getMenuItemIngles().addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                mi.setLenguaje("en", "US");
-                                principalView.cambiarIdioma();
-                                usuarioController.actualizarIdiomaEnVistas();
-                                productoController.actualizarIdiomaEnVistas();
-                                carritoController.actualizarIdiomaEnVistas();
-                            }
-                        });
-                        principalView.getMenuItemFrances().addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                mi.setLenguaje("fr", "FR");
-                                principalView.cambiarIdioma();
-                                usuarioController.actualizarIdiomaEnVistas();
-                                productoController.actualizarIdiomaEnVistas();
-                                carritoController.actualizarIdiomaEnVistas();
-                            }
-                        });
+                    int seleccion = fileChooser.showOpenDialog(archivoView);
+                    if (seleccion == JFileChooser.APPROVE_OPTION) {
+                        File dir = fileChooser.getSelectedFile();
+                        productoDAO = new ProductoDAOArchivo(new File(dir, "productos.dat"));
+                        carritoDAO = new CarritoDAOArchivo(new File(dir, "carrito.txt"), productoDAO);
+                        preguntaDAO = new PreguntaDAOArchivo(new File(dir, "preguntas.dat"), mi);
+                        usuarioDAO = new UsuarioDAOArchivo(new File(dir, "usuarios.txt"), preguntaDAO);
+                    } else {
+                        archivoView.mostrarMensaje(mi.get("errorDAO"));
+                        return;
                     }
+                } else {
+                    productoDAO = new ProductoDAOMemoria();
+                    carritoDAO = new CarritoDAOMemoria();
+                    preguntaDAO = new PreguntaDAOMemoria(mi);
+                    usuarioDAO = new UsuarioDAOMemoria(preguntaDAO);
                 }
+
+                archivoView.dispose();
+
+                LoginView loginView = new LoginView(mi);
+                loginView.setVisible(true);
+                UsuarioController usuarioController = new UsuarioController(usuarioDAO, loginView, preguntaDAO, mi);
+
+                loginView.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        Usuario usuarioAuntenticado = usuarioController.getUsuarioAutenticado();
+                        if(usuarioAuntenticado != null) {
+                            PrincipalView principalView = new PrincipalView(mi,usuarioAuntenticado.getUsername());
+                            CarritoAnadirView carritoAnadirView = new CarritoAnadirView(mi);
+                            CarritoListaView carritoListaView = new CarritoListaView(mi);
+                            CarritoModificarView carritoModificarView = new CarritoModificarView(mi);
+                            CarritoEliminarView carritoEliminarView = new CarritoEliminarView(mi);
+
+                            ProductoAnadirView productoAnadirView = new ProductoAnadirView(mi);
+                            ProductoEditarView productoEditarView = new ProductoEditarView(mi);
+                            ProductoEliminarView productoEliminarView = new ProductoEliminarView(mi);
+                            ProductoListaView productoListaView = new ProductoListaView(mi);
+
+                            UsuarioCrearView usuarioCrearView = new UsuarioCrearView(mi);
+                            UsuarioEliminarView usuarioEliminarView = new UsuarioEliminarView(mi);
+                            UsuarioModificarView usuarioModificarView = new UsuarioModificarView(mi);
+                            UsuarioListarView usuarioListarView = new UsuarioListarView(mi);
+
+                            ProductoController productoController = new ProductoController(productoDAO, productoAnadirView,
+                                    productoListaView, productoEditarView, productoEliminarView, carritoAnadirView, mi);
+
+                            CarritoController carritoController = new CarritoController(carritoAnadirView, productoDAO, carritoDAO,usuarioAuntenticado,
+                                    carritoListaView, carritoModificarView, carritoEliminarView, mi);
+
+                            UsuarioController usuarioController = new UsuarioController(usuarioDAO, usuarioCrearView, usuarioEliminarView, usuarioModificarView,
+                                    usuarioListarView, mi, usuarioAuntenticado);
+
+                            principalView.mostrarMensaje(mi.get("principal.bienvenido") + usuarioAuntenticado.getUsername());
+                            principalView.setTitle(mi.get("principal.titulo") + " - " + usuarioAuntenticado.getUsername());
+                            if (usuarioAuntenticado.getRol().equals(Rol.USUARIO)) {
+                                principalView.deshabilitarMenusAdministrador();
+                            }
+                            principalView.getMenuItemCrearUsuario().addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    if(!usuarioCrearView.isVisible()) {
+                                        usuarioCrearView.setVisible(true);
+                                        principalView.getjDesktopPane().add(usuarioCrearView);
+                                    }
+                                }
+                            });
+                            principalView.getMenuItemEliminarUsuario().addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    if(!usuarioEliminarView.isVisible()) {
+                                        usuarioEliminarView.setVisible(true);
+                                        principalView.getjDesktopPane().add(usuarioEliminarView);
+                                    }
+                                }
+                            });
+                            principalView.getMenuItemEditarUsuario().addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    if(!usuarioModificarView.isVisible()) {
+                                        usuarioModificarView.setVisible(true);
+                                        principalView.getjDesktopPane().add(usuarioModificarView);
+                                    }
+                                }
+                            });
+                            principalView.getMenuItemListarUsuario().addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    if(!usuarioListarView.isVisible()) {
+                                        usuarioListarView.setVisible(true);
+                                        principalView.getjDesktopPane().add(usuarioListarView);
+                                    }
+                                }
+                            });
+                            principalView.getMenuItemCrearCarrito().addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    if(!carritoAnadirView.isVisible()) {
+                                        carritoAnadirView.setVisible(true);
+                                        principalView.getjDesktopPane().add(carritoAnadirView);
+                                    }
+                                }
+                            });
+                            principalView.getMenuItemListarCarrito().addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    if(!carritoListaView.isVisible()) {
+                                        carritoListaView.setVisible(true);
+                                        principalView.getjDesktopPane().add(carritoListaView);
+                                    }
+                                }
+                            });
+                            principalView.getMenuItemEditarCarrito().addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    if(!carritoModificarView.isVisible()) {
+                                        carritoModificarView.setVisible(true);
+                                        principalView.getjDesktopPane().add(carritoModificarView);
+                                    }
+                                }
+                            });
+                            principalView.getMenuItemEliminarCarrito().addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    if(!carritoEliminarView.isVisible()) {
+                                        carritoEliminarView.setVisible(true);
+                                        principalView.getjDesktopPane().add(carritoEliminarView);
+                                    }
+                                }
+                            });
+                            principalView.getMenuItemCrearProducto().addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    if(!productoAnadirView.isVisible()) {
+                                        productoAnadirView.setVisible(true);
+                                        principalView.getjDesktopPane().add(productoAnadirView);
+                                    }
+                                }
+                            });
+                            principalView.getMenuItemActualizarProducto().addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    if(!productoEditarView.isVisible()) {
+                                        productoEditarView.setVisible(true);
+                                        principalView.getjDesktopPane().add(productoEditarView);
+                                    }
+                                }
+                            });
+                            principalView.getMenuItemEliminarProducto().addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    if(!productoEliminarView.isVisible()) {
+                                        productoEliminarView.setVisible(true);
+                                        principalView.getjDesktopPane().add(productoEliminarView);
+                                    }
+                                }
+                            });
+                            principalView.getMenuItemBuscarProducto().addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    if(!productoListaView.isVisible()) {
+                                        productoListaView.setVisible(true);
+                                        principalView.getjDesktopPane().add(productoListaView);
+                                    }
+                                }
+                            });
+                            principalView.getMenuItemCerrarSesion().addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    boolean confirmado = principalView.mostrarMensajePregunta(mi.get("principal.cerrar"));
+                                    if(confirmado) {
+                                        principalView.dispose();
+                                        usuarioController.setUsuarioAutenticado(null);
+                                        loginView.actualizarTextos();
+                                        loginView.setVisible(true);
+                                    }
+                                }
+                            });
+                            principalView.getMenuItemSalir().addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    boolean confirmado = principalView.mostrarMensajePregunta(mi.get("principal.salir"));
+                                    if(confirmado) {
+                                        principalView.dispose();
+                                        System.exit(0);
+                                    }
+                                }
+                            });
+                            // Opciones del menu para cambiar el idioma de las vistas
+                            principalView.getMenuItemEspanol().addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    mi.setLenguaje("es", "EC");
+                                    principalView.cambiarIdioma();
+                                    usuarioController.actualizarIdiomaEnVistas();
+                                    productoController.actualizarIdiomaEnVistas();
+                                    carritoController.actualizarIdiomaEnVistas();
+                                }
+                            });
+                            principalView.getMenuItemIngles().addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    mi.setLenguaje("en", "US");
+                                    principalView.cambiarIdioma();
+                                    usuarioController.actualizarIdiomaEnVistas();
+                                    productoController.actualizarIdiomaEnVistas();
+                                    carritoController.actualizarIdiomaEnVistas();
+                                }
+                            });
+                            principalView.getMenuItemFrances().addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    mi.setLenguaje("fr", "FR");
+                                    principalView.cambiarIdioma();
+                                    usuarioController.actualizarIdiomaEnVistas();
+                                    productoController.actualizarIdiomaEnVistas();
+                                    carritoController.actualizarIdiomaEnVistas();
+                                }
+                            });
+                        }
+                    }
+                });
             });
+            archivoView.setOnSalir(e -> System.exit(0));
         });
     }
 }
