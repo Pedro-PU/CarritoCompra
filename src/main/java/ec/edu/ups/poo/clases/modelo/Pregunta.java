@@ -19,6 +19,10 @@ public class Pregunta {
         this.id = id;
     }
 
+    public String getEnunciadoPreguntaRaw() {
+        return enunciadoPregunta;
+    }
+
     public String getEnunciadoPregunta(MensajeInternacionalizacionHandler mi) {
         return mi.get(enunciadoPregunta);
     }

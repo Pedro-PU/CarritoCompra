@@ -26,7 +26,6 @@ public class UsuarioDAOArchivo implements UsuarioDAO {
         if (archivo.exists()) {
             this.usuarios = cargarUsuarios();
         } else {
-            // Usuarios por defecto
             Usuario admin = new Usuario(
                     "admin",
                     "12345",
@@ -185,6 +184,7 @@ public class UsuarioDAOArchivo implements UsuarioDAO {
             u.setCelular(celular);
             u.setFecha(fecha);
             u.setEmail(email);
+            u.setRespuestas(new ArrayList<>());
 
             return u;
         } catch (Exception e) {

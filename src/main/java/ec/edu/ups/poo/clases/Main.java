@@ -19,23 +19,58 @@ import ec.edu.ups.poo.clases.vista.producto.ProductoEliminarView;
 import ec.edu.ups.poo.clases.vista.producto.ProductoListaView;
 import ec.edu.ups.poo.clases.vista.usuario.*;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-//Prueba 2
+import java.io.File;
+
 public class Main {
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(() -> {
 
             MensajeInternacionalizacionHandler  mi = new MensajeInternacionalizacionHandler("es", "EC");
-            // Instancias de los DAOs
-            ProductoDAO productoDAO = new ProductoDAOMemoria();
-            CarritoDAO carritoDAO = new CarritoDAOMemoria();
 
-            PreguntaDAO preguntaDAO = new PreguntaDAOMemoria(mi);
-            UsuarioDAO usuarioDAO = new UsuarioDAOMemoria(preguntaDAO);
-            // Instancia de la vista LoginView y el constructor para esa vista
+            String[] opciones = {"Memoria", "Archivo"};
+            int opcion = JOptionPane.showOptionDialog(null,
+                    "¿Cómo deseas guardar los datos?",
+                    "Selecciona el tipo de almacenamiento",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    opciones,
+                    opciones[0]);
+
+            ProductoDAO productoDAO;
+            CarritoDAO carritoDAO;
+            PreguntaDAO preguntaDAO;
+            UsuarioDAO usuarioDAO;
+
+            if (opcion == 1) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+                int seleccion = fileChooser.showOpenDialog(null);
+
+                if (seleccion == JFileChooser.APPROVE_OPTION) {
+                    File directorio = fileChooser.getSelectedFile();
+
+                    productoDAO = new ProductoDAOArchivo(new File(directorio, "productos.dat"));
+                    carritoDAO = new CarritoDAOArchivo(new File(directorio, "carrito.txt"));
+                    preguntaDAO = new PreguntaDAOArchivo(new File(directorio, "preguntas.dat"), mi);
+                    usuarioDAO = new UsuarioDAOArchivo(new File(directorio, "usuarios.txt"),preguntaDAO);
+                } else {
+                    JOptionPane.showMessageDialog(null, "No seleccionaste un directorio. Cerrando aplicación.");
+                    return;
+                }
+            } else {
+                productoDAO = new ProductoDAOMemoria();
+                carritoDAO = new CarritoDAOMemoria();
+                preguntaDAO = new PreguntaDAOMemoria(mi);
+                usuarioDAO = new UsuarioDAOMemoria(preguntaDAO);
+            }
+
             LoginView loginView = new LoginView(mi);
             loginView.setVisible(true);
             UsuarioController usuarioController = new UsuarioController(usuarioDAO, loginView, preguntaDAO, mi);

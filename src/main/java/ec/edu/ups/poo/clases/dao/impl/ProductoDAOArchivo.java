@@ -7,39 +7,96 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.io.*;
-import java.util.*;
 
-public class ProductoDAOArchivo implements ProductoDAO, Serializable {
-    private List<Producto> productos;
+public class ProductoDAOArchivo implements ProductoDAO {
+    private static final int TAM_NOMBRE = 30; // 30 caracteres
+    private static final int TAM_REGISTRO = 4 + (TAM_NOMBRE * 2) + 8; // int + String (UTF-16) + double
     private File archivo;
 
     public ProductoDAOArchivo(File archivo) {
         this.archivo = archivo;
-        if (archivo.exists()) {
-            productos = cargarProductos();
-        } else {
-            productos = new ArrayList<>();
-            // Productos por defecto
-            crear(new Producto(1, "Prod A", 15));
-            crear(new Producto(2, "Prod B", 25));
-            crear(new Producto(3, "Prod C", 35));
-            guardarProductos(productos);
+        try {
+            if (!archivo.exists()) {
+                archivo.createNewFile();
+                crear(new Producto(1, "Prod A", 15));
+                crear(new Producto(2, "Prod B", 25));
+                crear(new Producto(3, "Prod C", 35));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+
+    private void escribirProducto(RandomAccessFile raf, Producto p) throws IOException {
+        raf.writeInt(p.getCodigo());
+
+        String nombre = p.getNombre();
+        if (nombre.length() > TAM_NOMBRE) {
+            nombre = nombre.substring(0, TAM_NOMBRE);
+        }
+        nombre = String.format("%-" + TAM_NOMBRE + "s", nombre); // Rellenar con espacios
+        raf.writeChars(nombre); // 2 bytes por carácter
+
+        raf.writeDouble(p.getPrecio());
+    }
+
+    private Producto leerProducto(RandomAccessFile raf) throws IOException {
+        int codigo = raf.readInt();
+
+        StringBuilder nombre = new StringBuilder();
+        for (int i = 0; i < TAM_NOMBRE; i++) {
+            nombre.append(raf.readChar());
+        }
+
+        double precio = raf.readDouble();
+        return new Producto(codigo, nombre.toString().trim(), precio);
+    }
+
+    private long buscarPosicionPorCodigo(int codigo) throws IOException {
+        try (RandomAccessFile raf = new RandomAccessFile(archivo, "r")) {
+            long numRegistros = raf.length() / TAM_REGISTRO;
+
+            for (int i = 0; i < numRegistros; i++) {
+                raf.seek(i * TAM_REGISTRO);
+                int cod = raf.readInt();
+                if (cod == codigo) {
+                    return i * TAM_REGISTRO;
+                }
+            }
+        }
+        return -1;
     }
 
     @Override
     public void crear(Producto producto) {
-        productos.add(producto);
-        guardarProductos(productos);
+        try {
+            if (buscarPorCodigo(producto.getCodigo()) != null) {
+                System.out.println("Producto con código ya existente");
+                return;
+            }
+            try (RandomAccessFile raf = new RandomAccessFile(archivo, "rw")) {
+                raf.seek(raf.length());
+                escribirProducto(raf, producto);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public Producto buscarPorCodigo(int codigo) {
-        for (Producto producto : productos) {
-            if (producto.getCodigo() == codigo) {
-                return producto;
+        try (RandomAccessFile raf = new RandomAccessFile(archivo, "r")) {
+            long numRegistros = raf.length() / TAM_REGISTRO;
+
+            for (int i = 0; i < numRegistros; i++) {
+                raf.seek(i * TAM_REGISTRO);
+                Producto p = leerProducto(raf);
+                if (p.getCodigo() == codigo) {
+                    return p;
+                }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -47,61 +104,63 @@ public class ProductoDAOArchivo implements ProductoDAO, Serializable {
     @Override
     public List<Producto> buscarPorNombre(String nombre) {
         List<Producto> encontrados = new ArrayList<>();
-        for (Producto producto : productos) {
-            if (producto.getNombre().equalsIgnoreCase(nombre)) {
-                encontrados.add(producto);
+        try (RandomAccessFile raf = new RandomAccessFile(archivo, "r")) {
+            long numRegistros = raf.length() / TAM_REGISTRO;
+
+            for (int i = 0; i < numRegistros; i++) {
+                raf.seek(i * TAM_REGISTRO);
+                Producto p = leerProducto(raf);
+                if (p.getNombre().equalsIgnoreCase(nombre)) {
+                    encontrados.add(p);
+                }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return encontrados;
     }
 
     @Override
     public void actualizar(Producto producto) {
-        for (int i = 0; i < productos.size(); i++) {
-            if (productos.get(i).getCodigo() == producto.getCodigo()) {
-                productos.set(i, producto);
-                guardarProductos(productos);
-                return;
+        try (RandomAccessFile raf = new RandomAccessFile(archivo, "rw")) {
+            long pos = buscarPosicionPorCodigo(producto.getCodigo());
+            if (pos != -1) {
+                raf.seek(pos);
+                escribirProducto(raf, producto);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public void eliminar(int codigo) {
+        List<Producto> productos = listarTodos();
         productos.removeIf(p -> p.getCodigo() == codigo);
-        guardarProductos(productos);
+        try (RandomAccessFile raf = new RandomAccessFile(archivo, "rw")) {
+            raf.setLength(0);
+            for (Producto p : productos) {
+                escribirProducto(raf, p);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public List<Producto> listarTodos() {
-        return productos;
-    }
-
-    private List<Producto> cargarProductos() {
         List<Producto> lista = new ArrayList<>();
-        try (DataInputStream dis = new DataInputStream(new FileInputStream(archivo))) {
-            while (dis.available() > 0) {
-                int codigo = dis.readInt();
-                String nombre = dis.readUTF();
-                double precio = dis.readDouble();
-                lista.add(new Producto(codigo, nombre, precio));
+        try (RandomAccessFile raf = new RandomAccessFile(archivo, "r")) {
+            long numRegistros = raf.length() / TAM_REGISTRO;
+            for (int i = 0; i < numRegistros; i++) {
+                raf.seek(i * TAM_REGISTRO);
+                Producto p = leerProducto(raf);
+                lista.add(p);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return lista;
-    }
-
-    private void guardarProductos(List<Producto> productos) {
-        try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(archivo))) {
-            for (Producto p : productos) {
-                dos.writeInt(p.getCodigo());
-                dos.writeUTF(p.getNombre());
-                dos.writeDouble(p.getPrecio());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
 
