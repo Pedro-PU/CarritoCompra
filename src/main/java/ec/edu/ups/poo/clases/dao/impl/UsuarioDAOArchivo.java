@@ -18,14 +18,20 @@ public class UsuarioDAOArchivo implements UsuarioDAO {
 
     private List<Usuario> usuarios;
     private File archivo;
+    private PreguntaDAO preguntaDAO;
 
     public UsuarioDAOArchivo(File archivo, PreguntaDAO preguntaDAO) {
         this.archivo = archivo;
         this.usuarios = new ArrayList<>();
+        this.preguntaDAO = preguntaDAO;
 
         if (archivo.exists()) {
             this.usuarios = cargarUsuarios();
         } else {
+            guardarUsuarios();
+            this.usuarios = cargarUsuarios();
+        }
+        if (buscarPorUsername("admin") == null) {
             Usuario admin = new Usuario(
                     "admin",
                     "12345",
@@ -35,7 +41,16 @@ public class UsuarioDAOArchivo implements UsuarioDAO {
                     new GregorianCalendar(1980, Calendar.JANUARY, 1),
                     "admin@gmail.com"
             );
-
+            List<Pregunta> preguntas = preguntaDAO.listarTodas();
+            for (int i = 0; i < 3 && i < preguntas.size(); i++) {
+                Pregunta pregunta = preguntas.get(i);
+                Respuesta respuesta = new Respuesta(pregunta);
+                respuesta.setRespuesta("respuesta" + (i + 1));
+                admin.getRespuestas().add(respuesta);
+            }
+            usuarios.add(admin);
+        }
+        if (buscarPorUsername("0301127569") == null) {
             Usuario user = new Usuario(
                     "0301127569",
                     "12345",
@@ -45,20 +60,9 @@ public class UsuarioDAOArchivo implements UsuarioDAO {
                     new GregorianCalendar(1995, Calendar.JUNE, 15),
                     "user@gmail.com"
             );
-
-            List<Pregunta> preguntas = preguntaDAO.listarTodas();
-
-            for (int i = 0; i < 3; i++) {
-                Pregunta pregunta = preguntas.get(i);
-                Respuesta respuesta = new Respuesta(pregunta);
-                respuesta.setRespuesta("respuesta" + (i + 1));
-                admin.getRespuestas().add(respuesta);
-            }
-
-            usuarios.add(admin);
             usuarios.add(user);
-            guardarUsuarios();
         }
+        guardarUsuarios();
     }
 
     @Override
@@ -126,15 +130,18 @@ public class UsuarioDAOArchivo implements UsuarioDAO {
                 sb.append(u.getNombre()).append(",");
                 sb.append(u.getCelular()).append(",");
                 GregorianCalendar f = u.getFecha();
-                if (f != null) {
-                    sb.append(f.get(Calendar.YEAR)).append("-")
-                            .append(f.get(Calendar.MONTH)).append("-")
-                            .append(f.get(Calendar.DAY_OF_MONTH));
-                } else {
-                    sb.append("0-0-0");
-                }
-                sb.append(",");
+                sb.append(f != null ? f.get(Calendar.YEAR) + "-" + f.get(Calendar.MONTH) + "-" + f.get(Calendar.DAY_OF_MONTH) : "0-0-0").append(",");
                 sb.append(u.getEmail() != null ? u.getEmail() : "");
+
+                if (u.getRespuestas() != null && !u.getRespuestas().isEmpty()) {
+                    sb.append(",");
+                    for (Respuesta r : u.getRespuestas()) {
+                        sb.append(r.getPregunta().getId()).append("~")
+                                .append(r.getRespuesta()).append("|");
+                    }
+                    sb.deleteCharAt(sb.length() - 1); // Quitar último '|'
+                }
+
                 pw.println(sb.toString());
             }
         } catch (IOException e) {
@@ -158,14 +165,16 @@ public class UsuarioDAOArchivo implements UsuarioDAO {
 
     private Usuario parsear(String linea) {
         try {
-            String[] partes = linea.split(",", 7);
+            String[] partes = linea.split(",", 8); // hasta 8 si hay respuestas
+
             if (partes.length < 7) return null;
 
-            String username = partes[0];
-            String contrasenia = partes[1];
-            Rol rol = Rol.valueOf(partes[2]);
-            String nombre = partes[3];
-            String celular = partes[4];
+            Usuario u = new Usuario();
+            u.setUsername(partes[0]);
+            u.setContrasenia(partes[1]);
+            u.setRol(Rol.valueOf(partes[2]));
+            u.setNombre(partes[3]);
+            u.setCelular(partes[4]);
 
             String[] fPartes = partes[5].split("-");
             GregorianCalendar fecha = new GregorianCalendar(
@@ -173,25 +182,34 @@ public class UsuarioDAOArchivo implements UsuarioDAO {
                     Integer.parseInt(fPartes[1]),
                     Integer.parseInt(fPartes[2])
             );
-
-            String email = partes[6];
-
-            Usuario u = new Usuario();
-            u.setUsername(username);
-            u.setContrasenia(contrasenia);
-            u.setRol(rol);
-            u.setNombre(nombre);
-            u.setCelular(celular);
             u.setFecha(fecha);
-            u.setEmail(email);
+            u.setEmail(partes[6]);
             u.setRespuestas(new ArrayList<>());
+
+            if (partes.length == 8 && !partes[7].isEmpty()) {
+                String[] respPartes = partes[7].split("\\|");
+                for (String respStr : respPartes) {
+                    String[] rSplit = respStr.split("~");
+                    if (rSplit.length == 2) {
+                        int preguntaId = Integer.parseInt(rSplit[0]);
+                        String respuestaTexto = rSplit[1];
+                        Pregunta pregunta = preguntaDAO.buscarPorId(preguntaId);
+                        if (pregunta != null) {
+                            Respuesta respuesta = new Respuesta(pregunta);
+                            respuesta.setRespuesta(respuestaTexto);
+                            u.getRespuestas().add(respuesta);
+                        }
+                    }
+                }
+            }
 
             return u;
         } catch (Exception e) {
-            System.err.println("Error parseando usuario: " + e.getMessage());
+            System.err.println("Error parseando usuario con respuestas: " + e.getMessage());
             return null;
         }
     }
+
 }
 
 

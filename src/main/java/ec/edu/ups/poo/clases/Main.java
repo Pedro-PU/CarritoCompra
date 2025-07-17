@@ -57,7 +57,7 @@ public class Main {
                     File directorio = fileChooser.getSelectedFile();
 
                     productoDAO = new ProductoDAOArchivo(new File(directorio, "productos.dat"));
-                    carritoDAO = new CarritoDAOArchivo(new File(directorio, "carrito.txt"));
+                    carritoDAO = new CarritoDAOArchivo(new File(directorio, "carrito.txt"), productoDAO);
                     preguntaDAO = new PreguntaDAOArchivo(new File(directorio, "preguntas.dat"), mi);
                     usuarioDAO = new UsuarioDAOArchivo(new File(directorio, "usuarios.txt"),preguntaDAO);
                 } else {
@@ -80,7 +80,6 @@ public class Main {
                 public void windowClosed(WindowEvent e) {
                     Usuario usuarioAuntenticado = usuarioController.getUsuarioAutenticado();
                     if(usuarioAuntenticado != null) {
-                        //Instancias de las vistas y controladores
                         PrincipalView principalView = new PrincipalView(mi,usuarioAuntenticado.getUsername());
                         CarritoAnadirView carritoAnadirView = new CarritoAnadirView(mi);
                         CarritoListaView carritoListaView = new CarritoListaView(mi);
@@ -109,10 +108,8 @@ public class Main {
                         principalView.mostrarMensaje(mi.get("principal.bienvenido") + usuarioAuntenticado.getUsername());
                         principalView.setTitle(mi.get("principal.titulo") + " - " + usuarioAuntenticado.getUsername());
                         if (usuarioAuntenticado.getRol().equals(Rol.USUARIO)) {
-                            //Deshabilita los campos si es rol Usuario
                             principalView.deshabilitarMenusAdministrador();
                         }
-                        // Acciones de los menús
                         principalView.getMenuItemCrearUsuario().addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {

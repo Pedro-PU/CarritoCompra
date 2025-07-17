@@ -1,6 +1,7 @@
 package ec.edu.ups.poo.clases.dao.impl;
 
 import ec.edu.ups.poo.clases.dao.CarritoDAO;
+import ec.edu.ups.poo.clases.dao.ProductoDAO;
 import ec.edu.ups.poo.clases.modelo.Carrito;
 import ec.edu.ups.poo.clases.modelo.ItemCarrito;
 import ec.edu.ups.poo.clases.modelo.Producto;
@@ -11,15 +12,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CarritoDAOArchivo implements CarritoDAO {
     private List<Carrito> carritos;
     private int contCodigo = 1;
     private File archivo;
+    private ProductoDAO productoDAO;
 
-    public CarritoDAOArchivo(File archivo) {
+    public CarritoDAOArchivo(File archivo, ProductoDAO productoDAO) {
         this.archivo = archivo;
+        this.productoDAO = productoDAO;
         if (archivo.exists()) {
             carritos = cargarCarritos();
             // Ajustar contCodigo al máximo código + 1 para evitar duplicados
@@ -90,7 +92,6 @@ public class CarritoDAOArchivo implements CarritoDAO {
         return resultado;
     }
 
-
     private void guardarCarritos(List<Carrito> carritos) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(archivo))) {
             for (Carrito c : carritos) {
@@ -112,6 +113,11 @@ public class CarritoDAOArchivo implements CarritoDAO {
                             .append(item.getCantidad())
                             .append(";");
                 }
+                sb.append(",");
+                sb.append(c.calcularSubtotal()).append(",");
+                sb.append(c.calcularIVA()).append(",");
+                sb.append(c.calcularTotal());
+
                 writer.println(sb.toString());
             }
         } catch (IOException e) {
@@ -124,8 +130,8 @@ public class CarritoDAOArchivo implements CarritoDAO {
         try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
             String linea;
             while ((linea = reader.readLine()) != null) {
-                String[] partes = linea.split(",", 4);
-                if (partes.length < 4) continue;
+                String[] partes = linea.split(",", 7); // código, usuario, fecha, items, subtotal, iva, total
+                if (partes.length < 7) continue;
 
                 int codigo = Integer.parseInt(partes[0]);
                 String username = partes[1];
@@ -150,12 +156,25 @@ public class CarritoDAOArchivo implements CarritoDAO {
                     if (itemStr.isEmpty()) continue;
                     String[] itemPartes = itemStr.split(":");
                     if (itemPartes.length != 2) continue;
+
                     int prodCodigo = Integer.parseInt(itemPartes[0]);
                     int cantidad = Integer.parseInt(itemPartes[1]);
-
-                    // Producto placeholder con código
-                    Producto producto = new Producto(prodCodigo, "Desconocido", 0.0);
+                    Producto producto = productoDAO.buscarPorCodigo(prodCodigo);
+                    if (producto == null) {
+                        producto = new Producto(prodCodigo, "Desconocido", 0.0); // fallback
+                    }
                     carrito.agregarProducto(producto, cantidad);
+                }
+
+                try {
+                    double subtotal = Double.parseDouble(partes[4]);
+                    double iva = Double.parseDouble(partes[5]);
+                    double total = Double.parseDouble(partes[6]);
+
+                    System.out.printf("Carrito %d: Subtotal=%.2f, IVA=%.2f, Total=%.2f%n",
+                            codigo, subtotal, iva, total);
+                } catch (NumberFormatException e) {
+                    System.err.println("Error parseando montos del carrito " + codigo);
                 }
 
                 lista.add(carrito);
@@ -163,7 +182,6 @@ public class CarritoDAOArchivo implements CarritoDAO {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return lista;
     }
 }
