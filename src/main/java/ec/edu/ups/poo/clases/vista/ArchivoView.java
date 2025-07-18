@@ -117,6 +117,11 @@ public class ArchivoView extends JFrame{
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
 
+        UIManager.put("FileChooser.openDialogTitleText", mi.get("selector.directorio.titulo"));
+        UIManager.put("FileChooser.openButtonText", mi.get("selector.directorio.abrir"));
+        UIManager.put("FileChooser.cancelButtonText", mi.get("selector.directorio.cancelar"));
+        UIManager.put("FileChooser.lookInLabelText", mi.get("selector.directorio.buscarEn"));
+
         int selectedIndex = cbxTiposGuardado.getSelectedIndex();
         cbxTiposGuardado.removeAllItems();
         cbxTiposGuardado.addItem(mi.get("memoria"));
