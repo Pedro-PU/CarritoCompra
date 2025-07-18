@@ -3,6 +3,7 @@ package ec.edu.ups.poo.clases.dao.impl;
 import ec.edu.ups.poo.clases.dao.CarritoDAO;
 import ec.edu.ups.poo.clases.dao.ProductoDAO;
 import ec.edu.ups.poo.clases.modelo.*;
+import ec.edu.ups.poo.clases.util.Cedula;
 
 import java.io.*;
 import java.util.ArrayList;

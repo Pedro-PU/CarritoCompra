@@ -1,4 +1,4 @@
-package ec.edu.ups.poo.clases.modelo;
+package ec.edu.ups.poo.clases.util;
 
 /**
  * Excepción personalizada que se lanza cuando un número de celular no cumple con los criterios de validación.

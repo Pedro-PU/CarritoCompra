@@ -1,4 +1,4 @@
-package ec.edu.ups.poo.clases.modelo;
+package ec.edu.ups.poo.clases.util;
 
 /**
  * Excepción personalizada utilizada para señalar errores relacionados con cédulas no válidas.

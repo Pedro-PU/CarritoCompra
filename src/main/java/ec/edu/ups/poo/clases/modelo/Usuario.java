@@ -1,5 +1,10 @@
 package ec.edu.ups.poo.clases.modelo;
 
+import ec.edu.ups.poo.clases.util.Cedula;
+import ec.edu.ups.poo.clases.util.Celular;
+import ec.edu.ups.poo.clases.util.Contrasenia;
+import ec.edu.ups.poo.clases.util.Email;
+
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
