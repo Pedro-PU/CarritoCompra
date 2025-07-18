@@ -4,7 +4,12 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+/**
+ * Clase que representa a un usuario del sistema, ya sea un administrador o consumidor.
+ * Contiene información personal, credenciales de acceso y mecanismos de validación para asegurar consistencia y seguridad.
+ */
 public class Usuario {
+
     private String username;
     private String contrasenia;
     private Rol rol;
@@ -14,6 +19,16 @@ public class Usuario {
     private String email;
     private List<Respuesta> respuestas;
 
+    /**
+     * Constructor completo que inicializa los atributos del usuario.
+     * @param nombreDeUsuario Nombre de usuario (se valida como cédula).
+     * @param contrasenia Contraseña segura (se valida por formato).
+     * @param rol Rol del usuario.
+     * @param nombre Nombre completo.
+     * @param celular Número de celular.
+     * @param fecha Fecha de nacimiento.
+     * @param email Dirección de correo electrónico.
+     */
     public Usuario(String nombreDeUsuario, String contrasenia, Rol rol, String nombre,
                    String celular, GregorianCalendar fecha, String email) {
         this.username = nombreDeUsuario;
@@ -25,6 +40,10 @@ public class Usuario {
         this.email = email;
         this.respuestas = new ArrayList<>();
     }
+
+    /**
+     * Constructor vacío para inicialización tardía.
+     */
     public Usuario() {}
 
     public List<Respuesta> getRespuestas() {
@@ -39,10 +58,15 @@ public class Usuario {
         return email;
     }
 
-    public void setEmail(String email) throws Email{
-        if(!validarEmail(email)){
+    /**
+     * Establece el correo electrónico validando su formato.
+     * @param email Correo electrónico a asignar.
+     * @throws Email si el formato no es válido.
+     */
+    public void setEmail(String email) throws Email {
+        if (!validarEmail(email)) {
             throw new Email("No es un número de teléfono válido");
-        }else{
+        } else {
             this.email = email;
         }
     }
@@ -51,6 +75,11 @@ public class Usuario {
         return username;
     }
 
+    /**
+     * Establece el nombre de usuario validándolo como cédula ecuatoriana.
+     * @param username Cédula.
+     * @throws Cedula si no cumple el algoritmo de verificación.
+     */
     public void setUsername(String username) throws Cedula {
         if (!validarCedula(username)) {
             throw new Cedula("No es una cédula válida");
@@ -63,10 +92,15 @@ public class Usuario {
         return contrasenia;
     }
 
+    /**
+     * Establece la contraseña tras validar longitud y presencia de mayúsculas, minúsculas y caracteres especiales.
+     * @param contrasenia Contraseña a verificar.
+     * @throws Contrasenia si no cumple las políticas.
+     */
     public void setContrasenia(String contrasenia) throws Contrasenia {
-        if(!validarContrasenia(contrasenia)) {
+        if (!validarContrasenia(contrasenia)) {
             throw new Contrasenia("No es una contraseña válida");
-        }else{
+        } else {
             this.contrasenia = contrasenia;
         }
     }
@@ -91,10 +125,15 @@ public class Usuario {
         return celular;
     }
 
-    public void setCelular(String celular) throws Celular{
-        if(!validarCelular(celular)){
+    /**
+     * Establece el número de celular tras validar el formato.
+     * @param celular Número de celular.
+     * @throws Celular si no cumple formato numérico y longitud.
+     */
+    public void setCelular(String celular) throws Celular {
+        if (!validarCelular(celular)) {
             throw new Celular("No es un número de teléfono válido");
-        }else{
+        } else {
             this.celular = celular;
         }
     }
@@ -107,7 +146,9 @@ public class Usuario {
         this.fecha = fecha;
     }
 
-    //Validación contrasenia
+    /**
+     * Valida que la contraseña tenga al menos 6 caracteres, una mayúscula, una minúscula y carácter especial (@ _ -).
+     */
     private boolean validarContrasenia(String contrasenia) {
         if (contrasenia == null || contrasenia.length() < 6)
             return false;
@@ -122,13 +163,16 @@ public class Usuario {
                 tieneMinuscula = true;
             else if (c == '@' || c == '_' || c == '-')
                 tieneEspecial = true;
+
             if (tieneMayuscula && tieneMinuscula && tieneEspecial)
                 return true;
         }
         return false;
     }
 
-    //Validación cédula
+    /**
+     * Valida cédula ecuatoriana según algoritmo oficial.
+     */
     private boolean validarCedula(String cedula) {
         if (cedula == null || cedula.length() != 10) {
             return false;
@@ -139,6 +183,7 @@ public class Usuario {
 
             if (provincia < 1 || provincia > 24 || tercerDigito >= 6)
                 return false;
+
             int suma = 0;
             for (int i = 0; i < 9; i++) {
                 int num = Character.getNumericValue(cedula.charAt(i));
@@ -148,28 +193,31 @@ public class Usuario {
                 }
                 suma += num;
             }
+
             int digitoVerificador = Character.getNumericValue(cedula.charAt(9));
             int decenaSuperior = ((suma + 9) / 10) * 10;
             int resultado = decenaSuperior - suma;
             if (resultado == 10)
                 resultado = 0;
+
             return resultado == digitoVerificador;
         } catch (NumberFormatException e) {
             return false;
         }
     }
+
+    /**
+     * Valida que el número de celular tenga entre 7 y 15 dígitos numéricos.
+     */
     private boolean validarCelular(String celular) {
-        if (!celular.matches("\\d{7,15}")) {
-            return false;
-        }else{
-            return true;
-        }
+        return celular.matches("\\d{7,15}");
     }
+
+    /**
+     * Valida la estructura básica de un correo electrónico.
+     */
     private boolean validarEmail(String email) {
-        if (!email.matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$")) {
-            return false;
-        }else{
-            return true;
-        }
+        return email.matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$");
     }
 }
+

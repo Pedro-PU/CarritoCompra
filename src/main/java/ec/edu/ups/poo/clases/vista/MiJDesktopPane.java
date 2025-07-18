@@ -3,15 +3,31 @@ package ec.edu.ups.poo.clases.vista;
 import javax.swing.*;
 import java.awt.*;
 import ec.edu.ups.poo.clases.util.MensajeInternacionalizacionHandler;
-
+/**
+ * Clase personalizada que extiende {@link JDesktopPane} para dibujar un fondo gráfico
+ * con un diseño personalizado que incluye un rectángulo central, texto y un eslogan.
+ * Utiliza gradientes, bordes y sombras para una presentación visual atractiva.
+ *
+ * También permite la internacionalización del eslogan a través de {@link MensajeInternacionalizacionHandler}.
+ */
 public class MiJDesktopPane extends JDesktopPane {
     private MensajeInternacionalizacionHandler mi;
-
+    /**
+     * Constructor que recibe el manejador de mensajes internacionalizados.
+     *
+     * @param mi Instancia de {@link MensajeInternacionalizacionHandler} para obtener textos en varios idiomas.
+     */
     public MiJDesktopPane(MensajeInternacionalizacionHandler mi) {
         super();
         this.mi = mi;
     }
-
+    /**
+     * Método sobrescrito de {@link JComponent} que se encarga de dibujar el fondo del panel.
+     * Dibuja un fondo con degradado azul, un rectángulo redondeado con borde amarillo,
+     * un título centrado y un eslogan internacionalizado.
+     *
+     * @param g El contexto gráfico en el que se dibujará el componente.
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -96,6 +112,10 @@ public class MiJDesktopPane extends JDesktopPane {
         g2d.setColor(amarilloTuti);
         g2d.drawString(eslogan, esloganX, esloganY);
     }
+    /**
+     * Método para actualizar el idioma del texto del eslogan.
+     * Llama a {@code repaint()} para redibujar el componente.
+     */
     public void actualizarIdioma() {
         repaint();
     }

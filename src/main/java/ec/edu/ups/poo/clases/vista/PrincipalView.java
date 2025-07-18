@@ -6,7 +6,11 @@ import ec.edu.ups.poo.clases.vista.cuestionario.CuestionarioView;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
-
+/**
+ * Ventana principal del sistema de carrito de compras.
+ * Contiene menús para gestionar productos, carritos, usuarios, idioma e inicio/cierre de sesión.
+ * Utiliza una barra de menús y un panel central tipo DesktopPane para cargar subventanas internas.
+ */
 public class PrincipalView extends JFrame {
     private JMenuBar menuBar;
     private JMenu menuProducto;
@@ -34,7 +38,13 @@ public class PrincipalView extends JFrame {
     private JMenuItem menuItemFrances;
     private String usuarioAutenticado;
     private MensajeInternacionalizacionHandler mi;
-
+    /**
+     * Constructor de la vista principal.
+     * Inicializa todos los menús y elementos gráficos, y aplica configuraciones generales.
+     *
+     * @param mi Manejador de internacionalización utilizado para mostrar los textos en el idioma seleccionado.
+     * @param usuarioAutenticado Nombre del usuario actualmente autenticado, usado para mostrar en el título.
+     */
     public PrincipalView(MensajeInternacionalizacionHandler mi, String usuarioAutenticado) {
         this.mi = mi;
         this.usuarioAutenticado = usuarioAutenticado;
@@ -109,17 +119,29 @@ public class PrincipalView extends JFrame {
         cambiarIdioma();
         inicializarImagenes();
     }
-    // Muestra mensaje emergente
+    /**
+     * Muestra un mensaje emergente al usuario.
+     *
+     * @param mensaje Texto del mensaje a mostrar.
+     */
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
-    // Muestra cuadro de confirmación
+    /**
+     * Muestra un cuadro de confirmación con opciones Sí y No.
+     *
+     * @param mensaje Mensaje de la pregunta de confirmación.
+     * @return true si el usuario selecciona "Sí", false en caso contrario.
+     */
     public boolean mostrarMensajePregunta(String mensaje) {
         int respuesta = JOptionPane.showConfirmDialog(this, mensaje, "Confirmación",
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         return respuesta == JOptionPane.YES_OPTION;
     }
-    // Activa o desactiva todos los campos de edición por rol de usuario
+    /**
+     * Desactiva opciones de menú que solo están disponibles para usuarios con rol administrador.
+     * Se utiliza para restringir el acceso según el rol del usuario autenticado.
+     */
     public void deshabilitarMenusAdministrador() {
         getMenuItemCrearProducto().setEnabled(false);
         getMenuItemActualizarProducto().setEnabled(false);
@@ -128,7 +150,10 @@ public class PrincipalView extends JFrame {
         getMenuItemEliminarUsuario().setEnabled(false);
         getMenuItemListarUsuario().setEnabled(false);
     }
-    // Aplica los textos internacionalizados
+    /**
+     * Cambia el idioma de todos los textos de la interfaz.
+     * Se utiliza para aplicar la internacionalización en tiempo de ejecución.
+     */
     public void cambiarIdioma() {
         jDesktopPane.actualizarIdioma();
         setTitle(mi.get("principal.titulo") + " - " + usuarioAutenticado);
@@ -166,7 +191,11 @@ public class PrincipalView extends JFrame {
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
-    // Asocia íconos a los botones
+    /**
+     * Inicializa los íconos de los elementos de menú.
+     * Asocia imágenes locales a los botones relacionados con el carrito.
+     * Muestra errores por consola si los recursos no se encuentran.
+     */
     public void inicializarImagenes(){
         //Iconos Carrito
         URL carrito = PrincipalView.class.getClassLoader().getResource("imagenes/carrito.png");
@@ -332,159 +361,321 @@ public class PrincipalView extends JFrame {
             System.err.println("Error: No se ha cargado el icono de Login");
         }
     }
-    // Getters y Setters
+    /**
+     * Devuelve el ítem de menú para seleccionar idioma Español.
+     *
+     * @return JMenuItem correspondiente al idioma Español.
+     */
     public JMenuItem getMenuItemEspanol() {
         return menuItemEspanol;
     }
 
+    /**
+     * Establece el ítem de menú para seleccionar idioma Español.
+     *
+     * @param menuItemEspanol El nuevo JMenuItem que representa el idioma Español.
+     */
     public void setMenuItemEspanol(JMenuItem menuItemEspanol) {
         this.menuItemEspanol = menuItemEspanol;
     }
 
+    /**
+     * Devuelve el panel de escritorio (DesktopPane) que contiene las ventanas internas.
+     *
+     * @return JDesktopPane usado en esta vista principal.
+     */
     public JMenuItem getMenuItemIngles() {
         return menuItemIngles;
     }
 
+    /**
+     * Devuelve el ítem de menú que permite crear un nuevo carrito.
+     *
+     * @return JMenuItem para la acción de crear carrito.
+     */
     public void setMenuItemIngles(JMenuItem menuItemIngles) {
         this.menuItemIngles = menuItemIngles;
     }
 
+    /**
+     * Devuelve el ítem de menú que permite crear un nuevo carrito.
+     *
+     * @return JMenuItem para la acción de crear carrito.
+     */
     public JMenuItem getMenuItemFrances() {
         return menuItemFrances;
     }
 
+    /**
+     * Establece el ítem de menú que permite cambiar el idioma a francés.
+     *
+     * @param menuItemFrances El nuevo JMenuItem correspondiente al idioma francés.
+     */
     public void setMenuItemFrances(JMenuItem menuItemFrances) {
         this.menuItemFrances = menuItemFrances;
     }
 
+
+    /**
+     * Obtiene el ítem de menú para listar usuarios.
+     * @return el JMenuItem para listar usuarios.
+     */
     public JMenuItem getMenuItemListarUsuario() {
         return menuItemListarUsuario;
     }
 
+    /**
+     * Establece el ítem de menú para listar usuarios.
+     * @param menuItemListarUsuario el JMenuItem a establecer.
+     */
     public void setMenuItemListarUsuario(JMenuItem menuItemListarUsuario) {
         this.menuItemListarUsuario = menuItemListarUsuario;
     }
 
+    /**
+     * Obtiene el ítem de menú para editar usuarios.
+     * @return el JMenuItem para editar usuarios.
+     */
     public JMenuItem getMenuItemEditarUsuario() {
         return menuItemEditarUsuario;
     }
 
+    /**
+     * Establece el ítem de menú para editar usuarios.
+     * @param menuItemEditarUsuario el JMenuItem a establecer.
+     */
     public void setMenuItemEditarUsuario(JMenuItem menuItemEditarUsuario) {
         this.menuItemEditarUsuario = menuItemEditarUsuario;
     }
 
+    /**
+     * Obtiene el ítem de menú para eliminar usuarios.
+     * @return el JMenuItem para eliminar usuarios.
+     */
     public JMenuItem getMenuItemEliminarUsuario() {
         return menuItemEliminarUsuario;
     }
 
+    /**
+     * Establece el ítem de menú para eliminar usuarios.
+     * @param menuItemEliminarUsuario el JMenuItem a establecer.
+     */
     public void setMenuItemEliminarUsuario(JMenuItem menuItemEliminarUsuario) {
         this.menuItemEliminarUsuario = menuItemEliminarUsuario;
     }
 
+    /**
+     * Obtiene el ítem de menú para crear usuarios.
+     * @return el JMenuItem para crear usuarios.
+     */
     public JMenuItem getMenuItemCrearUsuario() {
         return menuItemCrearUsuario;
     }
 
+    /**
+     * Establece el ítem de menú para crear usuarios.
+     * @param menuItemCrearUsuario el JMenuItem a establecer.
+     */
     public void setMenuItemCrearUsuario(JMenuItem menuItemCrearUsuario) {
         this.menuItemCrearUsuario = menuItemCrearUsuario;
     }
 
+    /**
+     * Obtiene el ítem de menú para eliminar carritos.
+     * @return el JMenuItem para eliminar carritos.
+     */
     public JMenuItem getMenuItemEliminarCarrito() {
         return menuItemEliminarCarrito;
     }
 
+    /**
+     * Establece el ítem de menú para eliminar carritos.
+     * @param menuItemEliminarCarrito el JMenuItem a establecer.
+     */
     public void setMenuItemEliminarCarrito(JMenuItem menuItemEliminarCarrito) {
         this.menuItemEliminarCarrito = menuItemEliminarCarrito;
     }
 
+    /**
+     * Obtiene el ítem de menú para editar carritos.
+     * @return el JMenuItem para editar carritos.
+     */
     public JMenuItem getMenuItemEditarCarrito() {
         return menuItemEditarCarrito;
     }
 
+    /**
+     * Establece el ítem de menú para editar carritos.
+     * @param menuItemEditarCarrito el JMenuItem a establecer.
+     */
     public void setMenuItemEditarCarrito(JMenuItem menuItemEditarCarrito) {
         this.menuItemEditarCarrito = menuItemEditarCarrito;
     }
 
+    /**
+     * Obtiene el menú de salida.
+     * @return el JMenu para salir.
+     */
     public JMenuItem getMenuSalir() {
         return menuSalir;
     }
 
+    /**
+     * Establece el menú de salida.
+     * @param menuSalir el JMenu a establecer.
+     */
     public void setMenuSalir(JMenu menuSalir) {
         this.menuSalir = menuSalir;
     }
 
+    /**
+     * Obtiene el ítem de menú para cerrar sesión.
+     * @return el JMenuItem para cerrar sesión.
+     */
     public JMenuItem getMenuItemCerrarSesion() {
         return menuItemCerrarSesion;
     }
 
+    /**
+     * Establece el ítem de menú para cerrar sesión.
+     * @param menuItemCerrarSesion el JMenuItem a establecer.
+     */
     public void setMenuItemCerrarSesion(JMenuItem menuItemCerrarSesion) {
         this.menuItemCerrarSesion = menuItemCerrarSesion;
     }
 
+    /**
+     * Obtiene el ítem de menú para salir de la aplicación.
+     * @return el JMenuItem para salir.
+     */
     public JMenuItem getMenuItemSalir() {
         return menuItemSalir;
     }
 
+    /**
+     * Establece el ítem de menú para salir de la aplicación.
+     * @param menuItemSalir el JMenuItem a establecer.
+     */
     public void setMenuItemSalir(JMenuItem menuItemSalir) {
         this.menuItemSalir = menuItemSalir;
     }
 
+    /**
+     * Obtiene el ítem de menú para listar carritos.
+     * @return el JMenuItem para listar carritos.
+     */
     public JMenuItem getMenuItemListarCarrito() {
         return menuItemListarCarrito;
     }
 
+    /**
+     * Establece el ítem de menú para listar carritos.
+     * @param menuItemListarCarrito el JMenuItem a establecer.
+     */
     public void setMenuItemListarCarrito(JMenuItem menuItemListarCarrito) {
         this.menuItemListarCarrito = menuItemListarCarrito;
     }
 
+    /**
+     * Obtiene el ítem de menú para crear productos.
+     * @return el JMenuItem para crear productos.
+     */
     public JMenuItem getMenuItemCrearProducto() {
         return menuItemCrearProducto;
     }
 
+    /**
+     * Establece el ítem de menú para crear productos.
+     * @param menuItemCrearProducto el JMenuItem a establecer.
+     */
     public void setMenuItemCrearProducto(JMenuItem menuItemCrearProducto) {
         this.menuItemCrearProducto = menuItemCrearProducto;
     }
 
+    /**
+     * Obtiene el ítem de menú para eliminar productos.
+     * @return el JMenuItem para eliminar productos.
+     */
     public JMenuItem getMenuItemEliminarProducto() {
         return menuItemEliminarProducto;
     }
 
+    /**
+     * Establece el ítem de menú para eliminar productos.
+     * @param menuItemEliminarProducto el JMenuItem a establecer.
+     */
     public void setMenuItemEliminarProducto(JMenuItem menuItemEliminarProducto) {
         this.menuItemEliminarProducto = menuItemEliminarProducto;
     }
 
+    /**
+     * Obtiene el ítem de menú para actualizar productos.
+     * @return el JMenuItem para actualizar productos.
+     */
     public JMenuItem getMenuItemActualizarProducto() {
         return menuItemActualizarProducto;
     }
 
+    /**
+     * Establece el ítem de menú para actualizar productos.
+     * @param menuItemActualizarProducto el JMenuItem a establecer.
+     */
     public void setMenuItemActualizarProducto(JMenuItem menuItemActualizarProducto) {
         this.menuItemActualizarProducto = menuItemActualizarProducto;
     }
 
+    /**
+     * Obtiene el ítem de menú para buscar productos.
+     * @return el JMenuItem para buscar productos.
+     */
     public JMenuItem getMenuItemBuscarProducto() {
         return menuItemBuscarProducto;
     }
 
+    /**
+     * Establece el ítem de menú para buscar productos.
+     * @param menuItemBuscarProducto el JMenuItem a establecer.
+     */
     public void setMenuItemBuscarProducto(JMenuItem menuItemBuscarProducto) {
         this.menuItemBuscarProducto = menuItemBuscarProducto;
     }
 
+    /**
+     * Obtiene el panel principal de escritorio.
+     * @return el JDesktopPane.
+     */
     public JDesktopPane getjDesktopPane() {
         return jDesktopPane;
     }
 
+    /**
+     * Obtiene el menú de carrito.
+     * @return el JMenu de carrito.
+     */
     public JMenuItem getMenuCarrito() {
         return menuCarrito;
     }
 
+    /**
+     * Establece el menú de carrito.
+     * @param menuCarrito el JMenu a establecer.
+     */
     public void setMenuCarrito(JMenu menuCarrito) {
         this.menuCarrito = menuCarrito;
     }
 
+    /**
+     * Obtiene el ítem de menú para crear carritos.
+     * @return el JMenuItem para crear carritos.
+     */
     public JMenuItem getMenuItemCrearCarrito() {
         return menuItemCrearCarrito;
     }
 
+    /**
+     * Establece el ítem de menú para crear carritos.
+     * @param menuItemCrearCarrito el JMenuItem a establecer.
+     */
     public void setMenuItemCrearCarrito(JMenuItem menuItemCrearCarrito) {
         this.menuItemCrearCarrito = menuItemCrearCarrito;
     }

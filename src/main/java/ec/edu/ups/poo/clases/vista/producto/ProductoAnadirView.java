@@ -10,7 +10,10 @@ import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.List;
 
-
+/**
+ * Clase que representa la ventana para añadir productos al sistema.
+ * Permite ingresar, visualizar y limpiar la información de un producto.
+ */
 public class ProductoAnadirView extends JInternalFrame{
     private JPanel panelPrincipal;
     private JButton btnAceptar;
@@ -23,7 +26,11 @@ public class ProductoAnadirView extends JInternalFrame{
     private JLabel lblNombre;
     private JLabel lblPrecio;
     private MensajeInternacionalizacionHandler mi;
-
+    /**
+     * Constructor de la ventana para añadir productos.
+     * Inicializa los componentes, configura idioma e iconos mediante el handler de internacionalización.
+     * @param mi Handler de internacionalización.
+     */
     public ProductoAnadirView(MensajeInternacionalizacionHandler mi) {
         setContentPane(panelPrincipal);
         setTitle("Datos del Productos");
@@ -48,23 +55,33 @@ public class ProductoAnadirView extends JInternalFrame{
         cambiarIdioma();
         inicializarImagenes();
     }
-    // Muestra por consola los productos recibidos (para depuración o test)
+    /**
+     * Muestra los productos en la consola para fines de depuración.
+     * @param productos Lista de productos a mostrar.
+     */
     public void mostrarProductos(List<Producto> productos) {
         for (Producto producto : productos) {
             System.out.println(producto);
         }
     }
-    // Muestra un mensaje emergente al usuario
+    /**
+     * Muestra un mensaje en un cuadro de diálogo.
+     * @param mensaje Texto del mensaje a mostrar.
+     */
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
-    // Limpia los campos de texto del formulario
+    /**
+     * Limpia todos los campos del formulario de producto.
+     */
     public void limpiarCampos() {
         txtCodigo.setText("");
         txtNombre.setText("");
         txtPrecio.setText("");
     }
-    // Cambia los textos visibles al idioma actual
+    /**
+     * Cambia el idioma de los componentes usando el handler de internacionalización.
+     */
     public void cambiarIdioma() {
         setTitle(mi.get("producto.anadir.titulo.ventana"));
         lblTitulo.setText(mi.get("producto.anadir.titulo"));
@@ -79,7 +96,9 @@ public class ProductoAnadirView extends JInternalFrame{
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
-    // Carga íconos a los botones si los archivos están disponibles
+    /**
+     * Carga los íconos a los botones de aceptar y limpiar, si los archivos existen.
+     */
     public void inicializarImagenes(){
         URL aceptar = ProductoAnadirView.class.getClassLoader().getResource("imagenes/aceptar.png");
         if (aceptar != null) {
@@ -97,85 +116,165 @@ public class ProductoAnadirView extends JInternalFrame{
             System.err.println("Error: No se ha cargado el icono de Registrarse");
         }
     }
-    //Getters y Setters
+
+
+    /**
+     * Obtiene el label del título de la ventana.
+     * @return JLabel del título.
+     */
     public JLabel getLblTitulo() {
         return lblTitulo;
     }
 
+    /**
+     * Establece el label del título de la ventana.
+     * @param lblTitulo JLabel del título.
+     */
     public void setLblTitulo(JLabel lblTitulo) {
         this.lblTitulo = lblTitulo;
     }
 
+    /**
+     * Obtiene el label del código del producto.
+     * @return JLabel del código.
+     */
     public JLabel getLblCodigo() {
         return lblCodigo;
     }
 
+    /**
+     * Establece el label del código del producto.
+     * @param lblCodigo JLabel del código.
+     */
     public void setLblCodigo(JLabel lblCodigo) {
         this.lblCodigo = lblCodigo;
     }
 
+    /**
+     * Obtiene el label del nombre del producto.
+     * @return JLabel del nombre.
+     */
     public JLabel getLblNombre() {
         return lblNombre;
     }
 
+    /**
+     * Establece el label del nombre del producto.
+     * @param lblNombre JLabel del nombre.
+     */
     public void setLblNombre(JLabel lblNombre) {
         this.lblNombre = lblNombre;
     }
 
+    /**
+     * Obtiene el label del precio del producto.
+     * @return JLabel del precio.
+     */
     public JLabel getLblPrecio() {
         return lblPrecio;
     }
 
+    /**
+     * Establece el label del precio del producto.
+     * @param lblPrecio JLabel del precio.
+     */
     public void setLblPrecio(JLabel lblPrecio) {
         this.lblPrecio = lblPrecio;
     }
 
+    /**
+     * Obtiene el panel principal del formulario.
+     * @return JPanel principal.
+     */
     public JPanel getPanelPrincipal() {
         return panelPrincipal;
     }
 
+    /**
+     * Establece el panel principal del formulario.
+     * @param panelPrincipal JPanel principal.
+     */
     public void setPanelPrincipal(JPanel panelPrincipal) {
         this.panelPrincipal = panelPrincipal;
     }
 
+    /**
+     * Obtiene el botón de aceptar.
+     * @return JButton de aceptar.
+     */
     public JButton getBtnAceptar() {
         return btnAceptar;
     }
 
+    /**
+     * Establece el botón de aceptar.
+     * @param btnAceptar JButton de aceptar.
+     */
     public void setBtnAceptar(JButton btnAceptar) {
         this.btnAceptar = btnAceptar;
     }
 
+    /**
+     * Obtiene el botón de limpiar.
+     * @return JButton de limpiar.
+     */
     public JButton getBtnLimpiar() {
         return btnLimpiar;
     }
 
+    /**
+     * Establece el botón de limpiar.
+     * @param btnLimpiar JButton de limpiar.
+     */
     public void setBtnLimpiar(JButton btnLimpiar) {
         this.btnLimpiar = btnLimpiar;
     }
 
+    /**
+     * Obtiene el campo de texto del código del producto.
+     * @return JTextField del código.
+     */
     public JTextField getTxtCodigo() {
         return txtCodigo;
     }
 
+    /**
+     * Establece el campo de texto del código del producto.
+     * @param txtCodigo JTextField del código.
+     */
     public void setTxtCodigo(JTextField txtCodigo) {
         this.txtCodigo = txtCodigo;
     }
 
+    /**
+     * Obtiene el campo de texto del nombre del producto.
+     * @return JTextField del nombre.
+     */
     public JTextField getTxtNombre() {
         return txtNombre;
     }
 
+    /**
+     * Establece el campo de texto del nombre del producto.
+     * @param txtNombre JTextField del nombre.
+     */
     public void setTxtNombre(JTextField txtNombre) {
         this.txtNombre = txtNombre;
     }
 
+    /**
+     * Obtiene el campo de texto del precio del producto.
+     * @return JTextField del precio.
+     */
     public JTextField getTxtPrecio() {
         return txtPrecio;
     }
 
+    /**
+     * Establece el campo de texto del precio del producto.
+     * @param txtPrecio JTextField del precio.
+     */
     public void setTxtPrecio(JTextField txtPrecio) {
         this.txtPrecio = txtPrecio;
     }
-
 }

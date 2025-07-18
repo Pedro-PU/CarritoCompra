@@ -12,13 +12,22 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-
+/**
+ * Implementación del DAO de Carrito que persiste los datos en un archivo de texto plano.
+ * Se encarga de realizar operaciones CRUD, cargar y guardar carritos, y mantener la integridad del contador de códigos.
+ */
 public class CarritoDAOArchivo implements CarritoDAO {
     private List<Carrito> carritos;
     private int contCodigo = 1;
     private File archivo;
     private ProductoDAO productoDAO;
 
+    /**
+     * Constructor que inicializa el DAO con acceso a un archivo y un DAO de productos.
+     * Si el archivo ya existe, carga los carritos y ajusta el contador; caso contrario, crea uno nuevo.
+     * @param archivo Archivo de persistencia.
+     * @param productoDAO DAO para resolver referencias de productos.
+     */
     public CarritoDAOArchivo(File archivo, ProductoDAO productoDAO) {
         this.archivo = archivo;
         this.productoDAO = productoDAO;
@@ -34,7 +43,11 @@ public class CarritoDAOArchivo implements CarritoDAO {
             guardarCarritos(carritos);
         }
     }
-
+    /**
+     * Asigna un nuevo código único al carrito, lo copia para preservar encapsulamiento,
+     * lo agrega a la lista y lo persiste en el archivo.
+     * @param carrito Carrito a registrar.
+     */
     @Override
     public void crear(Carrito carrito) {
         carrito.setCodigo(contCodigo++);
@@ -45,6 +58,11 @@ public class CarritoDAOArchivo implements CarritoDAO {
                 " con " + copia.obtenerItems().size() + " items.");
     }
 
+    /**
+     * Busca un carrito por su código en la lista cargada desde archivo.
+     * @param codigo Código único del carrito.
+     * @return Carrito encontrado; null si no existe.
+     */
     @Override
     public Carrito buscarPorCodigo(int codigo) {
         for(Carrito carrito : carritos){
@@ -55,6 +73,10 @@ public class CarritoDAOArchivo implements CarritoDAO {
         return null;
     }
 
+    /**
+     * Actualiza el carrito existente en la lista y guarda los cambios en el archivo.
+     * @param carrito Carrito con datos modificados.
+     */
     @Override
     public void actualizar(Carrito carrito) {
         for (int i = 0; i < carritos.size(); i++) {
@@ -66,12 +88,20 @@ public class CarritoDAOArchivo implements CarritoDAO {
         }
     }
 
+    /**
+     * Elimina el carrito por su código de la lista y actualiza el archivo.
+     * @param codigo Código del carrito a eliminar.
+     */
     @Override
     public void eliminar(int codigo) {
         carritos.removeIf(c -> c.getCodigo() == codigo);
         guardarCarritos(carritos);
     }
 
+    /**
+     * Lista todos los carritos, mostrando información básica de cada uno en consola.
+     * @return Lista de carritos.
+     */
     @Override
     public List<Carrito> listarTodos() {
         for (Carrito c : carritos) {
@@ -80,6 +110,11 @@ public class CarritoDAOArchivo implements CarritoDAO {
         return carritos;
     }
 
+    /**
+     * Devuelve una lista de carritos asociados a un usuario por su nombre de usuario.
+     * @param usuario Usuario cuyos carritos se desean buscar.
+     * @return Lista de carritos del usuario.
+     */
     @Override
     public List<Carrito> buscarPorUsuario(Usuario usuario) {
         List<Carrito> resultado = new ArrayList<>();
@@ -91,7 +126,11 @@ public class CarritoDAOArchivo implements CarritoDAO {
         }
         return resultado;
     }
-
+    /**
+     * Guarda todos los carritos en el archivo especificado utilizando formato CSV extendido.
+     * Incluye código, usuario, fecha, items y totales.
+     * @param carritos Lista de carritos a guardar.
+     */
     private void guardarCarritos(List<Carrito> carritos) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(archivo))) {
             for (Carrito c : carritos) {
@@ -124,7 +163,11 @@ public class CarritoDAOArchivo implements CarritoDAO {
             e.printStackTrace();
         }
     }
-
+    /**
+     * Carga los carritos desde el archivo al iniciar el sistema.
+     * Reconstruye objetos incluyendo fecha, usuario, productos y cantidades.
+     * @return Lista de carritos recuperados.
+     */
     private List<Carrito> cargarCarritos() {
         List<Carrito> lista = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {

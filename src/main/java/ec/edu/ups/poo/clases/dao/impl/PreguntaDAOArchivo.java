@@ -9,24 +9,31 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
+/**
+ * Implementación del DAO de Pregunta que persiste los datos en archivo binario fijo.
+ * Utiliza RandomAccessFile para almacenamiento eficiente de preguntas con enunciados internacionalizables.
+ */
 public class PreguntaDAOArchivo implements PreguntaDAO {
 
-    private static final int ENUNCIADO_LENGTH = 100; // bytes fijos para el texto
-    private static final int RECORD_SIZE = 4 + ENUNCIADO_LENGTH; // 4 bytes int + 100 bytes texto
+    private static final int ENUNCIADO_LENGTH = 100; // Tamaño fijo en bytes para el texto
+    private static final int RECORD_SIZE = 4 + ENUNCIADO_LENGTH; // ID (int) + texto
 
     private final File archivo;
     private final MensajeInternacionalizacionHandler mi;
 
+    /**
+     * Constructor que inicializa el DAO con el archivo de preguntas y el manejador de internacionalización.
+     * Si el archivo no existe, crea uno nuevo y lo llena con preguntas por defecto.
+     * @param archivo Archivo binario donde se guardan las preguntas.
+     * @param mi Manejador para acceder a traducciones de los enunciados.
+     */
     public PreguntaDAOArchivo(File archivo, MensajeInternacionalizacionHandler mi) {
         this.archivo = archivo;
         this.mi = mi;
 
-        // Si el archivo no existe, creamos y llenamos con preguntas por defecto
         if (!archivo.exists()) {
             try {
                 archivo.createNewFile();
-                // Preguntas por defecto (guardamos las claves, no los textos)
                 String[] claves = {
                         "pregunta.color_favorito",
                         "pregunta.primera_mascota",
@@ -44,7 +51,6 @@ public class PreguntaDAOArchivo implements PreguntaDAO {
                         "pregunta.nombre_primera_escuela"
                 };
                 for (int i = 0; i < claves.length; i++) {
-                    // Guardamos la clave, no el texto internacionalizado aquí
                     crear(new Pregunta(i + 1, claves[i]));
                 }
             } catch (IOException e) {
@@ -53,43 +59,15 @@ public class PreguntaDAOArchivo implements PreguntaDAO {
         }
     }
 
-    private String formatearTexto(String texto) {
-        byte[] bytes = texto.getBytes(StandardCharsets.UTF_8);
-        if (bytes.length > ENUNCIADO_LENGTH) {
-            // Si el texto es más largo que ENUNCIADO_LENGTH bytes, lo truncamos
-            return new String(bytes, 0, ENUNCIADO_LENGTH, StandardCharsets.UTF_8);
-        } else if (bytes.length < ENUNCIADO_LENGTH) {
-            // Si es más corto, rellenamos con espacios para que ocupe ENUNCIADO_LENGTH
-            StringBuilder sb = new StringBuilder(texto);
-            while (sb.toString().getBytes(StandardCharsets.UTF_8).length < ENUNCIADO_LENGTH) {
-                sb.append(' ');
-            }
-            return sb.toString();
-        } else {
-            return texto;
-        }
-    }
-
-    private long buscarPosicionPorId(int id, RandomAccessFile raf) throws IOException {
-        raf.seek(0);
-        while (raf.getFilePointer() < raf.length()) {
-            long pos = raf.getFilePointer();
-            int actualId = raf.readInt();
-            raf.skipBytes(ENUNCIADO_LENGTH);
-            if (actualId == id) {
-                return pos;
-            }
-        }
-        return -1;
-    }
-
+    /**
+     * Añade una nueva pregunta al archivo, con su ID y clave del enunciado.
+     * @param pregunta Pregunta a registrar.
+     */
     @Override
     public void crear(Pregunta pregunta) {
         try (RandomAccessFile raf = new RandomAccessFile(archivo, "rw")) {
             raf.seek(raf.length());
             raf.writeInt(pregunta.getId());
-
-            // Guardamos la clave (no traducida), la traducción se hace en getEnunciadoPregunta(mi)
             String textoFormateado = formatearTexto(pregunta.getEnunciadoPreguntaRaw());
             raf.write(textoFormateado.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
@@ -97,6 +75,11 @@ public class PreguntaDAOArchivo implements PreguntaDAO {
         }
     }
 
+    /**
+     * Busca una pregunta por su ID en el archivo.
+     * @param id Identificador numérico de la pregunta.
+     * @return Pregunta encontrada; null si no existe.
+     */
     @Override
     public Pregunta buscarPorId(int id) {
         try (RandomAccessFile raf = new RandomAccessFile(archivo, "r")) {
@@ -104,11 +87,9 @@ public class PreguntaDAOArchivo implements PreguntaDAO {
             if (pos >= 0) {
                 raf.seek(pos);
                 int actualId = raf.readInt();
-
                 byte[] textoBytes = new byte[ENUNCIADO_LENGTH];
                 raf.readFully(textoBytes);
                 String clave = new String(textoBytes, StandardCharsets.UTF_8).trim();
-
                 return new Pregunta(actualId, clave);
             }
         } catch (IOException e) {
@@ -117,6 +98,10 @@ public class PreguntaDAOArchivo implements PreguntaDAO {
         return null;
     }
 
+    /**
+     * Devuelve todas las preguntas registradas en el archivo.
+     * @return Lista de objetos Pregunta.
+     */
     @Override
     public List<Pregunta> listarTodas() {
         List<Pregunta> lista = new ArrayList<>();
@@ -135,6 +120,10 @@ public class PreguntaDAOArchivo implements PreguntaDAO {
         return lista;
     }
 
+    /**
+     * Actualiza el enunciado de una pregunta existente.
+     * @param pregunta Pregunta con los datos modificados.
+     */
     @Override
     public void actualizar(Pregunta pregunta) {
         try (RandomAccessFile raf = new RandomAccessFile(archivo, "rw")) {
@@ -150,16 +139,14 @@ public class PreguntaDAOArchivo implements PreguntaDAO {
         }
     }
 
+    /**
+     * Elimina una pregunta del archivo reescribiendo todos los registros menos el que coincide con el ID.
+     * @param id ID de la pregunta a eliminar.
+     */
     @Override
     public void eliminar(int id) {
         List<Pregunta> preguntas = listarTodas();
-        Iterator<Pregunta> iter = preguntas.iterator();
-        while (iter.hasNext()) {
-            if (iter.next().getId() == id) {
-                iter.remove();
-                break;
-            }
-        }
+        preguntas.removeIf(p -> p.getId() == id);
         try (RandomAccessFile raf = new RandomAccessFile(archivo, "rw")) {
             raf.setLength(0);
             for (Pregunta p : preguntas) {
@@ -171,5 +158,44 @@ public class PreguntaDAOArchivo implements PreguntaDAO {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Busca la posición en el archivo donde se encuentra la pregunta con el ID dado.
+     * @param id ID a buscar.
+     * @param raf Archivo de acceso aleatorio.
+     * @return Posición del registro o -1 si no se encuentra.
+     */
+    private long buscarPosicionPorId(int id, RandomAccessFile raf) throws IOException {
+        raf.seek(0);
+        while (raf.getFilePointer() < raf.length()) {
+            long pos = raf.getFilePointer();
+            int actualId = raf.readInt();
+            raf.skipBytes(ENUNCIADO_LENGTH);
+            if (actualId == id) {
+                return pos;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Formatea el texto del enunciado para ajustarse al tamaño definido.
+     * Trunca si excede; rellena con espacios si es más corto.
+     * @param texto Texto original.
+     * @return Cadena con longitud fija.
+     */
+    private String formatearTexto(String texto) {
+        byte[] bytes = texto.getBytes(StandardCharsets.UTF_8);
+        if (bytes.length > ENUNCIADO_LENGTH) {
+            return new String(bytes, 0, ENUNCIADO_LENGTH, StandardCharsets.UTF_8);
+        } else {
+            StringBuilder sb = new StringBuilder(texto);
+            while (sb.toString().getBytes(StandardCharsets.UTF_8).length < ENUNCIADO_LENGTH) {
+                sb.append(' ');
+            }
+            return sb.toString();
+        }
+    }
 }
+
 

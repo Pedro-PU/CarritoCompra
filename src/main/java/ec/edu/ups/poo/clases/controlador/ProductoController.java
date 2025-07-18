@@ -16,7 +16,11 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Locale;
 
-
+/**
+ * Controlador encargado de gestionar todas las operaciones relacionadas con productos.
+ * Coordina las interacciones entre las vistas de productos (añadir, listar, editar, eliminar)
+ * y el DAO de productos. Maneja validaciones, operaciones CRUD y cambios de idioma.
+ */
 public class ProductoController {
     private final ProductoAnadirView productoAnadirView;
     private final ProductoListaView productoListaView;
@@ -26,7 +30,18 @@ public class ProductoController {
     private final CarritoAnadirView carritoAnadirView;
     private final MensajeInternacionalizacionHandler mi;
 
-
+    /**
+     * Constructor del controlador de productos. Inicializa las vistas y DAOs necesarios,
+     * y configura los eventos para las acciones del usuario.
+     *
+     * @param productoDAO DAO para operaciones con productos.
+     * @param productoAnadirView Vista para añadir nuevos productos.
+     * @param productoListaView Vista para listar productos existentes.
+     * @param productoGestionView Vista para editar productos.
+     * @param productoEliminarView Vista para eliminar productos.
+     * @param carritoAnadirView Vista del carrito para búsqueda de productos.
+     * @param mi Handler de internacionalización de mensajes.
+     */
     public ProductoController(ProductoDAO productoDAO,
                               ProductoAnadirView productoAnadirView,
                               ProductoListaView productoListaView,
@@ -41,7 +56,10 @@ public class ProductoController {
         this.mi = mi;
         configurarEventos();
     }
-    // Vincula los botones de cada vista con sus respectivas acciones
+    /**
+     * Configura los listeners para los botones de acción en todas las vistas de productos.
+     * Asocia cada botón con su correspondiente método de acción.
+     */
     private void configurarEventos() {
         productoAnadirView.getBtnAceptar().addActionListener(new ActionListener() {
             @Override
@@ -99,7 +117,11 @@ public class ProductoController {
             }
         });
     }
-    // Valida campos y guarda un nuevo producto si no existe el código
+    /**
+     * Valida y guarda un nuevo producto en la base de datos.
+     * Realiza validaciones de campos vacíos, formato de código y precio,
+     * y verifica que no exista un producto con el mismo código.
+     */
     private void guardarProducto() {
         String codigoTexto = productoAnadirView.getTxtCodigo().getText().trim();
         String nombre = productoAnadirView.getTxtNombre().getText().trim();
@@ -132,19 +154,29 @@ public class ProductoController {
         productoAnadirView.limpiarCampos();
         productoAnadirView.mostrarProductos(productoDAO.listarTodos());
     }
-    // Filtra productos por nombre desde la vista productoListaView
+
+    /**
+     * Busca productos por nombre y muestra los resultados en la vista de lista.
+     */
     private void buscarProducto() {
         String nombre = productoListaView.getTxtBuscar().getText();
 
         List<Producto> productosEncontrados = productoDAO.buscarPorNombre(nombre);
         productoListaView.cargarDatos(productosEncontrados);
     }
-    // Muestra todos los productos registrados
+
+    /**
+     * Lista todos los productos existentes en la base de datos.
+     */
     private void listarProductos() {
         List<Producto> productos = productoDAO.listarTodos();
         productoListaView.cargarDatos(productos);
     }
-    // Permite modificar nombre y precio de un producto existente
+
+    /**
+     * Actualiza los datos de un producto existente después de validar los campos
+     * y confirmar la operación con el usuario.
+     */
     private void actualizarProducto() {
         String txtCod = productoEditarView.getTxtBuscar().getText().trim();
         String nombre = productoEditarView.getTxtNombre().getText().trim();
@@ -184,7 +216,11 @@ public class ProductoController {
         productoDAO.actualizar(producto);
         productoEditarView.mostrarMensaje(mi.get("producto.mensaje.actualizado.correctamente"));
     }
-    // Elimina un producto si el código es válido y se confirma la acción
+
+    /**
+     * Elimina un producto de la base de datos después de validar el código
+     * y confirmar la operación con el usuario.
+     */
     private void eliminarProducto() {
         String textCodigo = productoEliminarView.getTxtBuscar().getText().trim();
         if (textCodigo.isEmpty()) {
@@ -210,7 +246,10 @@ public class ProductoController {
         productoEliminarView.mostrarMensaje(mi.get("producto.mensaje.eliminado.correctamente"));
         productoEliminarView.limpiarCampos();
     }
-    // Busca un producto y carga los datos en la vista de eliminación
+
+    /**
+     * Busca un producto para eliminación y muestra sus datos en la vista correspondiente.
+     */
     private void buscarProductoEliminar() {
         String txtCod = productoEliminarView.getTxtBuscar().getText().trim();
 
@@ -235,7 +274,10 @@ public class ProductoController {
             productoEliminarView.limpiarCampos();
         }
     }
-    // Busca un producto para editar y muestra sus datos
+
+    /**
+     * Busca un producto para edición y muestra sus datos en la vista correspondiente.
+     */
     private void buscarProductoEdicion() {
         String txtCod = productoEditarView.getTxtBuscar().getText().trim();
 
@@ -260,7 +302,10 @@ public class ProductoController {
             productoEditarView.limpiarCampos();
         }
     }
-    // Permite buscar un producto desde la vista del carrito para agregarlo
+
+    /**
+     * Busca un producto desde la vista del carrito para poder agregarlo.
+     */
     private void buscarProductoCarrito() {
         String txtCod = carritoAnadirView.getTxtBuscar().getText().trim();
 
@@ -285,7 +330,11 @@ public class ProductoController {
             carritoAnadirView.limpiarCampos();
         }
     }
-    // Actualiza el precio de los productos en la tabla según el idioma
+
+    /**
+     * Actualiza los precios de los productos en la tabla de lista según el locale especificado.
+     * @param locale Locale para formatear los valores monetarios.
+     */
     private void refrescarTablaListaProductos(Locale locale) {
         DefaultTableModel modelo = (DefaultTableModel) productoListaView.getTblProductos().getModel();
         int rowCount = modelo.getRowCount();
@@ -298,7 +347,10 @@ public class ProductoController {
             }
         }
     }
-    // Cambia el idioma en las vistas y actualiza los datos formateados
+
+    /**
+     * Actualiza el idioma en todas las vistas de productos y reformatea los datos según el nuevo locale.
+     */
     public void actualizarIdiomaEnVistas() {
         productoAnadirView.cambiarIdioma();
         productoEditarView.cambiarIdioma();
