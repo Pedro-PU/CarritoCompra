@@ -9,14 +9,22 @@ import ec.edu.ups.poo.clases.modelo.Usuario;
 
 import java.util.*;
 
+/**
+ * Implementación en memoria del DAO de usuarios.
+ * Los datos se almacenan en una lista local durante la ejecución, ideal para entornos de pruebas o aplicaciones no persistentes.
+ */
 public class UsuarioDAOMemoria implements UsuarioDAO {
 
     private List<Usuario> usuarios;
 
+    /**
+     * Constructor que inicializa el DAO con usuarios predeterminados (admin y usuario de prueba).
+     * También asocia preguntas de seguridad al administrador.
+     * @param preguntaDAO DAO para obtener las preguntas asociadas a las respuestas.
+     */
     public UsuarioDAOMemoria(PreguntaDAO preguntaDAO) {
         this.usuarios = new ArrayList<>();
 
-        // Usuarios por defecto con todos los campos
         Usuario admin = new Usuario(
                 "admin",
                 "12345",
@@ -28,7 +36,7 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
         );
 
         Usuario user = new Usuario(
-                "user",
+                "0301127569",
                 "12345",
                 Rol.USUARIO,
                 "Usuario de Prueba",
@@ -38,33 +46,47 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
         );
 
         List<Pregunta> preguntas = preguntaDAO.listarTodas();
-
-        for (int i = 0; i < 3; i++) {
-            Pregunta pregunta = preguntas.get(i);
-            Respuesta respuesta = new Respuesta(pregunta);
-            respuesta.setRespuesta("respuesta" + (i + 1));
-            admin.getRespuestas().add(respuesta);
+        for (int i = 0; i < 3 && i < preguntas.size(); i++) {
+            Respuesta r = new Respuesta(preguntas.get(i));
+            r.setRespuesta("respuesta" + (i + 1));
+            admin.getRespuestas().add(r);
         }
+
         crear(admin);
         crear(user);
     }
 
-
+    /**
+     * Verifica las credenciales de un usuario.
+     * @param username Nombre de usuario.
+     * @param contrasenia Contraseña.
+     * @return Usuario válido si coincide; null si no.
+     */
     @Override
     public Usuario autenticar(String username, String contrasenia) {
         for (Usuario usuario : usuarios) {
-            if (usuario.getUsername().equals(username) && usuario.getContrasenia().equals(contrasenia)) {
+            if (usuario.getUsername().equals(username) &&
+                    usuario.getContrasenia().equals(contrasenia)) {
                 return usuario;
             }
         }
         return null;
     }
 
+    /**
+     * Agrega un nuevo usuario a la lista.
+     * @param usuario Usuario a registrar.
+     */
     @Override
     public void crear(Usuario usuario) {
         usuarios.add(usuario);
     }
 
+    /**
+     * Busca un usuario por su nombre de usuario.
+     * @param username Nombre de usuario.
+     * @return Usuario encontrado o null.
+     */
     @Override
     public Usuario buscarPorUsername(String username) {
         for (Usuario usuario : usuarios) {
@@ -75,6 +97,10 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
         return null;
     }
 
+    /**
+     * Actualiza los datos de un usuario existente.
+     * @param usuario Usuario modificado.
+     */
     @Override
     public void actualizar(Usuario usuario) {
         for (int i = 0; i < usuarios.size(); i++) {
@@ -85,22 +111,34 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
         }
     }
 
+    /**
+     * Elimina un usuario de la lista según su nombre de usuario.
+     * @param username Nombre de usuario a eliminar.
+     */
     @Override
     public void eliminar(String username) {
         Iterator<Usuario> iterator = usuarios.iterator();
         while (iterator.hasNext()) {
-            Usuario usuario = iterator.next();
-            if (usuario.getUsername().equals(username)) {
+            if (iterator.next().getUsername().equals(username)) {
                 iterator.remove();
             }
         }
     }
 
+    /**
+     * Devuelve la lista completa de usuarios almacenados en memoria.
+     * @return Lista de usuarios.
+     */
     @Override
     public List<Usuario> listarTodos() {
         return usuarios;
     }
 
+    /**
+     * Filtra los usuarios por su rol (ADMINISTRADOR o USUARIO).
+     * @param rol Rol a buscar.
+     * @return Lista de usuarios con ese rol.
+     */
     @Override
     public List<Usuario> listarPorRol(Rol rol) {
         List<Usuario> usuariosEncontrados = new ArrayList<>();
@@ -112,3 +150,4 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
         return usuariosEncontrados;
     }
 }
+

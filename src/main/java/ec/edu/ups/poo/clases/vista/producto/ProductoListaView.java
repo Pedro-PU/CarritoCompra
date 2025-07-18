@@ -9,7 +9,10 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.net.URL;
 import java.util.List;
-
+/**
+ * Clase que representa la ventana para listar productos del sistema.
+ * Permite buscar productos por nombre, visualizar el listado completo y mostrar sus detalles en tabla.
+ */
 public class ProductoListaView extends JInternalFrame {
     private JPanel panelPrincipal;
     private JTextField txtBuscar;
@@ -19,6 +22,11 @@ public class ProductoListaView extends JInternalFrame {
     private JLabel lblNombre;
     private DefaultTableModel modelo;
     private MensajeInternacionalizacionHandler mi;
+    /**
+     * Constructor de la ventana para listar productos.
+     * Inicializa componentes, configura el modelo de la tabla, carga íconos e idioma.
+     * @param mi Handler de internacionalización.
+     */
     public ProductoListaView(MensajeInternacionalizacionHandler mi) {
 
         setContentPane(panelPrincipal);
@@ -41,7 +49,10 @@ public class ProductoListaView extends JInternalFrame {
         cambiarIdioma();
         inicializarImagenes();
     }
-    // Cambia los textos visibles al idioma actual usando el handler de internacionalización
+    /**
+     * Cambia los textos visibles al idioma actual usando el handler de internacionalización.
+     * También actualiza los identificadores de columna de la tabla.
+     */
     public void cambiarIdioma() {
         mi.setLenguaje(mi.getLocale().getLanguage(), mi.getLocale().getCountry());
 
@@ -61,7 +72,10 @@ public class ProductoListaView extends JInternalFrame {
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
     }
-    // Llena la tabla con una lista de productos
+    /**
+     * Llena la tabla con los datos de una lista de productos.
+     * @param listaProductos Lista de productos a mostrar.
+     */
     public void cargarDatos(List<Producto> listaProductos) {
         modelo.setNumRows(0);
         for (Producto producto : listaProductos) {
@@ -73,7 +87,9 @@ public class ProductoListaView extends JInternalFrame {
             modelo.addRow(fila);
         }
     }
-    // Carga los íconos para los botones desde los recursos del proyecto
+    /**
+     * Carga los íconos en los botones de buscar y listar desde los recursos del proyecto.
+     */
     public void inicializarImagenes(){
         URL buscar = ProductoListaView.class.getClassLoader().getResource("imagenes/buscar.png");
         if (buscar != null) {
@@ -90,60 +106,116 @@ public class ProductoListaView extends JInternalFrame {
             System.err.println("Error: No se ha cargado el icono de Login");
         }
     }
-    //Getters y Setters
+    /**
+     * Obtiene el label del nombre para el campo de búsqueda.
+     * @return JLabel del nombre.
+     */
     public JLabel getLblNombre() {
         return lblNombre;
     }
 
+    /**
+     * Establece el label del nombre para el campo de búsqueda.
+     * @param lblNombre JLabel del nombre.
+     */
     public void setLblNombre(JLabel lblNombre) {
         this.lblNombre = lblNombre;
     }
 
+    /**
+     * Obtiene el campo de texto usado para buscar productos.
+     * @return JTextField de búsqueda.
+     */
     public JTextField getTxtBuscar() {
         return txtBuscar;
     }
 
+    /**
+     * Establece el campo de texto usado para buscar productos.
+     * @param txtBuscar JTextField de búsqueda.
+     */
     public void setTxtBuscar(JTextField txtBuscar) {
         this.txtBuscar = txtBuscar;
     }
 
+    /**
+     * Obtiene el botón de búsqueda.
+     * @return JButton de buscar.
+     */
     public JButton getBtnBuscar() {
         return btnBuscar;
     }
 
+    /**
+     * Establece el botón de búsqueda.
+     * @param btnBuscar JButton de buscar.
+     */
     public void setBtnBuscar(JButton btnBuscar) {
         this.btnBuscar = btnBuscar;
     }
 
+    /**
+     * Obtiene la tabla donde se muestran los productos.
+     * @return JTable de productos.
+     */
     public JTable getTblProductos() {
         return tblProductos;
     }
 
+    /**
+     * Establece la tabla donde se muestran los productos.
+     * @param tblProductos JTable de productos.
+     */
     public void setTblProductos(JTable tblProductos) {
         this.tblProductos = tblProductos;
     }
 
+    /**
+     * Obtiene el panel principal de la ventana.
+     * @return JPanel principal.
+     */
     public JPanel getPanelPrincipal() {
         return panelPrincipal;
     }
 
+    /**
+     * Establece el panel principal de la ventana.
+     * @param panelPrincipal JPanel principal.
+     */
     public void setPanelPrincipal(JPanel panelPrincipal) {
         this.panelPrincipal = panelPrincipal;
     }
 
+    /**
+     * Obtiene el botón para listar todos los productos.
+     * @return JButton de listar.
+     */
     public JButton getBtnListar() {
         return btnListar;
     }
 
+    /**
+     * Establece el botón para listar todos los productos.
+     * @param btnListar JButton de listar.
+     */
     public void setBtnListar(JButton btnListar) {
         this.btnListar = btnListar;
     }
 
+    /**
+     * Obtiene el modelo de la tabla de productos.
+     * @return DefaultTableModel del modelo.
+     */
     public DefaultTableModel getModelo() {
         return modelo;
     }
 
+    /**
+     * Establece el modelo de la tabla de productos.
+     * @param modelo DefaultTableModel del modelo.
+     */
     public void setModelo(DefaultTableModel modelo) {
         this.modelo = modelo;
     }
+
 }
