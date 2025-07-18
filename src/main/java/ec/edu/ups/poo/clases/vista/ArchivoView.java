@@ -116,6 +116,12 @@ public class ArchivoView extends JFrame{
         UIManager.put("OptionPane.noButtonText", mi.get("dialogo.boton.no"));
         UIManager.put("OptionPane.cancelButtonText", mi.get("dialogo.boton.cancelar"));
         UIManager.put("OptionPane.okButtonText", mi.get("dialogo.boton.aceptar"));
+
+        int selectedIndex = cbxTiposGuardado.getSelectedIndex();
+        cbxTiposGuardado.removeAllItems();
+        cbxTiposGuardado.addItem(mi.get("memoria"));
+        cbxTiposGuardado.addItem(mi.get("archivo"));
+        cbxTiposGuardado.setSelectedIndex(selectedIndex);
     }
     /**
      * Muestra un mensaje emergente con el texto especificado.
@@ -131,7 +137,8 @@ public class ArchivoView extends JFrame{
      * @return Cadena que representa el tipo de almacenamiento ("memoria" o "archivo").
      */
     public String getTipoAlmacenamientoSeleccionado() {
-        return cbxTiposGuardado.getSelectedItem().toString();
+        int index = cbxTiposGuardado.getSelectedIndex();
+        return index == 0 ? "memoria" : "archivo";
     }
     /**
      * Obtiene el idioma seleccionado en el combo de idiomas.

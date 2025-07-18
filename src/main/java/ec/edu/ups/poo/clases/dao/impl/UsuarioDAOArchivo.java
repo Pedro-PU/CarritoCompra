@@ -45,7 +45,7 @@ public class UsuarioDAOArchivo implements UsuarioDAO {
         // Carga usuarios predeterminados si no existen
         if (buscarPorUsername("admin") == null) {
             Usuario admin = new Usuario(
-                    "admin", "12345", Rol.ADMINISTRADOR,
+                    "0106978463", "12345", Rol.ADMINISTRADOR,
                     "Administrador General", "0999999999",
                     new GregorianCalendar(1980, Calendar.JANUARY, 1), "admin@gmail.com"
             );

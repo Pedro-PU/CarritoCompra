@@ -61,7 +61,7 @@ public class Main {
                 UsuarioDAO usuarioDAO;
 
                 // Selección de almacenamiento: archivo o memoria
-                if (tipo.equals(mi.get("archivo"))) {
+                if (tipo.equals("archivo")) {
                     JFileChooser fileChooser = new JFileChooser();
                     fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 

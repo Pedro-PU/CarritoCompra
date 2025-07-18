@@ -2,10 +2,7 @@ package ec.edu.ups.poo.clases.dao.impl;
 
 import ec.edu.ups.poo.clases.dao.CarritoDAO;
 import ec.edu.ups.poo.clases.dao.ProductoDAO;
-import ec.edu.ups.poo.clases.modelo.Carrito;
-import ec.edu.ups.poo.clases.modelo.ItemCarrito;
-import ec.edu.ups.poo.clases.modelo.Producto;
-import ec.edu.ups.poo.clases.modelo.Usuario;
+import ec.edu.ups.poo.clases.modelo.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -189,9 +186,14 @@ public class CarritoDAOArchivo implements CarritoDAO {
                 Carrito carrito = new Carrito();
                 carrito.setCodigo(codigo);
                 Usuario usuario = new Usuario();
-                usuario.setUsername(username);
-                carrito.setUsuario(usuario);
-                carrito.setFechaCreacion(fecha);
+                try {
+                    usuario.setUsername(username);
+                    carrito.setUsuario(usuario);
+                    carrito.setFechaCreacion(fecha);
+                } catch (Cedula e) {
+                    System.err.println("Advertencia: Cédula inválida '" + username + "' al cargar carrito " + codigo + ". Se asignará usuario nulo.");
+                    carrito.setUsuario(null);
+                }
 
                 String itemsStr = partes[3];
                 String[] itemsArr = itemsStr.split(";");
@@ -204,7 +206,7 @@ public class CarritoDAOArchivo implements CarritoDAO {
                     int cantidad = Integer.parseInt(itemPartes[1]);
                     Producto producto = productoDAO.buscarPorCodigo(prodCodigo);
                     if (producto == null) {
-                        producto = new Producto(prodCodigo, "Desconocido", 0.0); // fallback
+                        producto = new Producto(prodCodigo, "Desconocido", 0.0);
                     }
                     carrito.agregarProducto(producto, cantidad);
                 }
